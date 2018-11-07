@@ -10,7 +10,7 @@ all: $(OBJS)
 
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -g -c -o $@ $< $(CFLAGS)
 	
 
 sd: $(EXSD) 

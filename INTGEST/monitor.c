@@ -15,6 +15,15 @@
 +--------------------------------------------------------------------------*/ 
 extern void cmd_sair (int, char** );
 extern void cmd_test (int, char** );
+extern void nuti (int, char** );
+extern void luti (int, char** );
+extern void euti (int, char** );
+extern void mpu (int, char** );
+extern void lapu (int, char** );
+extern void tserv (int, char** );
+extern void cep (int, char** );
+extern void mep (int, char** );
+extern void rip (int, char** );
        void cmd_sos  (int, char** );
 
 /*-------------------------------------------------------------------------+
@@ -30,7 +39,13 @@ struct 	command_d {
 } const commands[] = {
   {cmd_sos,  "sos","                  help"},
   {cmd_sair, "sair","                 sair"},
-  {cmd_test, "teste","<arg1> <arg2>   comando de teste"}
+  {cmd_test, "teste","<arg1> <arg2>   comando de teste"},
+  {nuti,     "nuti","                 novo utilizador: id; nome; portas com acesso (ABC"},
+  {luti,     "luti","                 listar utilizador u (0-todos) (id, nome, portas)"},
+  {euti,     "euti","                 eliminar utilizador u (0-todos)"},
+  {mpu,      "mpu","                  modificar portas utilizador u (0-todos), portas ABC"},
+  {lapu,     "lapu","                 listar acessos porta p (0-todas), utilizador u (0-todos), entre t1 (dd/mm/aaaa hh:mm:ss) e t2"},
+
 };
 
 #define NCOMMANDS  (sizeof(commands)/sizeof(struct command_d))
@@ -87,8 +102,8 @@ void monitor (void)
     if ((argc = my_getline(argv, ARGVECSIZE)) > 0) {
       for (p=argv[0]; *p != '\0'; *p=tolower(*p), p++);
       for (i = 0; i < NCOMMANDS; i++) 
-	if (strcmp(argv[0], commands[i].cmd_name) == 0) 
-	  break;
+	      if (strcmp(argv[0], commands[i].cmd_name) == 0) 
+	      break;
       /* Executing commands -----------------------------------------------*/
       if (i < NCOMMANDS)
 	commands[i].cmd_fnct (argc, argv);
