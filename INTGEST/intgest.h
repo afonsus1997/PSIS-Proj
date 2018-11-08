@@ -21,8 +21,10 @@
 
 #endif
 
-int serverInit();
+int clientInit();
 
 int sendInfo(MESSAGE* msg);
 
 int closeServer();
+
+void splashscreen();

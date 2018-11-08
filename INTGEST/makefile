@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS= -Wall -g
 
-OBJS= structs.o intgest.o intgest_server.o monitor.o comando.o
+OBJS= structs.o intgest.o intgest_client.o monitor.o comando.o
 DEPS = intgest.h structs.h 
 
 

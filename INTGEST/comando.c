@@ -5,6 +5,14 @@
 | Data:  Nov 2002
 ***************************************************************************/
 
+#ifndef COMANDO_h
+#define COMANDO_h
+
+#include "structs.h"
+
+
+#endif
+
 
 /*
 	CMD LIST:
@@ -44,16 +52,17 @@
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
-void nuti (int argc, char **argv)
+MESSAGE nuti (int argc, char **argv)
 {
-  
-    printf ("LEL\n");
+  MESSAGE msgOut;
+  msgOut.header="TEST";
+  return msgOut;
 }
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_test - apenas como exemplo
 +--------------------------------------------------------------------------*/ 
-void luti (int argc, char** argv)
+MESSAGE luti (int argc, char** argv)
 {
   int i;
 
@@ -62,7 +71,7 @@ void luti (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void euti (int argc, char** argv)
+MESSAGE euti (int argc, char** argv)
 {
   int i;
 
@@ -71,7 +80,7 @@ void euti (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void mpu (int argc, char** argv)
+MESSAGE mpu (int argc, char** argv)
 {
   int i;
 
@@ -80,7 +89,7 @@ void mpu (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void lapu (int argc, char** argv)
+MESSAGE lapu (int argc, char** argv)
 {
   int i;
 
@@ -89,7 +98,7 @@ void lapu (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void tserv (int argc, char** argv)
+MESSAGE tserv (int argc, char** argv)
 {
   int i;
 
@@ -98,7 +107,7 @@ void tserv (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void cep (int argc, char** argv)
+MESSAGE cep (int argc, char** argv)
 {
   int i;
 
@@ -107,7 +116,7 @@ void cep (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void mep (int argc, char** argv)
+MESSAGE mep (int argc, char** argv)
 {
   int i;
 
@@ -116,7 +125,7 @@ void mep (int argc, char** argv)
     printf ("\nargv[%d] = %s", i, argv[i]);
 }
 
-void rip (int argc, char** argv)
+MESSAGE rip (int argc, char** argv)
 {
   int i;
 

@@ -9,31 +9,31 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-
+#include "monitor.h"
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/ 
 extern void cmd_sair (int, char** );
 extern void cmd_test (int, char** );
-extern void nuti (int, char** );
-extern void luti (int, char** );
-extern void euti (int, char** );
-extern void mpu (int, char** );
-extern void lapu (int, char** );
-extern void tserv (int, char** );
-extern void cep (int, char** );
-extern void mep (int, char** );
-extern void rip (int, char** );
+extern MESSAGE nuti (int, char**);
+extern MESSAGE luti (int, char**);
+extern MESSAGE euti (int, char**);
+extern MESSAGE mpu (int, char**);
+extern MESSAGE lapu (int, char**);
+extern MESSAGE tserv (int, char**);
+extern MESSAGE cep (int, char**);
+extern MESSAGE mep (int, char**);
+extern MESSAGE rip (int, char**);
        void cmd_sos  (int, char** );
 
 /*-------------------------------------------------------------------------+
 | Variable and constants definition
 +--------------------------------------------------------------------------*/ 
-const char TitleMsg[] = "\n Application Control Monitor\n";
-const char InvalMsg[] = "\nInvalid command!";
+const char TitleMsg[] = "\n \n";
+const char InvalMsg[] = "\nInvalid command!\nType sos for help\n";
 
 struct 	command_d {
-  void  (*cmd_fnct)(int, char**);
+  MESSAGE  (*cmd_fnct)(int, char**);
   char*	cmd_name;
   char*	cmd_help;
 } const commands[] = {
@@ -90,12 +90,13 @@ int my_getline (char** argv, int argvsize)
 /*-------------------------------------------------------------------------+
 | Function: monitor        (called from main) 
 +--------------------------------------------------------------------------*/ 
-void monitor (void)
+MESSAGE monitor ()
 {
+  MESSAGE outmesg;
   static char *argv[ARGVECSIZE+1], *p;
   int argc, i;
 
-  printf("%s Type sos for help\n", TitleMsg);
+  //printf("%s \n", TitleMsg);
   for (;;) {
     printf("\nCmd> ");
     /* Reading and parsing command line  ----------------------------------*/
@@ -106,9 +107,12 @@ void monitor (void)
 	      break;
       /* Executing commands -----------------------------------------------*/
       if (i < NCOMMANDS)
-	commands[i].cmd_fnct (argc, argv);
+	      return commands[i].cmd_fnct (argc, argv);
       else  
 	printf("%s", InvalMsg);
     } /* if my_getline */
   } /* forever */
+
+  return outmesg;
+
 }

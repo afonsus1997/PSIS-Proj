@@ -6,11 +6,11 @@ socklen_t addrlen;
 struct sockaddr_un to;
 socklen_t tolen;
 char buf[100];
-char cliname[100] = "/tmp/";
+char cliname[100] = CLINAME;
 int cliid;
 
 
-int serverInit(){
+int clientInit(){
   cliid = getpid();
   sprintf(cliname,"%ld", cliid);
   //strcat(cliname, (char*)cliid);
@@ -35,7 +35,10 @@ int serverInit(){
 }
   
 int sendInfo(MESSAGE* msg){
-  if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&to, 
+  //if(strcmp(msg->header, NULL) == 0)
+  //return -1;
+
+  if (sendto(sd, msg->header, strlen(msg->header)+1, 0, (struct sockaddr *)&to, 
 	     tolen) < 0) {
     perror("CLI: Erro no sendto");
   }
