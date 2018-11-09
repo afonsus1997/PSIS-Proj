@@ -50,8 +50,9 @@ int main()
   }
   else {
     printf("SERV: Recebi: %s\n", buf);
-    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, 
-	       fromlen) < 0) {
+//    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
+    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
+
       perror("Erro no sendto");
     }
   }

@@ -6,21 +6,25 @@ socklen_t addrlen;
 struct sockaddr_un to;
 socklen_t tolen;
 char buf[100];
-char cliname[100] = CLINAME;
+char cliname[100] = "/tmp/CLI";
 int cliid;
 
 
 int clientInit(){
-  cliid = getpid();
-  sprintf(cliname,"%ld", cliid);
+  //cliid = getpid();
+  //sprintf(cliname,"%ld", cliid);
   //strcat(cliname, (char*)cliid);
 
+  unlink(cliname);
+
+
+  printf("Client Name: %s\n", cliname);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
     perror("Erro a criar socket"); exit(-1);
   }
       
   my_addr.sun_family = AF_UNIX;
-  memset(my_addr.sun_path, 0, sizeof(my_addr.sun_path));
+    (my_addr.sun_path, 0, sizeof(my_addr.sun_path));
   strcpy(my_addr.sun_path, cliname);
   addrlen = sizeof(my_addr.sun_family) + strlen(my_addr.sun_path);
 
@@ -38,7 +42,9 @@ int sendInfo(MESSAGE* msg){
   //if(strcmp(msg->header, NULL) == 0)
   //return -1;
 
-  if (sendto(sd, msg->header, strlen(msg->header)+1, 0, (struct sockaddr *)&to, 
+  void* flat_mess = &msg; //flat struct to be sent
+
+  if (sendto(sd, flat_mess, flat_mess, 0, (struct sockaddr *)&to, 
 	     tolen) < 0) {
     perror("CLI: Erro no sendto");
   }
@@ -58,3 +64,17 @@ int closeServer(){
   close(sd);
   unlink(cliname);
 }
+
+
+/*
+FLATTEN
+
+void* vptr_test = &test2;
+
+UNFLAT
+uint8_t buffer[sizeof(MyStruct)];
+
+memcpy(buffer, vptr_test, sizeof(MyStruct));
+
+
+*/
