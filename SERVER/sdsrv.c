@@ -18,6 +18,18 @@
 #define SERVNAME "/tmp/SERV1"
 #define MSG "Servidor responde!!!"
 
+
+typedef struct message{
+	
+	char *header; 
+	char *utilizador;
+	char *nome;
+	char **portas;
+	char *tempo;
+	
+}MESSAGE;
+
+
 int main()
 {
   int sd;
@@ -26,6 +38,10 @@ int main()
   struct sockaddr_un from;
   socklen_t fromlen;
   char buf[100];
+
+  MESSAGE* msgIN;
+  void* msgINpnt;
+
   unlink(SERVNAME);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
     perror("Erro a criar socket"); exit(-1);
@@ -44,13 +60,24 @@ int main()
   while(TRUE){
 
     fromlen = sizeof(from);
-  if (recvfrom(sd, buf, sizeof(buf), 0, (struct sockaddr *)&from, 
+  
+  void* flat_mess; //flat struct to be sent
+ 
+  
+
+  if (recvfrom(sd, flat_mess, fromlen, 0, (struct sockaddr *)&from, 
 	       &fromlen) < 0) {
     perror("Erro no recvfrom");
   }
   else {
-    printf("SERV: Recebi: %s\n", buf);
+    msgIN=(MESSAGE*)flat_mess;
+    printf("SERV: Recebi: %s\n", msgIN->header);
 //    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
+    
+    //MESSAGE buffer[sizeof(MESSAGE)];
+
+    //memcpy(msgIN, buffer, sizeof(MESSAGE));
+
     if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
 
       perror("Erro no sendto");
@@ -65,4 +92,5 @@ int main()
 
   return 0;
 }
+
 

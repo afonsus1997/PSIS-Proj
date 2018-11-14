@@ -42,9 +42,11 @@ int sendInfo(MESSAGE* msg){
   //if(strcmp(msg->header, NULL) == 0)
   //return -1;
 
-  void* flat_mess = &msg; //flat struct to be sent
-
-  if (sendto(sd, flat_mess, flat_mess, 0, (struct sockaddr *)&to, 
+  void* flat_mess = (void*)malloc(msg); //flat struct to be sent
+  
+  memcpy(flat_mess, msg, sizeof(msg));
+  //memcpy(flat_mess, msg, sizeof(msg));
+  if (sendto(sd, flat_mess, sizeof(flat_mess), 0, (struct sockaddr *)&to, 
 	     tolen) < 0) {
     perror("CLI: Erro no sendto");
   }
@@ -71,7 +73,7 @@ FLATTEN
 
 void* vptr_test = &test2;
 
-UNFLAT
+
 uint8_t buffer[sizeof(MyStruct)];
 
 memcpy(buffer, vptr_test, sizeof(MyStruct));
