@@ -41,12 +41,9 @@ int clientInit(){
 int sendInfo(MESSAGE* msg){
   //if(strcmp(msg->header, NULL) == 0)
   //return -1;
-
-  void* flat_mess = (void*)malloc(msg); //flat struct to be sent
-  
-  memcpy(flat_mess, msg, sizeof(msg));
   //memcpy(flat_mess, msg, sizeof(msg));
-  if (sendto(sd, flat_mess, sizeof(flat_mess), 0, (struct sockaddr *)&to, 
+  
+  if (sendto(sd, msg, sizeof(MESSAGE), 0, (struct sockaddr *)&to, 
 	     tolen) < 0) {
     perror("CLI: Erro no sendto");
   }

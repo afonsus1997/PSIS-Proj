@@ -12,22 +12,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-
+#include "structs.h"
 
 #define TRUE 1
 #define SERVNAME "/tmp/SERV1"
 #define MSG "Servidor responde!!!"
 
-
-typedef struct message{
-	
-	char *header; 
-	char *utilizador;
-	char *nome;
-	char **portas;
-	char *tempo;
-	
-}MESSAGE;
 
 
 int main()
@@ -39,8 +29,8 @@ int main()
   socklen_t fromlen;
   char buf[100];
 
-  MESSAGE* msgIN;
-  void* msgINpnt;
+
+  MESSAGE msgIN;
 
   unlink(SERVNAME);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
@@ -61,17 +51,13 @@ int main()
 
     fromlen = sizeof(from);
   
-  void* flat_mess; //flat struct to be sent
- 
-  
 
-  if (recvfrom(sd, flat_mess, fromlen, 0, (struct sockaddr *)&from, 
+  if (recvfrom(sd, &msgIN, fromlen, 0, (struct sockaddr *)&from, 
 	       &fromlen) < 0) {
     perror("Erro no recvfrom");
   }
   else {
-    msgIN=(MESSAGE*)flat_mess;
-    printf("SERV: Recebi: %s\n", msgIN->header);
+    printf("SERV: Recebi: %s\n", msgIN.header);
 //    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
     
     //MESSAGE buffer[sizeof(MESSAGE)];

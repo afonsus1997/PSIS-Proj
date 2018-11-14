@@ -55,7 +55,10 @@
 MESSAGE nuti (int argc, char **argv)
 {
   MESSAGE msgOut;
-  msgOut.header="TEST";
+  strcpy(msgOut.header, "NUTI");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
   return msgOut;
 }
 
