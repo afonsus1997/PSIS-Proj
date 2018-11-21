@@ -57,9 +57,9 @@ MESSAGE nuti (int argc, char **argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "NUTI");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.id, argv[1]);
+  strcpy(msgOut.reguti.nome, argv[2]);
+  strcpy(msgOut.reguti.port, argv[3]);
   return msgOut;
 }
 
@@ -69,10 +69,8 @@ MESSAGE nuti (int argc, char **argv)
 MESSAGE luti (int argc, char** argv)
 {
   MESSAGE msgOut;
-  strcpy(msgOut.header, "LUTI");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.header, "LUIT");
+  strcpy(msgOut.reguti.id, argv[1]);
   return msgOut;
 }
 
@@ -80,9 +78,7 @@ MESSAGE euti (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "EUTI");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.id, argv[1]);
   return msgOut;
 }
 
@@ -90,9 +86,8 @@ MESSAGE mpu (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "MPU");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.id, argv[1]);
+  strcpy(msgOut.reguti.port, argv[2]);
   return msgOut;
 }
 
@@ -100,9 +95,10 @@ MESSAGE lapu (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "LAPU");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.port, argv[1]);
+  strcpy(msgOut.reguti.id, argv[2]);
+  //strcpy(msgOut.reguti.nome, argv[3]);   TEMPO
+  
   return msgOut;
 }
 
@@ -110,9 +106,6 @@ MESSAGE tserv (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "TSERV");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
   return msgOut;
 }
 
@@ -120,9 +113,7 @@ MESSAGE cep (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "CEP");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.port, argv[1]);
   return msgOut;
 }
 
@@ -130,9 +121,8 @@ MESSAGE mep (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "MEP");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.nome, argv[2]);  //ESTADO
+  strcpy(msgOut.reguti.port, argv[1]);
   return msgOut;
 }
 
@@ -140,9 +130,7 @@ MESSAGE rip (int argc, char** argv)
 {
   MESSAGE msgOut;
   strcpy(msgOut.header, "RIP");
-  strcpy(msgOut.reguti.id, "1111");
-  strcpy(msgOut.reguti.nome, "asdsad");
-  strcpy(msgOut.reguti.port, "a");
+  strcpy(msgOut.reguti.port, argv[1]);
   return msgOut;
 }
 

@@ -9,6 +9,7 @@ char buf[100];
 char cliname[100] = "/tmp/CLI";
 int cliid;
 
+MESSAGE msgIN;
 
 int clientInit(){
   //cliid = getpid();
@@ -48,12 +49,13 @@ int sendInfo(MESSAGE* msg){
     perror("CLI: Erro no sendto");
   }
   else {
-    if (recvfrom(sd, buf, sizeof(buf), 0, (struct sockaddr *)&to, 
+    if (recvfrom(sd, &msgIN, sizeof(MESSAGE), 0, (struct sockaddr *)&to, 
 		 &tolen) < 0) {
       perror("CLI: Erro no recvfrom");
     }
     else {
-      printf("CLI: Recebi: %s\n", buf);
+      
+      printf("CLI: Recebi header: %s\n", msgIN.header);
     }
   }   
 

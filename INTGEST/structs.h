@@ -47,6 +47,8 @@ typedef struct message{
 	
 	char header[10]; 
 	uti_t reguti;
+	reg_t regt;
+	
 	
 }MESSAGE;
 

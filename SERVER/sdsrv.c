@@ -57,14 +57,14 @@ int main()
     perror("Erro no recvfrom");
   }
   else {
-    printf("SERV: Recebi: %s\n", msgIN.header);
-//    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
-    
-    //MESSAGE buffer[sizeof(MESSAGE)];
+    printf("SERV: Header: %s\n", msgIN.header);
+    printf("SERV: User ID: %s\n", msgIN.reguti.id);
+    printf("SERV: Nome: %s\n", msgIN.reguti.nome);
+    printf("SERV: Portas: %s\n", msgIN.reguti.port);
+    printf("\n\n\n");
 
-    //memcpy(msgIN, buffer, sizeof(MESSAGE));
 
-    if (sendto(sd, MSG, strlen(MSG)+1, 0, (struct sockaddr *)&from, fromlen) < 0) {
+    if (sendto(sd, &msgIN, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0) {
 
       perror("Erro no sendto");
     }
