@@ -13,6 +13,7 @@
 
 #endif
 
+extern int closeServer(void);
 
 /*
 	CMD LIST:
@@ -67,90 +68,91 @@ MESSAGE nuti (int argc, char **argv)
 +--------------------------------------------------------------------------*/ 
 MESSAGE luti (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "LUTI");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE euti (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "EUTI");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE mpu (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "MPU");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE lapu (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "LAPU");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE tserv (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "TSERV");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE cep (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "CEP");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE mep (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "MEP");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 MESSAGE rip (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  MESSAGE msgOut;
+  strcpy(msgOut.header, "RIP");
+  strcpy(msgOut.reguti.id, "1111");
+  strcpy(msgOut.reguti.nome, "asdsad");
+  strcpy(msgOut.reguti.port, "a");
+  return msgOut;
 }
 
 void cmd_sair (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  closeServer();
+  exit(0);
 }
 
 void cmd_test (int argc, char** argv)
 {
-  int i;
-
-  /* exemplo -- escreve argumentos */
-  for (i=0; i<argc; i++)
-    printf ("\nargv[%d] = %s", i, argv[i]);
+  printf("This is a test dumbass\n");
 }

@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <signal.h>
+
 #include "structs.h"
 
 
@@ -52,3 +54,5 @@ int sendInfo(MESSAGE* msg);
 int closeServer();
 
 void splashscreen();
+
+void exitHandler();

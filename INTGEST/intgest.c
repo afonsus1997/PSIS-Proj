@@ -1,12 +1,32 @@
 #include "intgest.h"
 extern MESSAGE monitor(void);
+extern int closeServer();
 
 MESSAGE msgOut;
+
+
+void exitHandler(int sn){
+  
+  char ch;
+  printf("\n\nDeseja terminar o cliente? (s/n)\n");
+  ch=getchar();
+  if(ch == 's'){
+    closeServer();
+    exit(0);
+    
+  }
+  
+  
+}
+
 
 int main()
 {
   
+
   splashscreen();
+
+  signal(SIGINT, exitHandler);
 
   if(clientInit() < 0){
     //ERROR
@@ -19,12 +39,11 @@ int main()
     sendInfo(&msgOut);
   }
   
-  if(closeServer()<0){
-    //ERRO
-  }}
+  
   
   
   return 0;
+}
 }
 
 

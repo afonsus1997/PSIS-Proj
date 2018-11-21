@@ -60,8 +60,12 @@ int sendInfo(MESSAGE* msg){
 }
 
 int closeServer(){
+  system("clear");
+  printf("\n\nTerminando o cliente...\n");
   close(sd);
   unlink(cliname);
+  printf("\nDone!\n");
+
 }
 
 
