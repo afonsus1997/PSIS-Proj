@@ -9,7 +9,7 @@ char buf[100];
 char cliname[100] = "/tmp/CLI";
 int cliid;
 
-MESSAGE msgIN;
+message_t msgIN;
 
 int clientInit(){
   //cliid = getpid();
@@ -39,17 +39,17 @@ int clientInit(){
   tolen = sizeof(my_addr.sun_family) + strlen(to.sun_path);
 }
   
-int sendInfo(MESSAGE* msg){
+int sendInfo(message_t* msg){
   //if(strcmp(msg->header, NULL) == 0)
   //return -1;
   //memcpy(flat_mess, msg, sizeof(msg));
   
-  if (sendto(sd, msg, sizeof(MESSAGE), 0, (struct sockaddr *)&to, 
+  if (sendto(sd, msg, sizeof(message_t), 0, (struct sockaddr *)&to, 
 	     tolen) < 0) {
     perror("CLI: Erro no sendto");
   }
   else {
-    if (recvfrom(sd, &msgIN, sizeof(MESSAGE), 0, (struct sockaddr *)&to, 
+    if (recvfrom(sd, &msgIN, sizeof(message_t), 0, (struct sockaddr *)&to, 
 		 &tolen) < 0) {
       perror("CLI: Erro no recvfrom");
     }
@@ -63,7 +63,7 @@ int sendInfo(MESSAGE* msg){
 
 int closeServer(){
   system("clear");
-  printf("\n\nTerminando o cliente...\n");
+  printf("\n\nStopping client...\n");
   close(sd);
   unlink(cliname);
   printf("\nDone!\n");

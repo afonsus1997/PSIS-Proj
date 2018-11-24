@@ -15,15 +15,15 @@
 +--------------------------------------------------------------------------*/ 
 extern void cmd_sair (int, char** );
 extern void cmd_test (int, char** );
-extern MESSAGE nuti (int, char**);
-extern MESSAGE luti (int, char**);
-extern MESSAGE euti (int, char**);
-extern MESSAGE mpu (int, char**);
-extern MESSAGE lapu (int, char**);
-extern MESSAGE tserv (int, char**);
-extern MESSAGE cep (int, char**);
-extern MESSAGE mep (int, char**);
-extern MESSAGE rip (int, char**);
+extern message_t nuti (int, char**);
+extern message_t luti (int, char**);
+extern message_t euti (int, char**);
+extern message_t mpu (int, char**);
+extern message_t lapu (int, char**);
+extern message_t tserv (int, char**);
+extern message_t cep (int, char**);
+extern message_t mep (int, char**);
+extern message_t rip (int, char**);
        void cmd_sos  (int, char** );
 
 /*-------------------------------------------------------------------------+
@@ -33,7 +33,7 @@ const char TitleMsg[] = "\n \n";
 const char InvalMsg[] = "\nInvalid command!\nType sos for help\n";
 
 struct 	command_d {
-  MESSAGE  (*cmd_fnct)(int, char**);
+  message_t  (*cmd_fnct)(int, char**);
   char*	cmd_name;
   char*	cmd_help;
 } const commands[] = {
@@ -45,7 +45,7 @@ struct 	command_d {
   {euti,     "euti","                 eliminar utilizador u (0-todos)"},
   {mpu,      "mpu","                  modificar portas utilizador u (0-todos), portas ABC"},
   {lapu,     "lapu","                 listar acessos porta p (0-todas), utilizador u (0-todos), entre t1 (dd/mm/aaaa hh:mm:ss) e t2"},
-
+  {tserv,    "tserv","                Termina o servidor." }
 };
 
 #define NCOMMANDS  (sizeof(commands)/sizeof(struct command_d))
@@ -90,9 +90,9 @@ int my_getline (char** argv, int argvsize)
 /*-------------------------------------------------------------------------+
 | Function: monitor        (called from main) 
 +--------------------------------------------------------------------------*/ 
-MESSAGE monitor ()
+message_t monitor ()
 {
-  MESSAGE outmesg;
+  message_t outmesg;
   static char *argv[ARGVECSIZE+1], *p;
   int argc, i;
 

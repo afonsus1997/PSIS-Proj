@@ -1,5 +1,5 @@
-#ifndef INTGEST_h
-#define INTGEST_h
+#ifndef SERVER_h
+#define SERVER_h
 
 #include <stdio.h>
 #include <unistd.h>
@@ -9,10 +9,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <string.h>
-#include <signal.h>
-
 #include "structs.h"
+
 
 
 #define NPROSS 3
@@ -41,18 +39,10 @@
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
 
 
-
-
-
-
 #endif
 
-int clientInit();
-
-int sendInfo(message_t* msg);
-
-int closeServer();
+extern int serverInit();
+extern int closeServer();
+extern int recieveMessage();
 
 void splashscreen();
-
-void exitHandler();

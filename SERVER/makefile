@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS= -Wall -g
 
-OBJS= sdsrv.o 
-DEPS = structs.h 
+OBJS= server.o sdsrv.o
+DEPS = structs.h server.h 
 
 
 all: $(OBJS)

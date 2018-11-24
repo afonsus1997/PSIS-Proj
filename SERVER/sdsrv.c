@@ -19,18 +19,16 @@
 #define MSG "Servidor responde!!!"
 
 
+int sd;
+struct sockaddr_un my_addr;
+socklen_t addrlen;
+struct sockaddr_un from;
+socklen_t fromlen;
+char buf[100];
+message_t msgIN;
 
-int main()
-{
-  int sd;
-  struct sockaddr_un my_addr;
-  socklen_t addrlen;
-  struct sockaddr_un from;
-  socklen_t fromlen;
-  char buf[100];
+int serverInit(){
 
-
-  MESSAGE msgIN;
 
   unlink(SERVNAME);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
@@ -46,8 +44,23 @@ int main()
     perror("Erro no bind"); exit(-1);
   }
 
+  return 0;
 
-  while(TRUE){
+}
+
+
+int closeServer(){
+  system("clear");
+  printf("\n\nStopping server...\n");
+  close(sd);
+  unlink(SERVNAME);
+  printf("\nDone!\n");
+  return 0;
+}
+
+int recieveMessage(){
+
+  while(1){
 
     fromlen = sizeof(from);
   
@@ -57,12 +70,19 @@ int main()
     perror("Erro no recvfrom");
   }
   else {
+    
+    if(strcmp(msgIN.header, "TSERV") == 0){
+      break;
+    }
+    else{
     printf("SERV: Header: %s\n", msgIN.header);
     printf("SERV: User ID: %s\n", msgIN.reguti.id);
     printf("SERV: Nome: %s\n", msgIN.reguti.nome);
     printf("SERV: Portas: %s\n", msgIN.reguti.port);
     printf("\n\n\n");
 
+    }
+    
 
     if (sendto(sd, &msgIN, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0) {
 
@@ -72,11 +92,14 @@ int main()
 
   }
   
-
-  close(sd);
-  unlink(SERVNAME);
-
   return 0;
+
 }
+
+
+
+
+
+
 
 

@@ -1,8 +1,8 @@
 #include "intgest.h"
-extern MESSAGE monitor(void);
+extern message_t monitor(void);
 extern int closeServer();
 
-MESSAGE msgOut;
+message_t msgOut;
 
 
 void exitHandler(int sn){

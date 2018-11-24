@@ -50,6 +50,6 @@ typedef struct message{
 	reg_t regt;
 	
 	
-}MESSAGE;
+}message_t;
 
 

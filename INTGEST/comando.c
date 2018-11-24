@@ -53,9 +53,9 @@ extern int closeServer(void);
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
-MESSAGE nuti (int argc, char **argv)
+message_t nuti (int argc, char **argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "NUTI");
   strcpy(msgOut.reguti.id, argv[1]);
   strcpy(msgOut.reguti.nome, argv[2]);
@@ -66,34 +66,34 @@ MESSAGE nuti (int argc, char **argv)
 /*-------------------------------------------------------------------------+
 | Function: cmd_test - apenas como exemplo
 +--------------------------------------------------------------------------*/ 
-MESSAGE luti (int argc, char** argv)
+message_t luti (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "LUIT");
   strcpy(msgOut.reguti.id, argv[1]);
   return msgOut;
 }
 
-MESSAGE euti (int argc, char** argv)
+message_t euti (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "EUTI");
   strcpy(msgOut.reguti.id, argv[1]);
   return msgOut;
 }
 
-MESSAGE mpu (int argc, char** argv)
+message_t mpu (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "MPU");
   strcpy(msgOut.reguti.id, argv[1]);
   strcpy(msgOut.reguti.port, argv[2]);
   return msgOut;
 }
 
-MESSAGE lapu (int argc, char** argv)
+message_t lapu (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "LAPU");
   strcpy(msgOut.reguti.port, argv[1]);
   strcpy(msgOut.reguti.id, argv[2]);
@@ -102,33 +102,33 @@ MESSAGE lapu (int argc, char** argv)
   return msgOut;
 }
 
-MESSAGE tserv (int argc, char** argv)
+message_t tserv (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "TSERV");
   return msgOut;
 }
 
-MESSAGE cep (int argc, char** argv)
+message_t cep (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "CEP");
   strcpy(msgOut.reguti.port, argv[1]);
   return msgOut;
 }
 
-MESSAGE mep (int argc, char** argv)
+message_t mep (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "MEP");
   strcpy(msgOut.reguti.nome, argv[2]);  //ESTADO
   strcpy(msgOut.reguti.port, argv[1]);
   return msgOut;
 }
 
-MESSAGE rip (int argc, char** argv)
+message_t rip (int argc, char** argv)
 {
-  MESSAGE msgOut;
+  message_t msgOut;
   strcpy(msgOut.header, "RIP");
   strcpy(msgOut.reguti.port, argv[1]);
   return msgOut;
