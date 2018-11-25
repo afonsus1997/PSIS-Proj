@@ -1,5 +1,5 @@
-#ifndef SERVER_h
-#define SERVER_h
+#ifndef MANAGEMENT_H
+#define MANAGEMENT_H
 
 #include <stdio.h>
 #include <unistd.h>
@@ -10,8 +10,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "structs.h"
-
-
 
 #define NPROSS 3
 #define TRUE 1
@@ -39,12 +37,8 @@
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
 
 
+
+#include "structs.h"
+
+
 #endif
-
-extern int serverInit();
-extern int closeServer();
-extern message_t recieveMessage();
-extern int sendMessage(message_t msgOUT);
-message_t intgestParser(message_t msgIN);
-
-void splashscreen();

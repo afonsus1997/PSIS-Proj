@@ -57,9 +57,9 @@ message_t nuti (int argc, char **argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "NUTI");
-  strcpy(msgOut.reguti.id, argv[1]);
-  strcpy(msgOut.reguti.nome, argv[2]);
-  strcpy(msgOut.reguti.port, argv[3]);
+  strcpy(msgOut.reguti[0].id, argv[1]);
+  strcpy(msgOut.reguti[0].nome, argv[2]);
+  strcpy(msgOut.reguti[0].port, argv[3]);
   return msgOut;
 }
 
@@ -70,7 +70,7 @@ message_t luti (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "LUIT");
-  strcpy(msgOut.reguti.id, argv[1]);
+  strcpy(msgOut.reguti[0].id, argv[1]);
   return msgOut;
 }
 
@@ -78,7 +78,7 @@ message_t euti (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "EUTI");
-  strcpy(msgOut.reguti.id, argv[1]);
+  strcpy(msgOut.reguti[0].id, argv[1]);
   return msgOut;
 }
 
@@ -86,8 +86,8 @@ message_t mpu (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "MPU");
-  strcpy(msgOut.reguti.id, argv[1]);
-  strcpy(msgOut.reguti.port, argv[2]);
+  strcpy(msgOut.reguti[0].id, argv[1]);
+  strcpy(msgOut.reguti[0].port, argv[2]);
   return msgOut;
 }
 
@@ -95,8 +95,8 @@ message_t lapu (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "LAPU");
-  strcpy(msgOut.reguti.port, argv[1]);
-  strcpy(msgOut.reguti.id, argv[2]);
+  strcpy(msgOut.reguti[0].port, argv[1]);
+  strcpy(msgOut.reguti[0].id, argv[2]);
   //strcpy(msgOut.reguti.nome, argv[3]);   TEMPO
   
   return msgOut;
@@ -113,7 +113,7 @@ message_t cep (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "CEP");
-  strcpy(msgOut.reguti.port, argv[1]);
+  strcpy(msgOut.reguti[0].port, argv[1]);
   return msgOut;
 }
 
@@ -121,8 +121,8 @@ message_t mep (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "MEP");
-  strcpy(msgOut.reguti.nome, argv[2]);  //ESTADO
-  strcpy(msgOut.reguti.port, argv[1]);
+  strcpy(msgOut.reguti[0].nome, argv[2]);  //ESTADO
+  strcpy(msgOut.reguti[0].port, argv[1]);
   return msgOut;
 }
 
@@ -130,7 +130,7 @@ message_t rip (int argc, char** argv)
 {
   message_t msgOut;
   strcpy(msgOut.header, "RIP");
-  strcpy(msgOut.reguti.port, argv[1]);
+  strcpy(msgOut.reguti[0].port, argv[1]);
   return msgOut;
 }
 

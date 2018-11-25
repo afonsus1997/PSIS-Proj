@@ -46,8 +46,8 @@ typedef struct reg_s { /* estrutura de um registo historico */
 typedef struct message{
 	
 	char header[10]; 
-	uti_t reguti;
-	reg_t regt;
+	uti_t reguti[UMAX];
+	reg_t regt[UMAX];
 	
 	
 }message_t;

@@ -48,7 +48,6 @@ int serverInit(){
 
 }
 
-
 int closeServer(){
   system("clear");
   printf("\n\nStopping server...\n");
@@ -58,9 +57,9 @@ int closeServer(){
   return 0;
 }
 
-int recieveMessage(){
+message_t recieveMessage(){
 
-  while(1){
+  
 
     fromlen = sizeof(from);
   
@@ -71,31 +70,33 @@ int recieveMessage(){
   }
   else {
     
-    if(strcmp(msgIN.header, "TSERV") == 0){
-      break;
-    }
-    else{
+    
     printf("SERV: Header: %s\n", msgIN.header);
     printf("SERV: User ID: %s\n", msgIN.reguti.id);
     printf("SERV: Nome: %s\n", msgIN.reguti.nome);
     printf("SERV: Portas: %s\n", msgIN.reguti.port);
     printf("\n\n\n");
 
-    }
+
+
     
-
-    if (sendto(sd, &msgIN, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0) {
-
-      perror("Erro no sendto");
-    }
-  }
+  
+    return msgIN;
 
   }
   
-  return 0;
+  
 
 }
 
+int sendMessage(message_t msgOUT){
+  if (sendto(sd, &msgOUT, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0) {
+
+      perror("Erro no sendto");
+      return -1;
+    }
+  return 0;
+}
 
 
 

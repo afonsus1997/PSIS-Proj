@@ -3,6 +3,11 @@
 pid_t mypid;
 pid_t pid;
 
+message_t msgIN;
+message_t msgOUT;
+uti_t usersBuffer[15];
+
+
 int main()
 {
 
@@ -18,8 +23,11 @@ int main()
 
         //init intgest serv
         serverInit();
-        recieveMessage();
+        msgIN = recieveMessage();
+        
+        if(strcmp(msgIN.header, "TSERV") == 0)
         closeServer();
+        sendMessage(intgestParser(msgIN));
 
 
     }    
