@@ -11,6 +11,6 @@
 #include <errno.h>
 #include "structs.h"
 
-message_t intgestParser(uti_t usersBuffer[UMAX], message_t msgIN);
+message_t intgestParser(message_t msgIN);
 
 #endif

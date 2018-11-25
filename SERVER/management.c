@@ -1,23 +1,42 @@
 #include "management.h"
 
+uti_t usersBuffer[UMAX];
 
-message_t intgestParser(uti_t usersBuffer[UMAX], message_t msgIN){
+void initStruct(){
+
+    int i;
+        for(i = 0; i < UMAX; i++)
+        {
+            memset(&usersBuffer[i].id, 0, sizeof(usersBuffer[i].id));
+        }
+
+}
+
+
+message_t intgestParser(message_t msgIN){
     uti_t user;
     message_t msgOUT;
 
     if(strcmp(msgIN.header, "NUTI") == 0){
+        
+        printf("New User:\n");
+        printf("\tID: %s\n", msgIN.reguti[0].id);
+        printf("\tNOME: %s\n", msgIN.reguti[0].nome);
+        printf("\tPORTAs: %s\n\n", msgIN.reguti[0].port);
+
         //add new user function
         int i = 0;
-        for(i ; i<UMAX ; i++){
-            if(usersBuffer[i].id != NULL)
+        for(i ; i<UMAX-1 ; i++){
+            if(usersBuffer[i].id[1] == '\0' && usersBuffer[i].id[1] == '\0' && usersBuffer[i].id[1] == '\0')
             break;
+
         }
         //mutex?
         strcpy(usersBuffer[i].id, msgIN.reguti[0].id);
         strcpy(usersBuffer[i].nome, msgIN.reguti[0].nome);
         strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
 
-        strcpy(msgOUT.header, "NUTIDONE");
+        strcpy(msgOUT.header, "User created!");
         return msgOUT;
     }
     else if(strcmp(msgIN.header, "LUTI") == 0)
@@ -106,4 +125,6 @@ message_t intgestParser(uti_t usersBuffer[UMAX], message_t msgIN){
     }
 
 }
+
+
 

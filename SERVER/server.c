@@ -5,7 +5,6 @@ pid_t pid;
 
 message_t msgIN;
 message_t msgOUT;
-uti_t usersBuffer[UMAX];
 
 
 int main()
@@ -23,12 +22,19 @@ int main()
 
         //init intgest serv
         serverInit();
-        msgIN = recieveMessage();
-        
-        if(strcmp(msgIN.header, "TSERV") == 0)
-        closeServer();
-        sendMessage(intgestParser(usersBuffer, msgIN));
+        initStruct();
+        while(1){
+            msgIN = recieveMessage();
+            
+            if(strcmp(msgIN.header, "TSERV") == 0){
+            closeServer();
+            break;                
+            }
+            
+            sendMessage(intgestParser(msgIN));
 
+        }
+        
 
     }    
 

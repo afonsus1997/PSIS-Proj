@@ -14,37 +14,8 @@
 #endif
 
 extern int closeServer(void);
-
-/*
-	CMD LIST:
-	NUTI - NEW USER
-		u - ID
-		nome - NOME
-		portas[] - PORTAS COM ACESSO 
-	
-
-	LUIT - LISTAR UTILIZADOR
-		u - UTILIZADOR (0 - todos) (id, nome, portas) 
-	EUTI - ELIMINAR UTILIZADORES 
-		u - UTILIZAODR (0 - todos)
-	MPU - MODIFICAR PORTAS UTILIZADOR
-		u - UTILIZADOR (0 - todos)
-		portas - PORTAS ABC
-	LAPU - LISTAR ACESSOS 
-		p - PORTA p (0 - todas)
-		u - UTILIZADOR (0 - todos)
-		[t1, t2] - TEMPO entre t1 e t2
-	TSERV 
-	CEP 
-		p
-	MEP 
-		p
-		e
-	RIP
-		p
-	
-	*/
-
+extern message_t recieveInfo();
+extern int sendInfo(message_t* msg);
 
 
 #include <stdio.h>
@@ -56,11 +27,14 @@ extern int closeServer(void);
 message_t nuti (int argc, char **argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "NUTI");
   strcpy(msgOut.reguti[0].id, argv[1]);
   strcpy(msgOut.reguti[0].nome, argv[2]);
   strcpy(msgOut.reguti[0].port, argv[3]);
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+  
 }
 
 /*-------------------------------------------------------------------------+
@@ -69,69 +43,103 @@ message_t nuti (int argc, char **argv)
 message_t luti (int argc, char** argv)
 {
   message_t msgOut;
-  strcpy(msgOut.header, "LUIT");
+  message_t msgIn;
+  strcpy(msgOut.header, "LUTI");
   strcpy(msgOut.reguti[0].id, argv[1]);
-  return msgOut;
+  sendInfo(&msgOut);
+  msgIn = recieveInfo();
+  printf("Users:\n");
+  int i;
+  for(i=0 ; i<UMAX ; i++){
+      if(!msgIn.reguti[i].id == 0){
+        printf("\tID: %s\n", msgIn.reguti[i].id);
+        printf("\tNOME: %s\n", msgIn.reguti[i].nome);
+        printf("\tPORTAs: %s\n\n", msgIn.reguti[i].port);
+      }
+      
+  }
+
 }
 
 message_t euti (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "EUTI");
   strcpy(msgOut.reguti[0].id, argv[1]);
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 message_t mpu (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "MPU");
   strcpy(msgOut.reguti[0].id, argv[1]);
   strcpy(msgOut.reguti[0].port, argv[2]);
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 message_t lapu (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "LAPU");
   strcpy(msgOut.reguti[0].port, argv[1]);
   strcpy(msgOut.reguti[0].id, argv[2]);
   //strcpy(msgOut.reguti.nome, argv[3]);   TEMPO
   
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 message_t tserv (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "TSERV");
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 message_t cep (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "CEP");
   strcpy(msgOut.reguti[0].port, argv[1]);
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 message_t mep (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "MEP");
   strcpy(msgOut.reguti[0].nome, argv[2]);  //ESTADO
   strcpy(msgOut.reguti[0].port, argv[1]);
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 message_t rip (int argc, char** argv)
 {
   message_t msgOut;
+  message_t msgIn;
   strcpy(msgOut.header, "RIP");
   strcpy(msgOut.reguti[0].port, argv[1]);
-  return msgOut;
+  sendInfo(&msgOut);
+  recieveInfo();
+
 }
 
 void cmd_sair (int argc, char** argv)

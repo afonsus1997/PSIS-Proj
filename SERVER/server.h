@@ -45,5 +45,6 @@ extern int serverInit();
 extern int closeServer();
 extern message_t recieveMessage();
 extern int sendMessage(message_t msgOUT);
-extern message_t intgestParser(uti_t usersBuffer[UMAX], message_t msgIN);
+extern message_t intgestParser(message_t msgIN);
+extern void initStruct();
 void splashscreen();

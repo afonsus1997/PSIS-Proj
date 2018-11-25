@@ -29,6 +29,7 @@
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
 
 
+
 #endif
 
 typedef struct uti_s { /* estrutura de um registo utilizador */
@@ -45,7 +46,7 @@ typedef struct reg_s { /* estrutura de um registo historico */
 
 typedef struct message{
 	
-	char header[10]; 
+	char header[20]; 
 	uti_t reguti[UMAX];
 	reg_t regt[UMAX];
 	

@@ -34,8 +34,6 @@ int main()
   
   while(1){
     msgOut = monitor();
-    printf("OUT Header: %s\n\n", msgOut.header);
-    sendInfo(&msgOut);
   }
   
 

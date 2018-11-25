@@ -9,7 +9,7 @@ char buf[100];
 char cliname[100] = "/tmp/CLI";
 int cliid;
 
-message_t msgIN;
+//message_t msgIN;
 
 int clientInit(){
   //cliid = getpid();
@@ -48,18 +48,23 @@ int sendInfo(message_t* msg){
 	     tolen) < 0) {
     perror("CLI: Erro no sendto");
   }
-  else {
-    if (recvfrom(sd, &msgIN, sizeof(message_t), 0, (struct sockaddr *)&to, 
-		 &tolen) < 0) {
-      perror("CLI: Erro no recvfrom");
-    }
-    else {
-      
-      printf("CLI: Recebi header: %s\n", msgIN.header);
-    }
-  }   
 
 }
+
+message_t recieveInfo(){ //arg timeout???
+  message_t msgIN;
+  if (recvfrom(sd, &msgIN, sizeof(message_t), 0, (struct sockaddr *)&to, 
+    &tolen) < 0) {
+    perror("CLI: Erro no recvfrom");
+  }
+  else {
+    
+    printf("\nServer: %s\n", msgIN.header);
+    return msgIN;
+  }
+  
+}
+
 
 int closeServer(){
   system("clear");
