@@ -1,8 +1,8 @@
 CC=gcc
-CFLAGS= -Wall -g
+CFLAGS= -g
 
-OBJS= server.o sdsrv.o
-DEPS = structs.h server.h 
+OBJS= server.o sdsrv.o management.o
+DEPS = structs.h server.h management.h server.h
 
 
 all: $(OBJS)
@@ -11,9 +11,9 @@ all: $(OBJS)
 
 %.o: %.c $(DEPS)
 	$(CC) -g -c -o $@ $< $(CFLAGS)
-	
 
-sd: $(EXSD) 
+
+sd: $(EXSD)
 
 ss: $(EXSS)
 

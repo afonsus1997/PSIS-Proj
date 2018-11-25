@@ -1,9 +1,7 @@
 #include "management.h"
 
-uti_t usersBuffer[UMAX];
 
 message_t intgestParser(uti_t usersBuffer[UMAX], message_t msgIN){
-    uti_t usersBuffer[UMAX];
     uti_t user;
     message_t msgOUT;
 
@@ -106,9 +104,6 @@ message_t intgestParser(uti_t usersBuffer[UMAX], message_t msgIN){
         strcpy(msgOUT.header, "INVALIDH");
         return msgOUT;   
     }
-
-
-    
 
 }
 

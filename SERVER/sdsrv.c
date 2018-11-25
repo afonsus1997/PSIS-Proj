@@ -69,20 +69,7 @@ message_t recieveMessage(){
     perror("Erro no recvfrom");
   }
   else {
-    
-    
-    printf("SERV: Header: %s\n", msgIN.header);
-    printf("SERV: User ID: %s\n", msgIN.reguti.id);
-    printf("SERV: Nome: %s\n", msgIN.reguti.nome);
-    printf("SERV: Portas: %s\n", msgIN.reguti.port);
-    printf("\n\n\n");
-
-
-
-    
-  
     return msgIN;
-
   }
   
   
