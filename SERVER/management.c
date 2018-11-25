@@ -109,19 +109,27 @@ message_t intgestParser(message_t msgIN){
     {
         //modify access
 
-        if(msgIN.reguti[0].id == '0'){
+        if(strcmp(msgIN.reguti[0].id, "0")==0){
             int i;
-            for(i = 0; i < UMAX; i++)
+            for(i = 0; i < UMAX-1; i++)
             {   
+                if(strcmp(usersBuffer[i].id, "\000") != 0){
                 strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+                printf("Modified User:\n");
+                printf("\tID: %s\n", usersBuffer[i].id);
+                printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
+                }
             }
         }
         else{
             int i;
-            for(i = 0; i < UMAX; i++)
+            for(i = 0; i < UMAX-1; i++)
             {
-                if(usersBuffer[i].id == msgIN.reguti[0].id){
+                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) ==0){
                     strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+                    printf("Modified User:\n");
+                    printf("\tID: %s\n", usersBuffer[i].id);
+                    printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
                     break;
                 }
             }
