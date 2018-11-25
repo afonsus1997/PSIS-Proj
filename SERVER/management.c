@@ -2,14 +2,28 @@
 
 uti_t usersBuffer[UMAX];
 
-void initStruct(){
+int checkEmpty(int pos){
 
     int i;
-        for(i = 0; i < UMAX; i++)
-        {
-            memset(&usersBuffer[i].id, 0, sizeof(usersBuffer[i].id));
+    for(i = 0; i < NDIG; i++)
+    {
+        if(usersBuffer[pos].id[i] != '\0'){
+            return 0;
         }
+    }
+    return 1;
 
+}
+
+int checkEmptyMsg(char string[NDIG+1]){
+   int i;
+    for(i = 0; i < NDIG; i++)
+    {
+        if(string[i] != '\0'){
+            return 0;
+        }
+    }
+    return 1; 
 }
 
 
@@ -27,7 +41,8 @@ message_t intgestParser(message_t msgIN){
         //add new user function
         int i = 0;
         for(i ; i<UMAX-1 ; i++){
-            if(usersBuffer[i].id[1] == '\0' && usersBuffer[i].id[1] == '\0' && usersBuffer[i].id[1] == '\0')
+
+            if(checkEmpty(i))            
             break;
 
         }
@@ -43,15 +58,29 @@ message_t intgestParser(message_t msgIN){
     {
         //get user list
         int i = 0;
-        for(i = 0; i < UMAX; i++)
-        {
-            if(usersBuffer[i].id != NULL){
-                strcpy(msgOUT.reguti[i].id, usersBuffer[i].id);
-                strcpy(msgOUT.reguti[i].nome, usersBuffer[i].nome);
-                strcpy(msgOUT.reguti[i].port, usersBuffer[i].port);
+        if(strcmp(msgIN.reguti[0].id, "0")==0){
+            
+            for(i = 0; i < UMAX; i++)
+            {
+                if(usersBuffer[i].id != NULL){
+                    strcpy(msgOUT.reguti[i].id, usersBuffer[i].id);
+                    strcpy(msgOUT.reguti[i].nome, usersBuffer[i].nome);
+                    strcpy(msgOUT.reguti[i].port, usersBuffer[i].port);
+                }
             }
         }
-        strcpy(msgOUT.header, "LUTIDONE");
+        else{
+            for(i = 0; i < UMAX; i++)
+            {
+                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0){
+                    strcpy(msgOUT.reguti[0].id, usersBuffer[i].id);
+                    strcpy(msgOUT.reguti[0].nome, usersBuffer[i].nome);
+                    strcpy(msgOUT.reguti[0].port, usersBuffer[i].port);
+                }
+            }
+        }
+        
+        strcpy(msgOUT.header, "Done");
         return msgOUT;
     }
     else if(strcmp(msgIN.header, "EUTI") == 0)
@@ -59,15 +88,21 @@ message_t intgestParser(message_t msgIN){
         //delete user
 
         int i;
-        for(i = 0; i < UMAX; i++)
+        for(i = 0; i < UMAX-1; i++)
         {
-            if(usersBuffer[i].id == msgIN.reguti[0].id){
-                memset(&usersBuffer[i], 0, sizeof(uti_t));
+            if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0){
+                
+                printf("Deleted User:\n");
+                printf("\tID: %s\n", usersBuffer[i].id);
+                printf("\tNOME: %s\n", usersBuffer[i].nome);
+                printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
+                
+                memset(&usersBuffer[i], '\0', sizeof(uti_t));
                 break;
             }
         }
 
-        strcpy(msgOUT.header, "EUTIDONE");
+        strcpy(msgOUT.header, "Deleted Specified user");
         return msgOUT;
     }
     else if(strcmp(msgIN.header, "MPU") == 0)

@@ -21,6 +21,8 @@ extern int sendInfo(message_t* msg);
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
@@ -50,13 +52,19 @@ message_t luti (int argc, char** argv)
   msgIn = recieveInfo();
   printf("Users:\n");
   int i;
-  for(i=0 ; i<UMAX ; i++){
-      if(!msgIn.reguti[i].id == 0){
-        printf("\tID: %s\n", msgIn.reguti[i].id);
-        printf("\tNOME: %s\n", msgIn.reguti[i].nome);
-        printf("\tPORTAs: %s\n\n", msgIn.reguti[i].port);
-      }
-      
+  if(strcmp(msgOut.reguti[0].id, "0")!=0){
+    printf("\tID: %s\n", msgIn.reguti[0].id);
+    printf("\tNOME: %s\n", msgIn.reguti[0].nome);
+    printf("\tPORTAs: %s\n\n", msgIn.reguti[0].port);
+  }
+  else{
+    for(i=0 ; i<UMAX-1 ; i++){
+        if(strcmp(msgIn.reguti[i].id, "\000") != 0){
+          printf("\tID: %s\n", msgIn.reguti[i].id);
+          printf("\tNOME: %s\n", msgIn.reguti[i].nome);
+          printf("\tPORTAs: %s\n\n", msgIn.reguti[i].port);
+        }
+    }      
   }
 
 }

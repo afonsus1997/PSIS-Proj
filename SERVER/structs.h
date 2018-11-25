@@ -20,7 +20,7 @@
 #define SERVS "/tmp/SERV" /* nome do servidor (socket) */
 #define SERVQ "/SERV" /* nome do servidor (queue) */
 // ou #define SERVQ 0x53 /* (’S’) nome (chave) do servidor (msg) */
-#define NPOR 3 /* numero de portas a controlar (ABC...) */
+#define NPOR 4 /* numero de portas a controlar (ABC...) */
 #define CTLA "/CTLA" /* nome do controlador A (queue) */
 // ou #define CTLA 0x4341 /* (’C’’A’) nome (chave) do controlador A (msg) */
 #define CTLB "/CTLB" /* nome do controlador B (queue) */

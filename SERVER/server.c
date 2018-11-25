@@ -22,7 +22,6 @@ int main()
 
         //init intgest serv
         serverInit();
-        initStruct();
         while(1){
             msgIN = recieveMessage();
             
