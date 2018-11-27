@@ -1,7 +1,14 @@
-
-
 #ifndef STRUCTS_H
 #define STRUCTS_H
+
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <mqueue.h>
 
 #define NPROSS 3
 #define TRUE 1
@@ -28,12 +35,8 @@
 #define CTLC "/CTLC" /* nome do controlador C (queue) */
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
 
-//------------QUEUES
-
-
 
 #endif
-
 
 typedef struct uti_s { /* estrutura de um registo utilizador */
 	char id[NDIG+1]; /* identificador do utilizador */
@@ -53,11 +56,11 @@ typedef struct message{
 	uti_t reguti[UMAX];
 	reg_t regt[UMAX];
 	
+	
 }message_t;
 
 typedef struct doorcomm{
-	
-	char porta; 
-	char id[UMAX][NDIG+1];
-	
-}doorcomm_t;
+
+    char    porta;
+    char    id[UMAX][NDIG+1];   
+  } doorcomm_t;

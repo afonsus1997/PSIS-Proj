@@ -10,7 +10,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "structs.h"
-
+#include <sys/mman.h>
+#include <pthread.h>
 
 
 #define NPROSS 3
@@ -46,4 +47,5 @@ extern int closeServer();
 extern message_t recieveMessage();
 extern int sendMessage(message_t msgOUT);
 extern message_t intgestParser(message_t msgIN);
+extern int initQueue();
 void splashscreen();

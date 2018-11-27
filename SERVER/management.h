@@ -10,7 +10,11 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "structs.h"
+#include <sys/mman.h>
+
 
 message_t intgestParser(message_t msgIN);
 
 #endif
+
+doorcomm_t sendAcesses;

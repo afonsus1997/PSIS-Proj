@@ -1,8 +1,8 @@
 #include "intgest.h"
-extern message_t monitor(void);
+extern int monitor(void);
 extern int closeServer();
 
-message_t msgOut;
+
 
 
 void exitHandler(int sn){
@@ -33,7 +33,10 @@ int main()
   }
   
   while(1){
-    msgOut = monitor();
+    if(monitor() == -2){
+      printf("Unhandled Exeption\n");
+      break;
+    }
   }
   
 

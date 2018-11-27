@@ -1,10 +1,18 @@
 #include "server.h"
 
-pid_t mypid;
-pid_t pid;
 
 message_t msgIN;
 message_t msgOUT;
+int threadID;
+pthread_t  thread;
+
+void *thread_func(void * pi)
+{
+  initQueue();
+  while(1){
+      //check msg?
+  }
+}
 
 
 int main()
@@ -12,13 +20,11 @@ int main()
 
     splashscreen();
 
-    if ((pid = fork()) == 0) {
-        /*-----------FILHO-----------*/
-        mypid = getpid(); //get my pid
-    }
-    else{
-        /*-------------PAI-----------*/
-        mypid = getpid();
+
+        if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
+            printf("Error Creating Door Thread\n");
+        }
+    
 
         //init intgest serv
         serverInit();
@@ -35,7 +41,7 @@ int main()
         }
         
 
-    }    
+     
 
 
 

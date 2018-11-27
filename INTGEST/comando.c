@@ -26,10 +26,13 @@ extern int sendInfo(message_t* msg);
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
 +--------------------------------------------------------------------------*/ 
-message_t nuti (int argc, char **argv)
+int nuti (int argc, char **argv)
 {
   message_t msgOut;
   message_t msgIn;
+  if(argv[1] == NULL || argv[2] == NULL || argv[3] == NULL){
+    return -1;
+  }
   strcpy(msgOut.header, "NUTI");
   strcpy(msgOut.reguti[0].id, argv[1]);
   strcpy(msgOut.reguti[0].nome, argv[2]);
@@ -42,10 +45,15 @@ message_t nuti (int argc, char **argv)
 /*-------------------------------------------------------------------------+
 | Function: cmd_test - apenas como exemplo
 +--------------------------------------------------------------------------*/ 
-message_t luti (int argc, char** argv)
+int luti (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
+
+  if(argv[1] == NULL){
+      return -1;
+    }
+
   strcpy(msgOut.header, "LUTI");
   strcpy(msgOut.reguti[0].id, argv[1]);
   sendInfo(&msgOut);
@@ -69,10 +77,15 @@ message_t luti (int argc, char** argv)
 
 }
 
-message_t euti (int argc, char** argv)
+int euti (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
+
+  if(argv[1] == NULL){
+    return -1;
+  }
+
   strcpy(msgOut.header, "EUTI");
   strcpy(msgOut.reguti[0].id, argv[1]);
   sendInfo(&msgOut);
@@ -80,10 +93,15 @@ message_t euti (int argc, char** argv)
 
 }
 
-message_t mpu (int argc, char** argv)
+int mpu (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
+
+  if(argv[1] == NULL || argv[2] == NULL){
+    return -1;
+  }
+
   strcpy(msgOut.header, "MPU");
   strcpy(msgOut.reguti[0].id, argv[1]);
   strcpy(msgOut.reguti[0].port, argv[2]);
@@ -92,10 +110,15 @@ message_t mpu (int argc, char** argv)
 
 }
 
-message_t lapu (int argc, char** argv)
+int lapu (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
+
+  if(argv[1] == NULL || argv[2] == NULL){
+    return -1;
+  }
+
   strcpy(msgOut.header, "LAPU");
   strcpy(msgOut.reguti[0].port, argv[1]);
   strcpy(msgOut.reguti[0].id, argv[2]);
@@ -106,7 +129,7 @@ message_t lapu (int argc, char** argv)
 
 }
 
-message_t tserv (int argc, char** argv)
+int tserv (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
@@ -116,10 +139,15 @@ message_t tserv (int argc, char** argv)
 
 }
 
-message_t cep (int argc, char** argv)
+int cep (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
+
+  if(argv[1] == NULL){
+    return -1;
+  }
+
   strcpy(msgOut.header, "CEP");
   strcpy(msgOut.reguti[0].port, argv[1]);
   sendInfo(&msgOut);
@@ -127,10 +155,15 @@ message_t cep (int argc, char** argv)
 
 }
 
-message_t mep (int argc, char** argv)
+int mep (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
+
+  if(argv[1] == NULL || argv[2] == NULL){
+    return -1;
+  }
+
   strcpy(msgOut.header, "MEP");
   strcpy(msgOut.reguti[0].nome, argv[2]);  //ESTADO
   strcpy(msgOut.reguti[0].port, argv[1]);
@@ -139,7 +172,7 @@ message_t mep (int argc, char** argv)
 
 }
 
-message_t rip (int argc, char** argv)
+int rip (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;

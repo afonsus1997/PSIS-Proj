@@ -15,15 +15,15 @@
 +--------------------------------------------------------------------------*/ 
 extern void cmd_sair (int, char** );
 extern void cmd_test (int, char** );
-extern message_t nuti (int, char**);
-extern message_t luti (int, char**);
-extern message_t euti (int, char**);
-extern message_t mpu (int, char**);
-extern message_t lapu (int, char**);
-extern message_t tserv (int, char**);
-extern message_t cep (int, char**);
-extern message_t mep (int, char**);
-extern message_t rip (int, char**);
+extern int nuti (int, char**);
+extern int luti (int, char**);
+extern int euti (int, char**);
+extern int mpu (int, char**);
+extern int lapu (int, char**);
+extern int tserv (int, char**);
+extern int cep (int, char**);
+extern int mep (int, char**);
+extern int rip (int, char**);
        void cmd_sos  (int, char** );
 
 /*-------------------------------------------------------------------------+
@@ -33,7 +33,7 @@ const char TitleMsg[] = "\n \n";
 const char InvalMsg[] = "\nInvalid command!\nType sos for help\n";
 
 struct 	command_d {
-  message_t  (*cmd_fnct)(int, char**);
+  int  (*cmd_fnct)(int, char**);
   char*	cmd_name;
   char*	cmd_help;
 } const commands[] = {
@@ -51,7 +51,7 @@ struct 	command_d {
 #define NCOMMANDS  (sizeof(commands)/sizeof(struct command_d))
 #define ARGVECSIZE 5
 #define MAX_LINE   50
-
+int errcode;
 /*-------------------------------------------------------------------------+
 | Function: cmd_sos - provides a rudimentary help
 +--------------------------------------------------------------------------*/ 
@@ -90,7 +90,7 @@ int my_getline (char** argv, int argvsize)
 /*-------------------------------------------------------------------------+
 | Function: monitor        (called from main) 
 +--------------------------------------------------------------------------*/ 
-message_t monitor ()
+int monitor ()
 {
   message_t outmesg;
   static char *argv[ARGVECSIZE+1], *p;
@@ -107,12 +107,24 @@ message_t monitor ()
 	      break;
       /* Executing commands -----------------------------------------------*/
       if (i < NCOMMANDS)
-	      return commands[i].cmd_fnct (argc, argv);
+	      errcode = commands[i].cmd_fnct (argc, argv);
+        if(errcode == -1){
+          printf("\nMissing Parameters!\n");
+          errcode = 0;
+          return -1;
+        }
+        else if(errcode == -2){
+          errcode = 0;
+          return -2;
+        }
+        
+        }
       else  
-	printf("%s", InvalMsg);
+	    printf("%s", InvalMsg);
+      return 0;
     } /* if my_getline */
-  } /* forever */
+    
+} /* forever */
 
-  return outmesg;
+  //return 0;
 
-}

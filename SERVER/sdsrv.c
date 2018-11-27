@@ -29,7 +29,7 @@ message_t msgIN;
 
 int serverInit(){
 
-
+  printf("\nStarting Intgest Server...\n");
   unlink(SERVNAME);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
     perror("Erro a criar socket"); exit(-1);
