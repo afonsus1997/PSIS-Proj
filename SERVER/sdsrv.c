@@ -1,8 +1,15 @@
-/* Exemplo de utilizacao de sockets unix datagrama na comunicacao
-   entre 2 processos independentes hierarquicamente (Cliente,
-   Servidor).  Executar primeiro (em "background" ou noutra janela) o
-   programa Servidor (este programa - "sdsrv"), e depois o programa
-   Cliente ("sdcli").  -- CRA
+/*
+
+***********************************************************************************
+----------------------------------------SDSRV.c-----------------------------------
+
+    -> Has all the functions needed for the socket comm with the intgest
+
+    -> sdserv.h keeps necessary libraries and constants and function prototypes
+
+    -> 
+-----------------------------------------------------------------------------------
+***********************************************************************************
 */
 #include <stdio.h>
 #include <unistd.h>
@@ -43,6 +50,7 @@ int serverInit(){
   if (bind(sd, (struct sockaddr *)&my_addr, addrlen) < 0 ) {
     perror("Erro no bind"); exit(-1);
   }
+  printf("Done.\n\n");
 
   return 0;
 

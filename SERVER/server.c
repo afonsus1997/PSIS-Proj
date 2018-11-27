@@ -1,3 +1,18 @@
+/*
+
+***********************************************************************************
+----------------------------------------SERVER.c-----------------------------------
+
+    -> Main program .c file. In charge of stating the comms and answering messages
+
+    -> server.h keeps necesary libraries and contants and function prototypes
+
+    -> 
+-----------------------------------------------------------------------------------
+***********************************************************************************
+*/
+
+
 #include "server.h"
 
 
@@ -6,7 +21,7 @@ message_t msgOUT;
 int threadID;
 pthread_t  thread;
 
-void *thread_func(void * pi)
+void *thread_func(void * pi)  //Door answer thread
 {
   initQueue();
   while(1){
@@ -18,17 +33,23 @@ void *thread_func(void * pi)
 int main()
 {
 
-    splashscreen();
+    splashscreen(); //good stuff right here ;)
+
+    if (pthread_mutex_init(&lockUsers, NULL) != 0) //user array mutex initialization
+    {
+        printf("\n mutex init failed\n");
+        return 1;
+    }
 
 
-        if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
-            printf("Error Creating Door Thread\n");
-        }
-    
+    serverInit();
 
-        //init intgest serv
-        serverInit();
-        while(1){
+
+    if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
+        printf("Error Creating Door Thread\n");
+    }
+        
+        while(1){                                  // main server (socket) loop 
             msgIN = recieveMessage();
             
             if(strcmp(msgIN.header, "TSERV") == 0){
@@ -45,7 +66,7 @@ int main()
 
 
 
-
+    pthread_mutex_destroy(&lockUsers);
     return 0;
 }
 

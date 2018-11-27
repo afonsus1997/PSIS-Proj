@@ -12,7 +12,7 @@
 #include "structs.h"
 #include <sys/mman.h>
 #include <pthread.h>
-
+//#include "structs.h"
 
 #define NPROSS 3
 #define TRUE 1

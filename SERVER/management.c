@@ -1,3 +1,16 @@
+/*
+
+***********************************************************************************
+------------------------------------MANAGEMENT.c-----------------------------------
+
+    -> Has all the functions needed for user and message processing
+
+    -> management.h keeps necessary libraries and constants and function prototypes
+
+    -> 
+-----------------------------------------------------------------------------------
+***********************************************************************************
+
 #include "management.h"
 
 uti_t usersBuffer[UMAX];
@@ -46,10 +59,11 @@ message_t intgestParser(message_t msgIN){
             break;
 
         }
-        //mutex?
+        pthread_mutex_lock(&lockUsers);
         strcpy(usersBuffer[i].id, msgIN.reguti[0].id);
         strcpy(usersBuffer[i].nome, msgIN.reguti[0].nome);
         strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+        pthread_mutex_unlock(&lockUsers);
 
         strcpy(msgOUT.header, "User created!");
         return msgOUT;
@@ -96,8 +110,11 @@ message_t intgestParser(message_t msgIN){
                 printf("\tID: %s\n", usersBuffer[i].id);
                 printf("\tNOME: %s\n", usersBuffer[i].nome);
                 printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
-                
+                pthread_mutex_lock(&lockUsers);
                 memset(&usersBuffer[i], '\0', sizeof(uti_t));
+                pthread_mutex_unlock(&lockUsers);
+                
+
                 break;
             }
         }
@@ -114,7 +131,9 @@ message_t intgestParser(message_t msgIN){
             for(i = 0; i < UMAX-1; i++)
             {   
                 if(strcmp(usersBuffer[i].id, "\000") != 0){
+                pthread_mutex_lock(&lockUsers);
                 strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+                pthread_mutex_unlock(&lockUsers);
                 printf("Modified User:\n");
                 printf("\tID: %s\n", usersBuffer[i].id);
                 printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
@@ -126,7 +145,9 @@ message_t intgestParser(message_t msgIN){
             for(i = 0; i < UMAX-1; i++)
             {
                 if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) ==0){
+                    pthread_mutex_lock(&lockUsers);
                     strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+                    pthread_mutex_unlock(&lockUsers);
                     printf("Modified User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
                     printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
@@ -170,4 +191,31 @@ message_t intgestParser(message_t msgIN){
 }
 
 
+
+
+
+int checkAccess(char door, char doors[NPOR+1]){
+    return (door == doors[0] || door == doors[1] || door == doors[2]);
+}
+
+//----------QUEUES--------
+
+int answerDoor(){
+    doorcomm_t outQMsg;
+    doorcomm_t inQMsg = recieveQMessage();
+    int i,j=0;
+    for(i = 0;i < UMAX;i++)
+    {
+       if(checkAccess(inQMsg.porta, usersBuffer[i].port)){
+           strcpy(usersBuffer[i].id, outQMsg.id[j++]);
+           //j++;
+       } 
+    }
+    strcpy(outQMsg.porta, inQMsg.porta);
+    sendQMessage(inQMsg, outQMsg);
+
+
+  
+  
+}
 

@@ -23,3 +23,5 @@ int mqids, mqidc, i;
     char    id[10];
     char    mtext[TXTSIZE];   /* message text */
   } msg;
+
+  

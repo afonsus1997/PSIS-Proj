@@ -30,9 +30,11 @@
 
 //------------QUEUES
 
-
+#include <pthread.h>
 
 #endif
+
+pthread_mutex_t lockUsers;
 
 
 typedef struct uti_s { /* estrutura de um registo utilizador */
@@ -56,8 +58,7 @@ typedef struct message{
 }message_t;
 
 typedef struct doorcomm{
-	
-	char porta; 
-	char id[UMAX][NDIG+1];
-	
-}doorcomm_t;
+    char    cid[10];
+    char    porta;
+    char    id[UMAX][NDIG+1];   
+  } doorcomm_t;

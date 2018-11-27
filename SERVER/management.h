@@ -13,8 +13,11 @@
 #include <sys/mman.h>
 
 
+
 message_t intgestParser(message_t msgIN);
 
 #endif
 
+extern int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg);
+doorcomm_t recieveQMessage();
 doorcomm_t sendAcesses;
