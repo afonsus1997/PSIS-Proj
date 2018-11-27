@@ -1,23 +1,18 @@
 CC=gcc
-CFLAGS= -g
+CFLAGS= -Wall -g
 LDFLAGS= -lrt
 
-OBJS= ctlgeral.o qclient.o
-DEPS = structs.h
+EXMQ= qserv qclient
 
+EXALL= $(EXMQ)
 
-all: $(OBJS)
-	$(CC) -o ctlport $(OBJS) $(DEPS) $(CFLAGS) $(LDFLAGS)
+all: $(EXALL)
 
+qserv: qserv.o
+	$(CC) -o qserv qserv.o $(LDFLAGS)
 
-%.o: %.c $(DEPS)
-	$(CC) -g -c -o $@ $< $(CFLAGS) $(LDFLAGS)
-
-
-sd: $(EXSD)
-
-ss: $(EXSS)
-
+qclient: qclient.o
+	$(CC) -o qclient qclient.o $(LDFLAGS)
+	
 clean:
-	rm -f $(EXALL)
-
+	rm -f $(EXALL) *.o
