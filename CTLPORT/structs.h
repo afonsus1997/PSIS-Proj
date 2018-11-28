@@ -60,11 +60,12 @@ typedef struct message{
 }message_t;
 
 typedef struct doorcomm{
-
-    char    porta[2];
+    char    cid[10];
+    char    porta;
     char    id[UMAX][NDIG+1];   
   } doorcomm_t;
 
   char cachetest[UMAX][NDIG+1]={
       {"1234"},{"4321"},{"1111"}
 	  };
+

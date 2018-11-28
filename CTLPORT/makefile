@@ -12,7 +12,7 @@ qserv: qserv.o
 	$(CC) -o qserv qserv.o $(LDFLAGS)
 
 qclient: qclient.o
-	$(CC) -o qclient qclient.o $(LDFLAGS)
+	$(CC) -o qclient qclient.o structs.h $(LDFLAGS)
 	
 clean:
 	rm -f $(EXALL) *.o
