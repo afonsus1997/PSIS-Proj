@@ -23,9 +23,12 @@ pthread_t  thread;
 
 void *thread_func(void * pi)  //Door answer thread
 {
+  doorcomm_t msgIN;
   initQueue();
   while(1){
-      //check msg?
+      //printf("\n");
+      msgIN=recieveQMessage();
+      printf("Recieved query ID: %s\n", msgIN.id[0]);
   }
 }
 

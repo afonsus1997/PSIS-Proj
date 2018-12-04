@@ -48,4 +48,5 @@ extern message_t recieveMessage();
 extern int sendMessage(message_t msgOUT);
 extern message_t intgestParser(message_t msgIN);
 extern int initQueue();
+extern doorcomm_t recieveQMessage();
 void splashscreen();

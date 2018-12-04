@@ -36,6 +36,8 @@ int main()
     ma.mq_maxmsg = 2;
     ma.mq_msgsize = sizeof(doorcomm_t);
     printf("%d\n", sizeof(doorcomm_t));
+    printf("%d\n", sizeof(askDoor));
+
     
     snprintf(cliname, sizeof(cliname), "/CL-%05d", getpid());
     mq_unlink(cliname);
@@ -55,7 +57,7 @@ int main()
 
 
     printf("Introduza o identificador:"); // Pede o identificador ao utilizador
-    fgets(message, NDIG+1, stdin);
+    fgets(askDoor.id, NDIG+1, stdin);
 
 
     //askDoor.porta = 'A';

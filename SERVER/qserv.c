@@ -22,7 +22,7 @@ int initQueue(){
   
   ma.mq_flags = 0;
   ma.mq_maxmsg = 2;
-  ma.mq_msgsize = sizeof(msg);
+  ma.mq_msgsize = sizeof(doorcomm_t);
   printf("\nStarting Queue...\n");
   if ((mqids=mq_open(SERVNAME, O_RDWR|O_CREAT, 0666, &ma)) < 0) {
     perror("Servidor: Erro a criar queue servidor");
