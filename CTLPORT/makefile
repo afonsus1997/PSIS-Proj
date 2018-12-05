@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS= -Wall -g
-LDFLAGS= -lrt
+CFLAGS= -Wall -g -pthread
+LDFLAGS= -lrt -lpthread
 
 EXMQ= qserv qclient
 

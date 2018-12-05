@@ -21,10 +21,7 @@ int main()
   ma.mq_msgsize = sizeof(message);
   
 
-  for (i=0;i<3;i++){
-    strcpy(cache.id[i], cachetest[i]);
-  }
-
+  
   if ((mqids=mq_open(SERVQ, O_RDWR|O_CREAT, 0666, &ma)) < 0) {
     perror("Servidor: Erro a criar queue servidor");
     exit(-1);

@@ -19,7 +19,8 @@
 message_t msgIN;
 message_t msgOUT;
 int threadID;
-pthread_t  thread;
+pthread_t thread;
+
 
 void *thread_func(void * pi)  //Door answer thread
 {
@@ -27,8 +28,8 @@ void *thread_func(void * pi)  //Door answer thread
   initQueue();
   while(1){
       //printf("\n");
-      msgIN=recieveQMessage();
-      printf("Recieved query ID: %s\n", msgIN.id[0]);
+      answerDoor();
+      
   }
 }
 
@@ -37,7 +38,7 @@ int main()
 {
 
     splashscreen(); //good stuff right here ;)
-
+    
     if (pthread_mutex_init(&lockUsers, NULL) != 0) //user array mutex initialization
     {
         printf("\n mutex init failed\n");

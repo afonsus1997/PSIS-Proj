@@ -9,6 +9,8 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <mqueue.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 #define NPROSS 3
 #define TRUE 1
@@ -65,7 +67,7 @@ typedef struct doorcomm{
     char    id[UMAX][NDIG+1];   
   } doorcomm_t;
 
-  char cachetest[UMAX][NDIG+1]={
+  char usersCache[UMAX][NDIG+1]={
       {"1234"},{"4321"},{"1111"}
 	  };
 

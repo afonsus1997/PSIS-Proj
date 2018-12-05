@@ -203,15 +203,16 @@ int checkAccess(char door, char doors[NPOR+1]){
 int answerDoor(){
     doorcomm_t outQMsg;
     doorcomm_t inQMsg = recieveQMessage();
+    printf("Recieved query ID from door : %c\n", inQMsg.porta);
     int i,j=0;
     for(i = 0;i < UMAX;i++)
     {
        if(checkAccess(inQMsg.porta, usersBuffer[i].port)){
-           strcpy(usersBuffer[i].id, outQMsg.id[j++]);
+           strcpy(outQMsg.id[j++], usersBuffer[i].id);
            //j++;
        } 
     }
-    strcpy(outQMsg.porta, inQMsg.porta);
+    outQMsg.porta = inQMsg.porta;
     sendQMessage(inQMsg, outQMsg);
 
 
