@@ -1,6 +1,7 @@
 #include "structs.h"
 
 char cliname[10];
+char readBuf[NDIG+5];
 struct mq_attr ma;
 char message[NDIG+1];
 char servmsg[30];
@@ -47,40 +48,34 @@ int checkCache(char id[NDIG+1]){
     int i;        
     for(i=0 ; i < UMAX ; i++){
         if(strcmp(usersCache[i], id) == 0)
-        printf("\nAccess Granted!\n");
+        printf("\nAccess Granted!");
         return 1;
     }
-    printf("\nAccess Denied!\n");
+    printf("\nAccess Denied!");
     return 0;        
 }
 
 void *thread_func(void * pi)  //Door answer thread
 {
     doorcomm_t doorAnswer;
-    sem_wait(&semThread);
-    askDoor.porta = clientDoor;
-    strcpy(askDoor.cid, cliname);
-    
-    if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
-    else{
-        //receber msg
-        doorAnswer = receiveQMessage();
-        //update cache
-        updateCache(doorAnswer);
-        //verifica na cache
-        checkCache(askDoor.id);
+    while(1){
+        //printf("thread waiting\n");
+        sem_wait(&semThread);
+        //printf("thread going\n");
+        askDoor.porta = clientDoor;
+        strcpy(askDoor.cid, cliname);
         
-
+        if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
+        else{
+            //receber msg
+            doorAnswer = receiveQMessage();
+            //update cache
+            updateCache(doorAnswer);
+            //verifica na cache
+            checkCache(&askDoor.id[0][0]);
+        }
+        sem_post(&semMain);
     }
-
-    
-
-    
-    
-
-
-    sem_post(&semMain);
-  
 }
 
 int clientQinit(){
@@ -97,8 +92,6 @@ int clientQinit(){
     }
     return 1;
 }
-
-
 
 int clientQClose(){
     if (mq_unlink(cliname) < 0) {
@@ -131,24 +124,26 @@ int main(int argc, char *argv[])
     splashscreen();
     clientDoor = argv[1][0];
     printf("Porta %c\n", clientDoor);
-    if (sem_init(&semThread, 0, 0) != 0) {printf("Erro a inicializar semaforo da thread\n"); return -1;}
-    if (sem_init(&semMain, 0, 0) != 0) {printf("Erro a inicializar semaforo principal\n"); return -1;}
+    //if (sem_init(&semThread, 0, 0) != 0) {printf("Erro a inicializar semaforo da thread\n"); return -1;}
+    //if (sem_init(&semMain, 0, 0) != 0) {printf("Erro a inicializar semaforo principal\n"); return -1;}
+
+    sem_init(&semThread, 0, 0);
+    sem_init(&semMain, 0, 0);
 
     ma.mq_flags = 0;
     ma.mq_maxmsg = 2;
     ma.mq_msgsize = sizeof(doorcomm_t);
-
 
     if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
         printf("Error Creating Door Thread\n");
     }
 
     if(clientQinit() < 0){printf("Erro ao inicializar Queueeue\n");}
-    
 
     while(1){
         printf("Introduza o identificador: "); // Pede o identificador ao utilizador
-        fgets(askDoor.id, NDIG+1, stdin);
+        fgets(readBuf, sizeof(readBuf), stdin);
+        strcpy(askDoor.id[0], readBuf);
         sem_post(&semThread);
         sem_wait(&semMain);
     }
