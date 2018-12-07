@@ -2,17 +2,14 @@ CC=gcc
 CFLAGS= -Wall -g -pthread
 LDFLAGS= -lrt -lpthread
 
-EXMQ= qserv qclient
+EXMQ= ctldoor
 
 EXALL= $(EXMQ)
 
 all: $(EXALL)
 
-qserv: qserv.o
-	$(CC) -o qserv qserv.o $(LDFLAGS)
-
-qclient: qclient.o
-	$(CC) -o ctldoor qclient.o structs.h $(LDFLAGS)
+ctldoor: ctldoor.o
+	$(CC) -o ctldoor ctldoor.o structs.h $(LDFLAGS)
 	
 clean:
 	rm -f $(EXALL) *.o

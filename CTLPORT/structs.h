@@ -67,7 +67,5 @@ typedef struct doorcomm{
     char    id[UMAX][NDIG+1];   
   } doorcomm_t;
 
-  char usersCache[UMAX][NDIG+1]={
-      {"1234"},{"4321"},{"1111"}
-	  };
+  char usersCache[UMAX][NDIG+1];
 

@@ -7,16 +7,55 @@ char servmsg[30];
 int mqids, mqidc;
 int cliid;
 doorcomm_t msgIN;
+doorcomm_t askDoor;
+
 char clientDoor;
 pthread_t thread;
 int threadID;
 sem_t semThread;
 sem_t semMain;
 
+int sendQMessage(doorcomm_t inMsg){
+    if (mq_send(mqids, &inMsg, sizeof(doorcomm_t), 0) < 0) { //Envia a mensagem para o servidor
+        perror("Controlador: erro a enviar mensagem");
+        return -1;
+    }
+    return 0;
+}
+
+doorcomm_t receiveQMessage(){
+    doorcomm_t outMsg;
+    if (mq_receive(mqidc, &outMsg, sizeof(doorcomm_t), NULL) < 0) { // recebe os ids de todos os utilizadores
+        perror("Controlador: erro a receber mensagem");
+    }
+    return outMsg;
+    //timeout
+}
+
+int updateCache(doorcomm_t answer){
+    int i;
+    for(i = 0;i < UMAX; i++)
+    {  
+       if(strcmp(answer.id[i], "\000")==0)
+           memset(&usersCache[i], '\0', NDIG+1);
+       else
+        strcpy(usersCache[i], answer.id[i]); 
+    }
+}
+
+int checkCache(char id[NDIG+1]){
+    int i;        
+    for(i=0 ; i < UMAX ; i++){
+        if(strcmp(usersCache[i], id) == 0)
+        printf("\nAccess Granted!\n");
+        return 1;
+    }
+    printf("\nAccess Denied!\n");
+    return 0;        
+}
 
 void *thread_func(void * pi)  //Door answer thread
 {
-    doorcomm_t askDoor;
     doorcomm_t doorAnswer;
     sem_wait(&semThread);
     askDoor.porta = clientDoor;
@@ -27,19 +66,16 @@ void *thread_func(void * pi)  //Door answer thread
         //receber msg
         doorAnswer = receiveQMessage();
         //update cache
+        updateCache(doorAnswer);
         //verifica na cache
+        checkCache(askDoor.id);
+        
+
     }
 
     
 
-    if (validacao(msgIN, message)){        // Faz a validacao
-        //strcpy(servmsg,"Identificador valido");
-        printf("Identificador valido\n");
-    }
-    else{
-        //strcpy(servmsg,"identificador nao valido");
-        printf("Identificador nao valido\n");
-    }
+    
     
 
 
@@ -62,22 +98,6 @@ int clientQinit(){
     return 1;
 }
 
-int sendQMessage(doorcomm_t inMsg){
-    if (mq_send(mqids, &inMsg, sizeof(doorcomm_t), 0) < 0) { //Envia a mensagem para o servidor
-        perror("Controlador: erro a enviar mensagem");
-        return -1;
-    }
-    return 0;
-}
-
-doorcomm_t receiveQMessage(){
-    doorcomm_t outMsg;
-    if (mq_receive(mqidc, &outMsg, sizeof(doorcomm_t), NULL) < 0) { // recebe os ids de todos os utilizadores
-        perror("Controlador: erro a receber mensagem");
-    }
-    return outMsg;
-    //timeout
-}
 
 
 int clientQClose(){
@@ -108,7 +128,7 @@ int validacao(doorcomm_t msgIN, char msgId[NDIG+1]){
 
 int main(int argc, char *argv[])
 {
-    
+    splashscreen();
     clientDoor = argv[1][0];
     printf("Porta %c\n", clientDoor);
     if (sem_init(&semThread, 0, 0) != 0) {printf("Erro a inicializar semaforo da thread\n"); return -1;}
@@ -127,19 +147,31 @@ int main(int argc, char *argv[])
     
 
     while(1){
-        printf("Introduza o identificador:\n"); // Pede o identificador ao utilizador
+        printf("Introduza o identificador: "); // Pede o identificador ao utilizador
         fgets(askDoor.id, NDIG+1, stdin);
         sem_post(&semThread);
         sem_wait(&semMain);
     }
-
-    
-
-
-    
     
     if(clientQClose() < 0){printf("Erro ao fechar Queueeue\n");}
-    
 
   return 0;
+}
+
+void splashscreen(){
+
+system("clear");
+printf("\n\n");
+printf("-------------------------------------------------------\n");
+printf("|       ______________    ____  ____  ____  ____      |\n");
+printf("|      / ____/_  __/ /   / __ \\/ __ \\/ __ \\/ __ \\     |\n");
+printf("|     / /     / / / /   / / / / / / / / / / /_/ /     |\n");
+printf("|    / /___  / / / /___/ /_/ / /_/ / /_/ / _, _/      |\n");
+printf("|    \\____/ /_/ /_____/_____/\\____/\\____/_/ |_|       |\n");
+printf("|      Programacao de Sistemas Computacionais         |  \n");
+printf("|  Afonso Muralha | Miguel Dias | Tomas Bettencourt   |  \n");
+printf("|                                                     |  \n");
+printf("-------------------------------------------------------");
+
+printf("\n\n");
 }
