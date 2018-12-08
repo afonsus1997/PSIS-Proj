@@ -5,7 +5,7 @@ sem_t semThread;
 sem_t semMain;
 doorcomm_t msgIN;
 doorcomm_t askDoor;
-
+doorcomm_t doorAnswer;
 char clientDoor;
 
 extern doorcomm_t receiveQMessage();
@@ -16,24 +16,13 @@ extern int clientQClose();
 
 void *thread_func(void * pi)  //Door answer thread
 {
-    doorcomm_t doorAnswer;
+    
     while(1){
         //printf("thread waiting\n");
-        sem_wait(&semThread);
+        //sem_wait(&semThread);
         //printf("thread going\n");
-        askDoor.porta = clientDoor;
-        strcpy(askDoor.cid, cliname);
         
-        if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
-        else{
-            //receber msg
-            doorAnswer = receiveQMessage();
-            //update cache
-            updateCache(doorAnswer);
-            //verifica na cache
-            checkCache(&askDoor.id[0][0]);
-        }
-        sem_post(&semMain);
+        //sem_post(&semMain);
     }
 }
 
@@ -53,9 +42,9 @@ int main(int argc, char *argv[])
     ma.mq_maxmsg = 2;
     ma.mq_msgsize = sizeof(doorcomm_t);
 
-    if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
-        printf("Error Creating Door Thread\n");
-    }
+   // if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
+   //     printf("Error Creating Door Thread\n");
+   // }
 
     if(clientQinit() < 0){printf("Erro ao inicializar Queueeue\n");}
 
@@ -63,8 +52,23 @@ int main(int argc, char *argv[])
         printf("Introduza o identificador: "); // Pede o identificador ao utilizador
         fgets(readBuf, sizeof(readBuf), stdin);
         strcpy(askDoor.id[0], readBuf);
-        sem_post(&semThread);
-        sem_wait(&semMain);
+
+        askDoor.porta = clientDoor;
+        strcpy(askDoor.cid, cliname);
+        
+        if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
+        else{
+            //receber msg
+            doorAnswer = receiveQMessage();
+            //update cache
+            updateCache(doorAnswer);
+            //verifica na cache
+            checkCache(askDoor.id[0]);
+        }
+
+
+        //sem_post(&semThread);
+        //sem_wait(&semMain);
     }
     
     if(clientQClose() < 0){printf("Erro ao fechar Queueeue\n");}

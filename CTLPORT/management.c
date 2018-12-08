@@ -13,13 +13,16 @@ int updateCache(doorcomm_t answer){
 }
 
 int checkCache(char id[NDIG+1]){
+    id[NDIG] = '\0';
     int i;        
     for(i=0 ; i < UMAX ; i++){
-        if(strcmp(usersCache[i], id) == 0)
-        printf("\nAccess Granted!");
-        return 1;
+        if(strcmp(usersCache[i], id) == 0){
+            printf("\nAccess Granted!\n\n");
+            return 1;
+        }
+        
     }
-    printf("\nAccess Denied!");
+    printf("\nAccess Denied!\n\n");
     return 0;        
 }
 

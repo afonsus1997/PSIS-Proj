@@ -76,13 +76,13 @@ message_t intgestParser(message_t msgIN){
 
         for(j=0 ; j<NPOR ; j++){
             if(msgIN.reguti[0].port[j] == 'A'){
-                usersBuffer[i].port[j] = '1';    
+                usersBuffer[i].port[0] = '1';    
             }
             else if(msgIN.reguti[0].port[j] == 'B'){
-                usersBuffer[i].port[j] = '1';    
+                usersBuffer[i].port[1] = '1';    
             }
             else if(msgIN.reguti[0].port[j] == 'C'){
-                usersBuffer[i].port[j] = '1';    
+                usersBuffer[i].port[2] = '1';    
             }
         }
         pthread_mutex_unlock(&lockUsers);
@@ -223,7 +223,13 @@ message_t intgestParser(message_t msgIN){
 
 
 int checkAccess(char door, char doors[NPOR+1]){
-    return (door == doors[0] || door == doors[1] || door == doors[2]);
+    if(door == 'A')
+    return doors[0] == '1';
+    else if(door == 'B')
+    return doors[1] == '1';
+    else if(door == 'C')
+    return doors[2] == '1';
+    else return 0;
 }
 
 //----------QUEUES--------
