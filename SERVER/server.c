@@ -39,6 +39,8 @@ int main()
 
     splashscreen(); //good stuff right here ;)
     
+    initFileSystem();
+
     if (pthread_mutex_init(&lockUsers, NULL) != 0) //user array mutex initialization
     {
         printf("\n mutex init failed\n");

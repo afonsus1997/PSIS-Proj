@@ -33,6 +33,8 @@ struct sockaddr_un from;
 socklen_t fromlen;
 char buf[100];
 message_t msgIN;
+extern int closeFileSystem();
+extern int closeQServer();
 
 int serverInit(){
 
@@ -58,7 +60,9 @@ int serverInit(){
 
 int closeServer(){
   system("clear");
+  closeFileSystem();
   printf("\n\nStopping server...\n");
+  closeQServer();
   close(sd);
   unlink(SERVNAME);
   printf("\nDone!\n");

@@ -60,7 +60,6 @@ int closeQServer(){
     mq_unlink(SERVNAME);
     //perror("Servidor: Erro a eliminar queue servidor");
   
-
 }
 
 

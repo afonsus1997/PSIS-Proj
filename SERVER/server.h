@@ -51,3 +51,4 @@ extern int initQueue();
 extern doorcomm_t recieveQMessage();
 void splashscreen();
 extern int answerDoor();
+extern int initFileSystem();
