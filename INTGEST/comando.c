@@ -21,7 +21,16 @@ extern int sendInfo(message_t* msg);
 #include <stdio.h>
 #include <stdlib.h>
 
-
+void printPorts(char ports[NPOR+1]){
+    int i;
+    for(i=0 ; i<NPOR ; i++){
+        if(ports[i] == '1'){
+            if(i==0) printf(" %c", 'A');
+            if(i==1) printf(" %c", 'B');
+            if(i==2) printf(" %c", 'C');
+        }
+    }
+}
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
@@ -63,14 +72,14 @@ int luti (int argc, char** argv)
   if(strcmp(msgOut.reguti[0].id, "0")!=0){
     printf("\tID: %s\n", msgIn.reguti[0].id);
     printf("\tNOME: %s\n", msgIn.reguti[0].nome);
-    printf("\tPORTAs: %s\n\n", msgIn.reguti[0].port);
+    printf("\tPORTAs:"); printPorts(msgIn.reguti[0].port); printf("\n\n");
   }
   else{
     for(i=0 ; i<UMAX-1 ; i++){
         if(strcmp(msgIn.reguti[i].id, "\000") != 0){
           printf("\tID: %s\n", msgIn.reguti[i].id);
           printf("\tNOME: %s\n", msgIn.reguti[i].nome);
-          printf("\tPORTAs: %s\n\n", msgIn.reguti[i].port);
+          printf("\tPORTAs:"); printPorts(msgIn.reguti[i].port); printf("\n\n");
         }
     }      
   }

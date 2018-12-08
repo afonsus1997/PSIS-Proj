@@ -39,6 +39,16 @@ int checkEmptyMsg(char string[NDIG+1]){
     return 1; 
 }
 
+void printPorts(char ports[NPOR+1]){
+    int i;
+    for(i=0 ; i<NPOR ; i++){
+        if(ports[i] == '1'){
+            if(i==0) printf(" %c", 'A');
+            if(i==1) printf(" %c", 'B');
+            if(i==2) printf(" %c", 'C');
+        }
+    }
+}
 
 message_t intgestParser(message_t msgIN){
     uti_t user;
@@ -46,11 +56,7 @@ message_t intgestParser(message_t msgIN){
 
     if(strcmp(msgIN.header, "NUTI") == 0){
         
-        printf("New User:\n");
-        printf("\tID: %s\n", msgIN.reguti[0].id);
-        printf("\tNOME: %s\n", msgIN.reguti[0].nome);
-        printf("\tPORTAs: %s\n\n", msgIN.reguti[0].port);
-
+        
         //add new user function
         int i = 0;
         for(i ; i<UMAX-1 ; i++){
@@ -62,8 +68,30 @@ message_t intgestParser(message_t msgIN){
         pthread_mutex_lock(&lockUsers);
         strcpy(usersBuffer[i].id, msgIN.reguti[0].id);
         strcpy(usersBuffer[i].nome, msgIN.reguti[0].nome);
-        strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+        int j;
+
+        usersBuffer[i].port[0] = '0';    //
+        usersBuffer[i].port[1] = '0';    //  DO THIS IN A BETTER WAY PLEEEASE
+        usersBuffer[i].port[2] = '0';    //
+
+        for(j=0 ; j<NPOR ; j++){
+            if(msgIN.reguti[0].port[j] == 'A'){
+                usersBuffer[i].port[j] = '1';    
+            }
+            else if(msgIN.reguti[0].port[j] == 'B'){
+                usersBuffer[i].port[j] = '1';    
+            }
+            else if(msgIN.reguti[0].port[j] == 'C'){
+                usersBuffer[i].port[j] = '1';    
+            }
+        }
         pthread_mutex_unlock(&lockUsers);
+
+        printf("New User:\n");
+        printf("\tID: %s\n", msgIN.reguti[0].id);
+        printf("\tNOME: %s\n", msgIN.reguti[0].nome);
+        printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
+
 
         strcpy(msgOUT.header, "User created!");
         return msgOUT;
@@ -109,7 +137,7 @@ message_t intgestParser(message_t msgIN){
                 printf("Deleted User:\n");
                 printf("\tID: %s\n", usersBuffer[i].id);
                 printf("\tNOME: %s\n", usersBuffer[i].nome);
-                printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
+                printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
                 pthread_mutex_lock(&lockUsers);
                 memset(&usersBuffer[i], '\0', sizeof(uti_t));
                 pthread_mutex_unlock(&lockUsers);
@@ -136,7 +164,7 @@ message_t intgestParser(message_t msgIN){
                 pthread_mutex_unlock(&lockUsers);
                 printf("Modified User:\n");
                 printf("\tID: %s\n", usersBuffer[i].id);
-                printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
+                printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
                 }
             }
         }
@@ -150,7 +178,7 @@ message_t intgestParser(message_t msgIN){
                     pthread_mutex_unlock(&lockUsers);
                     printf("Modified User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
-                    printf("\tPORTAs: %s\n\n", usersBuffer[i].port);
+                    printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
                     break;
                 }
             }

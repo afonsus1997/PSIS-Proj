@@ -12,6 +12,10 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#define NORMAL 0
+#define ABERTO 1
+#define FECHADO 2
+
 #define NPROSS 3
 #define TRUE 1
 #define SERVNAME "/tmp/SERV1"
@@ -69,3 +73,15 @@ typedef struct doorcomm{
 
   char usersCache[UMAX][NDIG+1];
 
+
+char cliname[10];
+char readBuf[NDIG+5];
+struct mq_attr ma;
+char message[NDIG+1];
+char servmsg[30];
+int mqids, mqidc;
+int cliid;
+doorcomm_t msgIN;
+doorcomm_t askDoor;
+
+char clientDoor;

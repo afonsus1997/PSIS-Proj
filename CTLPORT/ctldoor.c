@@ -1,59 +1,18 @@
 #include "structs.h"
-
-char cliname[10];
-char readBuf[NDIG+5];
-struct mq_attr ma;
-char message[NDIG+1];
-char servmsg[30];
-int mqids, mqidc;
-int cliid;
-doorcomm_t msgIN;
-doorcomm_t askDoor;
-
-char clientDoor;
 pthread_t thread;
 int threadID;
 sem_t semThread;
 sem_t semMain;
+doorcomm_t msgIN;
+doorcomm_t askDoor;
 
-int sendQMessage(doorcomm_t inMsg){
-    if (mq_send(mqids, &inMsg, sizeof(doorcomm_t), 0) < 0) { //Envia a mensagem para o servidor
-        perror("Controlador: erro a enviar mensagem");
-        return -1;
-    }
-    return 0;
-}
+char clientDoor;
 
-doorcomm_t receiveQMessage(){
-    doorcomm_t outMsg;
-    if (mq_receive(mqidc, &outMsg, sizeof(doorcomm_t), NULL) < 0) { // recebe os ids de todos os utilizadores
-        perror("Controlador: erro a receber mensagem");
-    }
-    return outMsg;
-    //timeout
-}
+extern doorcomm_t receiveQMessage();
+extern sendQMessage(doorcomm_t inMsg);
+extern int clientQinit();
+extern int clientQClose();
 
-int updateCache(doorcomm_t answer){
-    int i;
-    for(i = 0;i < UMAX; i++)
-    {  
-       if(strcmp(answer.id[i], "\000")==0)
-           memset(&usersCache[i], '\0', NDIG+1);
-       else
-        strcpy(usersCache[i], answer.id[i]); 
-    }
-}
-
-int checkCache(char id[NDIG+1]){
-    int i;        
-    for(i=0 ; i < UMAX ; i++){
-        if(strcmp(usersCache[i], id) == 0)
-        printf("\nAccess Granted!");
-        return 1;
-    }
-    printf("\nAccess Denied!");
-    return 0;        
-}
 
 void *thread_func(void * pi)  //Door answer thread
 {
@@ -78,46 +37,6 @@ void *thread_func(void * pi)  //Door answer thread
     }
 }
 
-int clientQinit(){
-    snprintf(cliname, sizeof(cliname), "/CL-%05d", getpid());
-    mq_unlink(cliname);
-    if ((mqidc=mq_open(&cliname, O_RDWR|O_CREAT, 0666, &ma)) < 0) {
-        perror("Cliente: Erro a criar queue cliente");
-        exit(-1);
-    }
-
-    if ((mqids=mq_open(SERVQ, O_RDWR), 0666, &ma) < 0) {
-        perror("Cliente: Erro a associar a queue servidor");
-        exit(-1);
-    }
-    return 1;
-}
-
-int clientQClose(){
-    if (mq_unlink(cliname) < 0) {
-    perror("Controlador: Erro a eliminar queue controlador");
-    return -1;
-    }
-    return 0;
-}
-
-int validacao(doorcomm_t msgIN, char msgId[NDIG+1]){
-    int i,j,contador=0;
-
-    for(i=0;i<UMAX;i++){
-        for (j=0;j<NDIG+1;j++){
-            if(msgId[j]==msgIN.id[i][j]){
-                contador ++;     //verifica se todos os 4 digitos do identificador sao iguais
-            }
-        }
-    }
-    if (contador ==4){
-        return 1;
-    }
-    else{
-        return 0;
-    }
-}
 
 int main(int argc, char *argv[])
 {
