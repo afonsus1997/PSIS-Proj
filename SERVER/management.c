@@ -15,6 +15,27 @@
 
 uti_t usersBuffer[UMAX];
 
+int initFileSystem(){
+    int i, mfdFUTI; 
+    if ((mfdFUTI=open(FUTI, O_RDWR | O_CREAT, 0666 )) < 0) { /* abrir / criar ficheiro */
+        perror("Erro a criar ficheiro"); exit(-1);
+    }  
+    else {
+        if (ftruncate(mfdFUTI, sizeof(usersBuffer[UMAX])) < 0) { /* definir tamanho do ficheiro*/
+            perror("Erro no ftruncate"); exit(-1);
+                }
+        }
+ /* mapear ficheiro */
+    if ((pa=mmap(NULL, sizeof(usersBuffer[UMAX]), PROT_READ|PROT_WRITE, MAP_SHARED, mfdFUTI, 0)) < (char *)0) {
+        perror("Erro em mmap"); exit(-1);
+    }
+ /* aceder ao ficheiro através da memória */
+    for (i=0; i<sizeof(usersBuffer[UMAX]); i++) pa[i]='A';
+    munmap(pa, sizeof(usersBuffer[UMAX])); close(mfdFUTI);
+    return 0;
+}
+
+
 int checkEmpty(int pos){
 
     int i;

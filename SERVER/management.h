@@ -11,8 +11,7 @@
 #include <errno.h>
 #include "structs.h"
 #include <sys/mman.h>
-
-
+#include <fcntl.h>
 
 message_t intgestParser(message_t msgIN);
 

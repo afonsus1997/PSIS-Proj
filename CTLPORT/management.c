@@ -1,6 +1,8 @@
 
 #include "structs.h"
 
+int doorMode=0;
+
 int updateCache(doorcomm_t answer){
     int i;
     for(i = 0;i < UMAX; i++)
