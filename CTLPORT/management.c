@@ -3,6 +3,32 @@
 
 int doorMode=0;
 
+int processMessage(doorcomm_t answer){
+    if(strcmp(answer.header, "QUERY") == 0){
+        //update cache
+        updateCache(answer);
+        //verifica na cache
+        checkCache(askDoor.id[0]);
+        sem_post(&semMain);
+    }
+    else if(strcmp(answer.header, "CEP") == 0){
+
+    }
+    else if(strcmp(answer.header, "MEP") == 0){
+
+    }
+    else if(strcmp(answer.header, "RIP") == 0){
+        clearCache();
+    }
+}
+
+int clearCache(){
+    int i;
+    for(i = 0; i < UMAX-1; i++){
+        memset(usersCache[i], '\0', sizeof(char)*(NDIG+1));
+    }
+}
+
 int updateCache(doorcomm_t answer){
     int i;
     for(i = 0;i < UMAX; i++)
@@ -16,15 +42,21 @@ int updateCache(doorcomm_t answer){
 
 int checkCache(char id[NDIG+1]){
     id[NDIG] = '\0';
-    int i;        
+    int i;
+    if(strcmp(id, IDX) == 0){
+        printf("\n%sSuperUser detected, Access Granted!%s\n\n", KGRN, KWHT);
+        return 1;
+
+    }
+        
     for(i=0 ; i < UMAX ; i++){
         if(strcmp(usersCache[i], id) == 0){
-            printf("\nAccess Granted!\n\n");
+            printf("\n%sAccess Granted!%s\n\n", KGRN, KWHT);
             return 1;
         }
         
     }
-    printf("\nAccess Denied!\n\n");
+    printf("\n%sAccess Denied!%s\n\n", KRED, KWHT);
     return 0;        
 }
 

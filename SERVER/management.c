@@ -280,6 +280,7 @@ int answerDoor(){
        } 
     }
     outQMsg.porta = inQMsg.porta;
+    strcpy(outQMsg.header, "QUERY");
     sendQMessage(inQMsg, outQMsg);
 
 

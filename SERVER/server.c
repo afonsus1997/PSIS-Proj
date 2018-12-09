@@ -50,7 +50,6 @@ int main()
 
     serverInit();
 
-
     if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
         printf("Error Creating Door Thread\n");
     }
@@ -82,19 +81,19 @@ int main()
 void splashscreen(){
 
 system("clear");
-printf("\n\n");
-printf("-------------------------------------------------------\n");
-printf("|         _____ __________ _    ____________          |  \n");
-printf("|        / ___// ____/ __ \\ |  / / ____/ __ \\         | \n");
-printf("|        \\__ \\/ __/ / /_/ / | / / __/ / /_/ /         |  \n");
-printf("|       ___/ / /___/ _, _/| |/ / /___/ _, _/          |  \n");
-printf("|      /____/_____/_/ |_| |___/_____/_/ |_|           |  \n");
-printf("|      Programacao de Sistemas Computacionais         |  \n");
-printf("|  Afonso Muralha | Miguel Dias | Tomas Bettencourt   |  \n");
-printf("|                                                     |  \n");
-printf("-------------------------------------------------------");
+printf("\n\n%s", KYEL);
+printf("------------------------------------------------------\n");
+printf("|          %s_____ __________ _    ____________ %s       |  \n", KWHT, KYEL);
+printf("|         %s/ ___// ____/ __ \\ |  / / ____/ __ \\%s       | \n", KWHT, KYEL);
+printf("|         %s\\__ \\/ __/ / /_/ / | / / __/ / /_/ /%s       |  \n", KWHT, KYEL);
+printf("|        %s___/ / /___/ _, _/| |/ / /___/ _, _/%s        |  \n", KWHT, KYEL);
+printf("|       %s/____/_____/_/ |_| |___/_____/_/ |_|%s         |  \n", KWHT, KYEL);
+printf("|      %sProgramacao de Sistemas Computacionais %s       |  \n", KWHT, KYEL);
+printf("|  %sAfonso Muralha | Miguel Dias | Tomas Bettencourt%s  |  \n", KWHT, KYEL);
+printf("|                                                    |  \n");
+printf("------------------------------------------------------");
 
-printf("\n\n");
+printf("%s\n\n", KWHT);
 }
 
    

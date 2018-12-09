@@ -46,17 +46,17 @@ int main()
 void splashscreen(){
 
 system("clear");
-printf("\n\n");
+printf("%s\n\n", KBLU);
 printf("-------------------------------------------------------\n");
-printf("|         _____   _______________________________     |  \n");
-printf("|        /  _/ | / /_  __/ ____/ ____/ ___/_  __/     | \n");
-printf("|        / //  |/ / / / / / __/ __/  \\__ \\ / /        |  \n");
-printf("|      _/ // /|  / / / / /_/ / /___ ___/ // /         |  \n");
-printf("|     /___/_/ |_/ /_/  \\____/_____//____//_/          |  \n");
-printf("|     Programacao de Sistemas Computacionais          |  \n");
-printf("|  Afonso Muralha | Miguel Dias | Tomas Bettencourt   |  \n");
+printf("|        %s _____   _______________________________ %s    |  \n", KWHT, KBLU);
+printf("|       %s /  _/ | / /_  __/ ____/ ____/ ___/_  __/ %s    | \n",KWHT, KBLU);
+printf("|       %s / //  |/ / / / / / __/ __/  \\__ \\ / / %s       |  \n",KWHT, KBLU);
+printf("|     %s _/ // /|  / / / / /_/ / /___ ___/ // /  %s       |  \n",KWHT, KBLU);
+printf("|    %s /___/_/ |_/ /_/  \\____/_____//____//_/ %s         |  \n",KWHT, KBLU);
+printf("|   %s  Programacao de Sistemas Computacionais %s         |  \n",KWHT, KBLU);
+printf("| %s Afonso Muralha | Miguel Dias | Tomas Bettencourt %s  |  \n",KWHT, KBLU);
 printf("|                                                     |  \n");
 printf("-------------------------------------------------------");
 
-printf("\n\n");
+printf("%s\n\n", KWHT);
 }

@@ -1,8 +1,7 @@
 #include "structs.h"
 pthread_t thread;
 int threadID;
-sem_t semThread;
-sem_t semMain;
+
 doorcomm_t msgIN;
 doorcomm_t askDoor;
 doorcomm_t doorAnswer;
@@ -12,17 +11,16 @@ extern doorcomm_t receiveQMessage();
 extern sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();
 extern int clientQClose();
-
+extern int processMessage(doorcomm_t answer);
 
 void *thread_func(void * pi)  //Door answer thread
 {
     
     while(1){
-        //printf("thread waiting\n");
-        //sem_wait(&semThread);
-        //printf("thread going\n");
+        //doorAnswer = receiveQMessage();
+        processMessage(receiveQMessage());
+
         
-        //sem_post(&semMain);
     }
 }
 
@@ -42,11 +40,13 @@ int main(int argc, char *argv[])
     ma.mq_maxmsg = 2;
     ma.mq_msgsize = sizeof(doorcomm_t);
 
-   // if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
-   //     printf("Error Creating Door Thread\n");
-   // }
-
     if(clientQinit() < 0){printf("Erro ao inicializar Queueeue\n");}
+   
+
+   if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
+        printf("Error Creating Door Thread\n");
+   }
+
 
     while(1){
         printf("Introduza o identificador: "); // Pede o identificador ao utilizador
@@ -57,18 +57,9 @@ int main(int argc, char *argv[])
         strcpy(askDoor.cid, cliname);
         
         if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
-        else{
-            //receber msg
-            doorAnswer = receiveQMessage();
-            //update cache
-            updateCache(doorAnswer);
-            //verifica na cache
-            checkCache(askDoor.id[0]);
-        }
-
-
+        
         //sem_post(&semThread);
-        //sem_wait(&semMain);
+        sem_wait(&semMain);
     }
     
     if(clientQClose() < 0){printf("Erro ao fechar Queueeue\n");}
@@ -79,17 +70,17 @@ int main(int argc, char *argv[])
 void splashscreen(){
 
 system("clear");
-printf("\n\n");
+printf("\n\n%s", KGRN);
 printf("-------------------------------------------------------\n");
-printf("|       ______________    ____  ____  ____  ____      |\n");
-printf("|      / ____/_  __/ /   / __ \\/ __ \\/ __ \\/ __ \\     |\n");
-printf("|     / /     / / / /   / / / / / / / / / / /_/ /     |\n");
-printf("|    / /___  / / / /___/ /_/ / /_/ / /_/ / _, _/      |\n");
-printf("|    \\____/ /_/ /_____/_____/\\____/\\____/_/ |_|       |\n");
-printf("|      Programacao de Sistemas Computacionais         |  \n");
-printf("|  Afonso Muralha | Miguel Dias | Tomas Bettencourt   |  \n");
+printf("|      %s ______________    ____  ____  ____  ____ %s     |\n", KWHT, KGRN);
+printf("|      %s/ ____/_  __/ /   / __ \\/ __ \\/ __ \\/ __ \\%s     |\n", KWHT, KGRN);
+printf("|     %s/ /     / / / /   / / / / / / / / / / /_/ /%s     |\n", KWHT, KGRN);
+printf("|    %s/ /___  / / / /___/ /_/ / /_/ / /_/ / _, _/ %s     |\n", KWHT, KGRN);
+printf("|    %s\\____/ /_/ /_____/_____/\\____/\\____/_/ |_| %s      |\n", KWHT, KGRN);
+printf("|      %sProgramacao de Sistemas Computacionais%s         |  \n", KWHT, KGRN);
+printf("|  %sAfonso Muralha | Miguel Dias | Tomas Bettencourt%s   |  \n", KWHT, KGRN);
 printf("|                                                     |  \n");
 printf("-------------------------------------------------------");
 
-printf("\n\n");
+printf("%s\n\n", KWHT);
 }

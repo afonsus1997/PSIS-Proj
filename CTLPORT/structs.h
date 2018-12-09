@@ -41,6 +41,15 @@
 #define CTLC "/CTLC" /* nome do controlador C (queue) */
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
 
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
 
 #endif
 
@@ -56,19 +65,13 @@ typedef struct reg_s { /* estrutura de um registo historico */
 	unsigned char ac; /* acesso: 1-concedido; 0-recusado */
 } reg_t;
 
-typedef struct message{
-	
-	char header[20]; 
-	uti_t reguti[UMAX+1];
-	reg_t regt[UMAX+1];
-	
-	
-}message_t;
 
 typedef struct doorcomm{
-    char    cid[10];
+	char header[20];
+	char    cid[10];
     char    porta;
     char    id[UMAX][NDIG+1];   
+	char state;   
   } doorcomm_t;
 
   char usersCache[UMAX][NDIG+1];
@@ -85,3 +88,6 @@ doorcomm_t msgIN;
 doorcomm_t askDoor;
 
 char clientDoor;
+
+sem_t semThread;
+sem_t semMain;
