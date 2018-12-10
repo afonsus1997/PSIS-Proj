@@ -28,7 +28,9 @@
 #define CTLC "/CTLC" /* nome do controlador C (queue) */
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
 
-
+#define NORMAL 'N'
+#define ABERTO 'A'
+#define FECHADO 'F'
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -69,9 +71,10 @@ typedef struct message{
 }message_t;
 
 typedef struct doorcomm{
-	char header[20];
+	char 	header[20];
 	char    cid[10];
     char    porta;
     char    id[UMAX][NDIG+1];   
-	char state;   
+	char 	state;   
   } doorcomm_t;
+

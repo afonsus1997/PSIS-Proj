@@ -28,7 +28,7 @@ void *thread_func(void * pi)  //Door answer thread
   initQueue();
   while(1){
       //printf("\n");
-      answerDoor();
+      //answerDoor();
       
   }
 }
@@ -58,8 +58,11 @@ int main()
             msgIN = recieveMessage();
             
             if(strcmp(msgIN.header, "TSERV") == 0){
-            closeServer();
-            break;                
+                
+                strcpy(msgOUT.header, "Server killed");
+                sendMessage(msgOUT);
+                closeServer();
+                break;                
             }
             
             sendMessage(intgestParser(msgIN));

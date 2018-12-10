@@ -15,6 +15,7 @@
 
 uti_t *usersBufferFile;
 uti_t usersBuffer[UMAX];
+char estadoPortas[3];
 
 int mfdFUTI;
 int initFileSystem(){
@@ -23,7 +24,7 @@ int initFileSystem(){
  * --------------------
  *  Initializes file system and loads users to a buffer 
  *  We are aware that this is not the best way to do it, but changing it would require
- *  redo a bit part of the project
+ *  redo a big part of the project
  * 
  *  Returns:
  *      1: if completed successfuly
@@ -79,6 +80,9 @@ int closeFileSystem(){
             printf("\tPORTAs:"); printPorts(usersBufferFile[i].port); printf("\n\n");
             
         }
+        else
+            memset(&usersBufferFile[i], '\0', sizeof(char)*(NDIG+1));
+        
     }
     munmap(usersBufferFile, sizeof(usersBuffer)); close(mfdFUTI);
     return 1;
@@ -158,6 +162,38 @@ void printPorts(char ports[NPOR+1]){
     }
 }
 
+char CEPHelper(char currDoor){
+/*
+ * Function:  CEPHelper 
+ * --------------------
+ *  Handles the communication with the doors for the CEP command.
+ *  This function exists in order do reduce spaguetti code 
+ *  Returns:
+ *      (char) door state
+ * 
+ * 
+ */
+    doorcomm_t dummyMsg;
+    doorcomm_t msgQOUT;
+    message_t msgOUT;
+    if(currDoor == 'A'){
+        strcpy(dummyMsg.cid, CTLA);
+        }
+        else if(currDoor == 'B'){
+            strcpy(dummyMsg.cid, CTLB);
+        }
+        else if(currDoor == 'C'){
+            strcpy(dummyMsg.cid, CTLC);
+        }
+
+        strcpy(msgQOUT.header, "CEP");
+        sendQMessage(dummyMsg, msgQOUT);
+        
+        doorcomm_t msgQIN = recieveQMessage();
+        return msgQIN.state;        
+        
+}
+
 message_t intgestParser(message_t msgIN){
 /*
  * Function:  intgestParser 
@@ -169,13 +205,23 @@ message_t intgestParser(message_t msgIN){
  */
     uti_t user;
     message_t msgOUT;
+    doorcomm_t msgQOUT;
+    doorcomm_t msgQIN;
 
     if(strcmp(msgIN.header, "NUTI") == 0){
         
         
         //add new user function
-        int i = 0;
-        for(i ; i<UMAX-1 ; i++){
+        int i;
+        for(i = 0; i<UMAX-1; i++){
+            if(strcmp(msgIN.reguti[0].id, usersBuffer[i].id) == 0){
+                strcpy(msgOUT.header, "User already exists!");
+                printf("Error: User already exists\n");
+                return msgOUT;
+            }
+        }
+        
+        for(i = 0 ; i<UMAX-1 ; i++){
 
             if(checkEmpty(i))            
             break;
@@ -254,24 +300,39 @@ message_t intgestParser(message_t msgIN){
     }
     else if(strcmp(msgIN.header, "EUTI") == 0)
     {
-        //delete user
-
+        
         int i;
-        for(i = 0; i < UMAX-1; i++)
-        {
-            if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0){
-                
-                printf("Deleted User:\n");
-                printf("\tID: %s\n", usersBuffer[i].id);
-                printf("\tNOME: %s\n", usersBuffer[i].nome);
-                printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
-                pthread_mutex_lock(&lockUsers);
-                memset(&usersBuffer[i], '\0', sizeof(uti_t));
-                pthread_mutex_unlock(&lockUsers);
-                break;
+        if(strcmp(msgIN.reguti[0].id, "0")==0){
+            for(i = 0; i < UMAX-1; i++)
+            {
+                if(strcmp(usersBuffer[i].id, "\0") != 0){
+                    printf("Deleted User:\n");
+                    printf("\tID: %s\n", usersBuffer[i].id);
+                    printf("\tNOME: %s\n", usersBuffer[i].nome);
+                    printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
+                    pthread_mutex_lock(&lockUsers);
+                    memset(&usersBuffer[i], '\0', sizeof(uti_t));
+                    pthread_mutex_unlock(&lockUsers);
+                }
             }
         }
-
+        else{
+            
+            for(i = 0; i < UMAX-1; i++)
+            {
+                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0){
+                    
+                    printf("Deleted User:\n");
+                    printf("\tID: %s\n", usersBuffer[i].id);
+                    printf("\tNOME: %s\n", usersBuffer[i].nome);
+                    printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
+                    pthread_mutex_lock(&lockUsers);
+                    memset(&usersBuffer[i], '\0', sizeof(uti_t));
+                    pthread_mutex_unlock(&lockUsers);
+                    break;
+                }
+            }
+        }
         strcpy(msgOUT.header, "Deleted Specified user");
         return msgOUT;
     }
@@ -321,8 +382,23 @@ message_t intgestParser(message_t msgIN){
     else if(strcmp(msgIN.header, "CEP") == 0)
     {
         //consult door state
-        strcpy(msgOUT.header, "CEPDONE");
-        return msgOUT;   
+        doorcomm_t dummyMsg;
+        char currDoor = msgIN.reguti[0].port[0];
+        char currDoorState;        
+        if(currDoor == '0'){
+            msgOUT.reguti[0].port[0] = CEPHelper('A');
+            msgOUT.reguti[0].port[1] = CEPHelper('B');
+            msgOUT.reguti[0].port[2] = CEPHelper('C');
+            strcpy(msgOUT.header, "CEP DONE");
+            return msgOUT;
+        }
+        else{
+            msgOUT.reguti[0].port[0] = CEPHelper(currDoor);
+            msgOUT.reguti[0].port[1] = '\0';
+            strcpy(msgOUT.header, "CEP DONE");
+            return msgOUT;
+        }
+           
     }
     else if(strcmp(msgIN.header, "MEP") == 0)
     {
@@ -342,8 +418,6 @@ message_t intgestParser(message_t msgIN){
     }
 
 }
-
-
 
 
 

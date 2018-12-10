@@ -36,6 +36,7 @@ int initQueue(){
 
 int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg){
     
+    
     if ((mqidc=mq_open(inQMsg.cid, O_RDWR)) < 0) {
       perror("Servidor: Erro a associar a queue cliente");
     }
@@ -44,6 +45,11 @@ int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg){
     }
 }
 
+int sendQMessage2(doorcomm_t inQMsg, doorcomm_t outQMsg){
+    if (mq_send(mqidc, &outQMsg, sizeof(doorcomm_t), 0) < 0) {
+	perror("Servidor: erro a enviar mensagem");
+    }
+}
 
 doorcomm_t recieveQMessage(){
   doorcomm_t inQMsg;

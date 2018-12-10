@@ -9,6 +9,7 @@
 #define COMANDO_h
 
 #include "structs.h"
+#include <signal.h>
 
 
 #endif
@@ -147,6 +148,8 @@ int tserv (int argc, char** argv)
   strcpy(msgOut.header, "TSERV");
   sendInfo(&msgOut);
   recieveInfo();
+  kill(getpid(), SIGINT);
+
 
 }
 
@@ -154,15 +157,23 @@ int cep (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
-
-  if(argv[1] == NULL){
-    return -1;
-  }
-
+  char door;
   strcpy(msgOut.header, "CEP");
   strcpy(msgOut.reguti[0].port, argv[1]);
+  door = msgOut.reguti[0].port[0];
   sendInfo(&msgOut);
-  recieveInfo();
+
+  msgIn = recieveInfo();
+
+  if(argv[1][0] == '0'){
+    printf("Door A state: %c\n\n", msgIn.reguti[0].port[0]);
+    printf("Door B state: %c\n\n", msgIn.reguti[0].port[1]);
+    printf("Door C state: %c\n\n", msgIn.reguti[0].port[2]);
+  }
+  else{
+    printf("Door %c state: %c\n\n", door, msgIn.reguti[0].port[0]);
+  }
+
 
 }
 
@@ -179,6 +190,7 @@ int mep (int argc, char** argv)
   strcpy(msgOut.reguti[0].nome, argv[2]);  //ESTADO
   strcpy(msgOut.reguti[0].port, argv[1]);
   sendInfo(&msgOut);
+  
   recieveInfo();
 
 }

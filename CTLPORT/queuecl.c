@@ -1,13 +1,13 @@
 #include "structs.h"
 
-int mqids, mqidc;
+
 
 int sendQMessage(doorcomm_t inMsg){
     if (mq_send(mqids, &inMsg, sizeof(doorcomm_t), 0) < 0) { //Envia a mensagem para o servidor
         perror("Controlador: erro a enviar mensagem");
         return -1;
     }
-    return 0;
+    return 0; 
 }
 
 doorcomm_t receiveQMessage(){
@@ -20,7 +20,15 @@ doorcomm_t receiveQMessage(){
 }
 
 int clientQinit(){
-    snprintf(cliname, sizeof(cliname), "/CL-%05d", getpid());
+    if(clientDoor == 'A'){
+        strcpy(cliname, CTLA);
+    }
+    else if(clientDoor == 'B'){
+        strcpy(cliname, CTLB);
+    }
+    else if(clientDoor == 'C'){
+        strcpy(cliname, CTLC);
+    }
     mq_unlink(cliname);
     if ((mqidc=mq_open(&cliname, O_RDWR|O_CREAT, 0666, &ma)) < 0) {
         perror("Cliente: Erro a criar queue cliente");

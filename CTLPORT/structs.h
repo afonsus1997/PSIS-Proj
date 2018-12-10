@@ -12,9 +12,9 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define NORMAL 0
-#define ABERTO 1
-#define FECHADO 2
+#define NORMAL 'N'
+#define ABERTO 'A'
+#define FECHADO 'F'
 
 #define NPROSS 3
 #define TRUE 1
@@ -71,7 +71,7 @@ typedef struct doorcomm{
 	char    cid[10];
     char    porta;
     char    id[UMAX][NDIG+1];   
-	char state;   
+	char 	state;   
   } doorcomm_t;
 
   char usersCache[UMAX][NDIG+1];

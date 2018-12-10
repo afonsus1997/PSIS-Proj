@@ -1,23 +1,31 @@
 
 #include "structs.h"
 
-int doorMode=0;
+extern int sendQMessage(doorcomm_t inMsg);
+extern int clientQinit();
+char doorMode = NORMAL;
 
-int processMessage(doorcomm_t answer){
-    if(strcmp(answer.header, "QUERY") == 0){
+int processMessage(doorcomm_t msgQIN){
+    doorcomm_t msgQOUT;
+    if(strcmp(msgQIN.header, "QUERY") == 0){
         //update cache
-        updateCache(answer);
+        updateCache(msgQIN);
         //verifica na cache
         checkCache(askDoor.id[0]);
         sem_post(&semMain);
+        return 1;
     }
-    else if(strcmp(answer.header, "CEP") == 0){
+    else if(strcmp(msgQIN.header, "CEP") == 0){
+        msgQOUT.state = doorMode;
+        strcpy(msgQOUT.header, "DONE");
+        //clientQinit();
+        sendQMessage(msgQOUT);
+        return 1;
+    }
+    else if(strcmp(msgQIN.header, "MEP") == 0){
 
     }
-    else if(strcmp(answer.header, "MEP") == 0){
-
-    }
-    else if(strcmp(answer.header, "RIP") == 0){
+    else if(strcmp(msgQIN.header, "RIP") == 0){
         clearCache();
     }
 }
