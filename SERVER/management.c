@@ -18,6 +18,17 @@ uti_t usersBuffer[UMAX];
 
 int mfdFUTI;
 int initFileSystem(){
+ /*
+ * Function:  initFileSystem 
+ * --------------------
+ *  Initializes file system and loads users to a buffer 
+ *  We are aware that this is not the best way to do it, but changing it would require
+ *  redo a bit part of the project
+ * 
+ *  Returns:
+ *      1: if completed successfuly
+ *      0: if error
+ */
     int i, mfdFUTI; 
     if ((mfdFUTI=open(FUTI, O_RDWR | O_CREAT, 0666 )) < 0) { /* abrir / criar ficheiro */
         perror("Erro a criar ficheiro"); exit(-1);
@@ -47,6 +58,17 @@ int initFileSystem(){
 }
 
 int closeFileSystem(){
+/*
+ * Function:  closeFileSystem 
+ * --------------------
+ *  Closes file system and stores current users on local file 
+ *  We are aware that this is not the best way to do it, but changing it would require
+ *  redo a bit part of the project
+ * 
+ *  Returns:
+ *      1: if completed successfuly
+ *      0: if error
+ */
     printf("Saving users to filesystem:\n\n");
     int i;
     for(i=0; i<UMAX;i++){
@@ -59,9 +81,18 @@ int closeFileSystem(){
         }
     }
     munmap(usersBufferFile, sizeof(usersBuffer)); close(mfdFUTI);
+    return 1;
 }
 
 int clearBuffer(){
+/*
+ * Function:  clearBuffer 
+ * --------------------
+ *  Clears users buffer. This has to be done to avoid sending garbadge to intgest
+ * 
+ *  Returns:
+ *      1: if completed successfuly
+ */
     int i;
     for(i = 0; i < UMAX-1; i++){
         memset(&usersBuffer[i], '\0', sizeof(char)*(NDIG+1));
@@ -70,7 +101,15 @@ int clearBuffer(){
 }
 
 int checkEmpty(int pos){
-
+    /*
+ * Function:  checkEmpty 
+ * --------------------
+ *  Checks if users buffer is empty
+ * 
+ *  Returns:
+ *      1: if users buffer is empty
+ *      0: if users buffer is not empty
+ */
     int i;
     for(i = 0; i < NDIG; i++)
     {
@@ -83,6 +122,15 @@ int checkEmpty(int pos){
 }
 
 int checkEmptyMsg(char string[NDIG+1]){
+   /*
+ * Function:  checkEmpty 
+ * --------------------
+ *  Checks if message is empty
+ * 
+ *  Returns:
+ *      1: if message is empty
+ *      0: if message is not empty
+ */
    int i;
     for(i = 0; i < NDIG; i++)
     {
@@ -94,6 +142,12 @@ int checkEmptyMsg(char string[NDIG+1]){
 }
 
 void printPorts(char ports[NPOR+1]){
+    /*
+ * Function:  printPorts 
+ * --------------------
+ *  Helper function to print ports
+ * 
+ */
     int i;
     for(i=0 ; i<NPOR ; i++){
         if(ports[i] == '1'){
@@ -105,6 +159,14 @@ void printPorts(char ports[NPOR+1]){
 }
 
 message_t intgestParser(message_t msgIN){
+/*
+ * Function:  intgestParser 
+ * --------------------
+ *  Checks if message is empty
+ * 
+ *  Returns:
+ *      Message of type message_t
+ */
     uti_t user;
     message_t msgOUT;
 
@@ -206,8 +268,6 @@ message_t intgestParser(message_t msgIN){
                 pthread_mutex_lock(&lockUsers);
                 memset(&usersBuffer[i], '\0', sizeof(uti_t));
                 pthread_mutex_unlock(&lockUsers);
-                
-
                 break;
             }
         }
