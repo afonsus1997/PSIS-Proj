@@ -59,7 +59,7 @@ int serverInit(){
 }
 
 int closeServer(){
-  system("clear");
+  //system("clear");
   closeFileSystem();
   printf("\n\nStopping server...\n");
   closeQServer();

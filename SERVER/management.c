@@ -23,30 +23,51 @@ int initFileSystem(){
         perror("Erro a criar ficheiro"); exit(-1);
     }  
     else {
-        if (ftruncate(mfdFUTI, sizeof(usersBufferFile[UMAX])) < 0) { /* definir tamanho do ficheiro*/
+        if (ftruncate(mfdFUTI, sizeof(usersBuffer)) < 0) { /* definir tamanho do ficheiro*/
             perror("Erro no ftruncate"); exit(-1);
                 }
         }
  /* mapear ficheiro */
-    if ((usersBufferFile=(uti_t*)mmap(NULL, sizeof(usersBuffer[UMAX]), PROT_READ|PROT_WRITE, MAP_SHARED, mfdFUTI, 0)) < (char *)0) {
+    if ((usersBufferFile=(uti_t*)mmap(NULL, sizeof(usersBuffer), PROT_READ|PROT_WRITE, MAP_SHARED, mfdFUTI, 0)) < (uti_t *)0) {
         perror("Erro em mmap"); exit(-1);
     }
     
+    clearBuffer();
+    printf("Loading users from filesystem:\n\n");
     for(i=0; i<UMAX;i++){
+        if(strcmp(usersBufferFile[i].id, "\0")!=0){
+        printf("\tID: %s\n", usersBufferFile[i].id);
+        printf("\tNOME: %s\n", usersBufferFile[i].nome);
+        printf("\tPORTAs:"); printPorts(usersBufferFile[i].port); printf("\n\n");
         usersBuffer[i] = usersBufferFile[i];
+        }
     }
     
     return 0;
 }
 
 int closeFileSystem(){
+    printf("Saving users to filesystem:\n\n");
     int i;
     for(i=0; i<UMAX;i++){
-        usersBufferFile[i] = usersBuffer[i];
+        if(strcmp(usersBuffer[i].id, "\0")!=0){
+            usersBufferFile[i] = usersBuffer[i];
+            printf("\tID: %s\n", usersBufferFile[i].id);
+            printf("\tNOME: %s\n", usersBufferFile[i].nome);
+            printf("\tPORTAs:"); printPorts(usersBufferFile[i].port); printf("\n\n");
+            
+        }
     }
-    munmap(usersBufferFile, sizeof(usersBuffer[UMAX])); close(mfdFUTI);
+    munmap(usersBufferFile, sizeof(usersBuffer)); close(mfdFUTI);
 }
 
+int clearBuffer(){
+    int i;
+    for(i = 0; i < UMAX-1; i++){
+        memset(&usersBuffer[i], '\0', sizeof(char)*(NDIG+1));
+    }
+    return 1;
+}
 
 int checkEmpty(int pos){
 
@@ -132,17 +153,27 @@ message_t intgestParser(message_t msgIN){
     else if(strcmp(msgIN.header, "LUTI") == 0)
     {
         //get user list
+        int j = 0;
         int i = 0;
         if(strcmp(msgIN.reguti[0].id, "0")==0){
             
             for(i = 0; i < UMAX; i++)
             {
-                if(usersBuffer[i].id != NULL){
+                if(strcmp(usersBuffer[i].id, "\0") != 0){
                     strcpy(msgOUT.reguti[i].id, usersBuffer[i].id);
                     strcpy(msgOUT.reguti[i].nome, usersBuffer[i].nome);
                     strcpy(msgOUT.reguti[i].port, usersBuffer[i].port);
+                    j++;
+                }
+                else{
+                    memset(&msgOUT.reguti[i].id, '\0', sizeof(char)*(NDIG+1));
                 }
             }
+            if(j==UMAX-1)
+            strcpy(msgOUT.header, "User List Empty");
+            else
+            strcpy(msgOUT.header, "Done");
+            return msgOUT;
         }
         else{
             for(i = 0; i < UMAX; i++)
@@ -151,12 +182,13 @@ message_t intgestParser(message_t msgIN){
                     strcpy(msgOUT.reguti[0].id, usersBuffer[i].id);
                     strcpy(msgOUT.reguti[0].nome, usersBuffer[i].nome);
                     strcpy(msgOUT.reguti[0].port, usersBuffer[i].port);
+                    strcpy(msgOUT.header, "Done");
+                    return msgOUT;
                 }
             }
+            strcpy(msgOUT.header, "User Not Found");
+            return msgOUT;
         }
-        
-        strcpy(msgOUT.header, "Done");
-        return msgOUT;
     }
     else if(strcmp(msgIN.header, "EUTI") == 0)
     {

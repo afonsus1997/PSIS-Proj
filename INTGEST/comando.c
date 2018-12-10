@@ -67,20 +67,22 @@ int luti (int argc, char** argv)
   strcpy(msgOut.reguti[0].id, argv[1]);
   sendInfo(&msgOut);
   msgIn = recieveInfo();
-  printf("Users:\n");
+  //if(strcmp(msgIn.header, "DONE")==0){
   int i;
-  if(strcmp(msgOut.reguti[0].id, "0")!=0){
+  if(strcmp(msgOut.reguti[0].id, "0")!=0 && strcmp(msgIn.header, "Done")==0){
+    printf("Users:\n");
     printf("\tID: %s\n", msgIn.reguti[0].id);
     printf("\tNOME: %s\n", msgIn.reguti[0].nome);
     printf("\tPORTAs:"); printPorts(msgIn.reguti[0].port); printf("\n\n");
   }
   else{
     for(i=0 ; i<UMAX-1 ; i++){
-        if(strcmp(msgIn.reguti[i].id, "\000") != 0){
-          printf("\tID: %s\n", msgIn.reguti[i].id);
-          printf("\tNOME: %s\n", msgIn.reguti[i].nome);
-          printf("\tPORTAs:"); printPorts(msgIn.reguti[i].port); printf("\n\n");
-        }
+      if(strcmp(msgIn.reguti[i].id, "\0") != 0 && strcmp(msgIn.header, "Done")==0){
+        printf("Users:\n");
+        printf("\tID: %s\n", msgIn.reguti[i].id);
+        printf("\tNOME: %s\n", msgIn.reguti[i].nome);
+        printf("\tPORTAs:"); printPorts(msgIn.reguti[i].port); printf("\n\n");
+      }
     }      
   }
 
