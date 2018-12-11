@@ -82,21 +82,29 @@ int main()
 
 
 void splashscreen(){
+/*
+ * Function:  splashscreen 
+ * --------------------
+ *  Draws a pretty splashcreen. 
+ *  Hopefuly this will give us extra points *wink* *wink*
+ * 
+ *  Returns:
+ *      (void)
+ */
+    system("clear");
+    printf("\n\n%s", KYEL);
+    printf("------------------------------------------------------\n");
+    printf("|          %s_____ __________ _    ____________ %s       |  \n", KWHT, KYEL);
+    printf("|         %s/ ___// ____/ __ \\ |  / / ____/ __ \\%s       | \n", KWHT, KYEL);
+    printf("|         %s\\__ \\/ __/ / /_/ / | / / __/ / /_/ /%s       |  \n", KWHT, KYEL);
+    printf("|        %s___/ / /___/ _, _/| |/ / /___/ _, _/%s        |  \n", KWHT, KYEL);
+    printf("|       %s/____/_____/_/ |_| |___/_____/_/ |_|%s         |  \n", KWHT, KYEL);
+    printf("|      %sProgramacao de Sistemas Computacionais %s       |  \n", KWHT, KYEL);
+    printf("|  %sAfonso Muralha | Miguel Dias | Tomas Bettencourt%s  |  \n", KWHT, KYEL);
+    printf("|                                                    |  \n");
+    printf("------------------------------------------------------");
 
-system("clear");
-printf("\n\n%s", KYEL);
-printf("------------------------------------------------------\n");
-printf("|          %s_____ __________ _    ____________ %s       |  \n", KWHT, KYEL);
-printf("|         %s/ ___// ____/ __ \\ |  / / ____/ __ \\%s       | \n", KWHT, KYEL);
-printf("|         %s\\__ \\/ __/ / /_/ / | / / __/ / /_/ /%s       |  \n", KWHT, KYEL);
-printf("|        %s___/ / /___/ _, _/| |/ / /___/ _, _/%s        |  \n", KWHT, KYEL);
-printf("|       %s/____/_____/_/ |_| |___/_____/_/ |_|%s         |  \n", KWHT, KYEL);
-printf("|      %sProgramacao de Sistemas Computacionais %s       |  \n", KWHT, KYEL);
-printf("|  %sAfonso Muralha | Miguel Dias | Tomas Bettencourt%s  |  \n", KWHT, KYEL);
-printf("|                                                    |  \n");
-printf("------------------------------------------------------");
-
-printf("%s\n\n", KWHT);
+    printf("%s\n\n", KWHT);
 }
 
    

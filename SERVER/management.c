@@ -125,34 +125,66 @@ int clearBuffer(){
     return 1;
 }
 
+
+
 struct tm timespecToTm(struct timespec t){
+/*
+ * Function:  timespecToTm 
+ * --------------------
+ *  Converts timespec to tm.
+ * 
+ *  Returns:
+ *      (tm) converted timespec
+ */
     struct tm tm;
     localtime_r(&t.tv_sec, &tm);
     return tm;
 }
 
 struct timespec tmToTimespec(struct tm tm){
+/*
+ * Function:  tmToTimespec 
+ * --------------------
+ *  Converts tm to timespec.
+ * 
+ *  Returns:
+ *      (timespec) converted tm
+ */    
     struct timespec t;
     t.tv_sec = mktime(&tm);
     return t;
 }
 
 struct timespec stringToTimespec(char string[26]){
+/*
+ * Function:  stringToTimespec 
+ * --------------------
+ *  Parses string to timespec.
+ * 
+ *  Returns:
+ *      (timespec) parsed string
+ */   
     struct tm tm;
     strptime(string, "%d/%m/%Y %H:%M:%S\n", &tm);
     return tmToTimespec(tm); 
 }
 
 void printTimespecString(struct timespec t){
+/*
+ * Function:  printTimespecString 
+ * --------------------
+ *  Converts timespec to string and prints it.
+ * 
+ *  Returns:
+ *      (void) 
+ */ 
     char str[26];
     struct tm tm;
     tm = timespecToTm(t);
     strftime(&str[0], sizeof(str), "%d/%m/%Y %H:%M:%S\n", &tm); // specify format of str
-    printf("str: %s\n", str); // e.g. “15/11/2011 15:45:25” 
+    printf("%s\n\n", str); // e.g. “15/11/2011 15:45:25” 
 
 }
-
-
 
 int checkEmpty(int pos){
     /*
@@ -201,6 +233,7 @@ void printPorts(char ports[NPOR+1]){
  * --------------------
  *  Helper function to print ports
  * 
+ * 
  */
     int i;
     for(i=0 ; i<NPOR ; i++){
@@ -217,7 +250,7 @@ int CEPHelper(char currDoor){
  * Function:  CEPHelper 
  * --------------------
  *  Handles the communication with the doors for the CEP command.
- *  This function exists in order do reduce spaguetti code 
+ *  This function exists in order to reduce spaguetti code 
  * 
  *  Returns:
  *      1: If Successful
@@ -678,11 +711,13 @@ int processMessage(doorcomm_t msgQIN){
  *      0
  */ 
     message_t msgOUT;
-    printf("Recieved query from door : %c\n\n", msgQIN.porta);
+    
     if(strcmp(msgQIN.header, "QUERY") == 0){
+        printf("Recieved query from door : %c\n\n", msgQIN.porta);
         answerQuery(msgQIN);
     }
     else if(strcmp(msgQIN.header, "CEPANS0") == 0){
+        printf("Recieved query from door : %c\n\n", msgQIN.porta);
         if(strcmp(msgQIN.cid, CTLA) == 0 ){
             cepTemp[0] = msgQIN.state;
         }
@@ -705,15 +740,17 @@ int processMessage(doorcomm_t msgQIN){
     }
     else if(strcmp(msgQIN.header, "CEPANS") == 0){
         
+        printf("Recieved query from door : %c\n\n", msgQIN.porta);
         msgOUT.reguti[0].port[0] = msgQIN.state;
         msgOUT.reguti[0].port[1] = '\0';
         strcpy(msgOUT.header, "CEP DONE");
         sendMessage(msgOUT);
     }
     else if(strcmp(msgQIN.header, "REGUSR") == 0){
-        printf("%ld\n", msgQIN.reg.t.tv_sec);
+        //printf("%ld\n", msgQIN.reg.t.tv_sec);
+        printf("Successfull entry on door %c at:\n\t", msgQIN.porta);
         printTimespecString(msgQIN.reg.t);
-        printf("%ld\n", stringToTimespec("11/12/2018 16:02:37"));
+        //printf("%ld\n", stringToTimespec("11/12/2018 16:02:37"));
     }
     
     

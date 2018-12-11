@@ -18,8 +18,15 @@ struct mq_attr ma;
 
 
 int initQueue(){
-
-  
+/*
+ * Function:  initQueue 
+ * --------------------
+ *  Initializes Queues. 
+ * 
+ *  Returns:
+ *      1: If successful
+ *      0: If not successful
+ */
   ma.mq_flags = 0;
   ma.mq_maxmsg = 2;
   ma.mq_msgsize = sizeof(doorcomm_t);
@@ -35,7 +42,15 @@ int initQueue(){
 }
 
 int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg){
-    
+/*
+ * Function:  sendQMessage 
+ * --------------------
+ *  Sends a message of type doorcomm_t using POSIX queues. 
+ * 
+ *  Returns:
+ *      1: If successful
+ *      0: If not successful
+ */    
     
     if ((mqidc=mq_open(inQMsg.cid, O_RDWR)) < 0) {
       perror("Servidor: Erro a associar a queue cliente");
@@ -45,13 +60,15 @@ int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg){
     }
 }
 
-int sendQMessage2(doorcomm_t inQMsg, doorcomm_t outQMsg){
-    if (mq_send(mqidc, &outQMsg, sizeof(doorcomm_t), 0) < 0) {
-	perror("Servidor: erro a enviar mensagem");
-    }
-}
-
 doorcomm_t recieveQMessage(){
+/*
+ * Function:  recieveQMessage 
+ * --------------------
+ *  Recieves a message of type doorcomm_t using POSIX queues. 
+ * 
+ *  Returns:
+ *      (doorcomm_t) message
+ */ 
   doorcomm_t inQMsg;
   if (mq_receive(mqids, &inQMsg, sizeof(doorcomm_t), NULL) < 0) {
     perror("Servidor: erro a receber mensagem");
@@ -61,7 +78,15 @@ doorcomm_t recieveQMessage(){
 
 
 int closeQServer(){
-    
+/*
+ * Function:  closeQServer 
+ * --------------------
+ *  Unlinks POSIX Queue. 
+ * 
+ *  Returns:
+ *      1:?
+ *      0:?
+ */     
     mq_unlink(SERVNAME);
     //perror("Servidor: Erro a eliminar queue servidor");
   

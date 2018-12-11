@@ -37,7 +37,15 @@ extern int closeFileSystem();
 extern int closeQServer();
 
 int serverInit(){
-
+  /*
+ * Function:  serverInit 
+ * --------------------
+ *  Initializes socket comms. 
+ * 
+ *  Returns:
+ *      1: If successful
+ *      0: If not successful
+ */ 
   printf("\nStarting Intgest Server...\n");
   unlink(SERVNAME);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
@@ -59,7 +67,15 @@ int serverInit(){
 }
 
 int closeServer(){
-  //system("clear");
+  /*
+ * Function:  closeServer 
+ * --------------------
+ *  Closes program. 
+ * 
+ *  Returns:
+ *      1: If successful
+ *      0: If not successful
+ */ 
   closeFileSystem();
   printf("\n\nStopping server...\n");
   closeQServer();
@@ -70,11 +86,15 @@ int closeServer(){
 }
 
 message_t recieveMessage(){
-
-  
-
-    fromlen = sizeof(from);
-  
+  /*
+ * Function:  recieveMessage 
+ * --------------------
+ *  Receives message of type message_t using Datagram Sockets . 
+ * 
+ *  Returns:
+ *      (message_t) message
+ */ 
+  fromlen = sizeof(from);
 
   if (recvfrom(sd, &msgIN, fromlen, 0, (struct sockaddr *)&from, 
 	       &fromlen) < 0) {
@@ -83,12 +103,18 @@ message_t recieveMessage(){
   else {
     return msgIN;
   }
-  
-  
-
 }
 
 int sendMessage(message_t msgOUT){
+    /*
+ * Function:  sendMessage 
+ * --------------------
+ *  Sends message of type message_t using Datagram Sockets . 
+ * 
+ *  Returns:
+ *      1: If successful
+ *      0: If not successful
+ */ 
   if (sendto(sd, &msgOUT, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0) {
 
       perror("Erro no sendto");
