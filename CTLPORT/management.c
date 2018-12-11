@@ -5,6 +5,7 @@ extern int sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();
 extern void splashscreen(char mode);
 
+
 //char doorMode = NORMAL;
 
 
@@ -16,7 +17,7 @@ int processMessage(doorcomm_t msgQIN){
         updateCache(msgQIN);
         //verifica na cache
         checkCache(askDoor.id[0]);
-        sem_post(&semMain);
+        
         return 1;
     }
     else if(strcmp(msgQIN.header, "CEP") == 0){
@@ -45,6 +46,8 @@ int processMessage(doorcomm_t msgQIN){
     }
     else if(strcmp(msgQIN.header, "RIP") == 0){
         clearCache();
+        splashscreen('C');
+
     }
 }
 
@@ -66,11 +69,24 @@ int updateCache(doorcomm_t answer){
     }
 }
 
+int sendRegister(char id[NDIG+1], char ac){
+    doorcomm_t regMsg;
+    time_t currentTime;
+    strcpy(regMsg.header, "REGUSR");
+    strcpy(regMsg.reg.id, id);
+    regMsg.reg.p = clientDoor;
+    clock_gettime(CLOCK_REALTIME, &regMsg.reg.t );
+    regMsg.reg.ac = ac;
+    sendQMessage(regMsg);
+}
+
+
 int checkCache(char id[NDIG+1]){
     id[NDIG] = '\0';
     int i;
     if(strcmp(id, IDX) == 0){
         printf("\n%sSuperUser detected, Access Granted!%s\n\n", KGRN, KWHT);
+        sem_post(&semMain);
         return 1;
 
     }
@@ -78,11 +94,15 @@ int checkCache(char id[NDIG+1]){
     for(i=0 ; i < UMAX ; i++){
         if(strcmp(usersCache[i], id) == 0){
             printf("\n%sAccess Granted!%s\n\n", KGRN, KWHT);
+            //criar e enviar registo
+            sendRegister(id, '1');
+            sem_post(&semMain);
             return 1;
         }
         
     }
     printf("\n%sAccess Denied!%s\n\n", KRED, KWHT);
+    sem_post(&semMain);
     return 0;        
 }
 

@@ -14,6 +14,7 @@
 #include "management.h"
 
 uti_t *usersBufferFile;
+reg_t *regBufferFile;
 uti_t usersBuffer[UMAX];
 char estadoPortas[3];
 char cepTemp[3] = {'\0', '\0', '\0'};
@@ -31,7 +32,9 @@ int initFileSystem(){
  *      1: if completed successfuly
  *      0: if error
  */
-    int i, mfdFUTI; 
+    int i, mfdFUTI, mfdFLOG;
+   
+ //--------FUTI  
     if ((mfdFUTI=open(FUTI, O_RDWR | O_CREAT, 0666 )) < 0) { /* abrir / criar ficheiro */
         perror("Erro a criar ficheiro"); exit(-1);
     }  
@@ -45,6 +48,22 @@ int initFileSystem(){
         perror("Erro em mmap"); exit(-1);
     }
     
+//----------FLOG
+
+    if ((mfdFLOG=open(FLOG, O_RDWR | O_CREAT, 0666 )) < 0) { /* abrir / criar ficheiro */
+        perror("Erro a criar ficheiro"); exit(-1);
+    }  
+    else {
+        if (ftruncate(mfdFLOG, sizeof(regBufferFile)) < 0) { /* definir tamanho do ficheiro*/
+            perror("Erro no ftruncate"); exit(-1);
+                }
+        }
+ /* mapear ficheiro */
+    if ((regBufferFile=(reg_t*)mmap(NULL, sizeof(reg_t)*150, PROT_READ|PROT_WRITE, MAP_SHARED, mfdFLOG, 0)) < (reg_t *)0) {
+        perror("Erro em mmap"); exit(-1);
+    }
+
+
     clearBuffer();
     printf("Loading users from filesystem:\n\n");
     for(i=0; i<UMAX;i++){
@@ -86,6 +105,7 @@ int closeFileSystem(){
         
     }
     munmap(usersBufferFile, sizeof(usersBuffer)); close(mfdFUTI);
+    munmap(regBufferFile, sizeof(reg_t)*150); close(FLOG);
     return 1;
 }
 
@@ -104,6 +124,35 @@ int clearBuffer(){
     }
     return 1;
 }
+
+struct tm timespecToTm(struct timespec t){
+    struct tm tm;
+    localtime_r(&t.tv_sec, &tm);
+    return tm;
+}
+
+struct timespec tmToTimespec(struct tm tm){
+    struct timespec t;
+    t.tv_sec = mktime(&tm);
+    return t;
+}
+
+struct timespec stringToTimespec(char string[26]){
+    struct tm tm;
+    strptime(string, "%d/%m/%Y %H:%M:%S\n", &tm);
+    return tmToTimespec(tm); 
+}
+
+void printTimespecString(struct timespec t){
+    char str[26];
+    struct tm tm;
+    tm = timespecToTm(t);
+    strftime(&str[0], sizeof(str), "%d/%m/%Y %H:%M:%S\n", &tm); // specify format of str
+    printf("str: %s\n", str); // e.g. “15/11/2011 15:45:25” 
+
+}
+
+
 
 int checkEmpty(int pos){
     /*
@@ -171,7 +220,8 @@ int CEPHelper(char currDoor){
  *  This function exists in order do reduce spaguetti code 
  * 
  *  Returns:
- *      (char) door state
+ *      1: If Successful
+ *      0: If not Successful
  */
     doorcomm_t dummyMsg;
     doorcomm_t msgQOUT;
@@ -219,13 +269,14 @@ int CEPHelper(char currDoor){
 
 int MEPHelper(char currDoor, char state){
 /*
- * Function:  CEPHelper 
+ * Function:  MEPHelper 
  * --------------------
- *  Handles the communication with the doors for the CEP command.
+ *  Handles the communication with the doors for the MEP command.
  *  This function exists in order do reduce spaguetti code 
  * 
  *  Returns:
- *      (char) door state
+ *      1: If Successful
+ *      0: If not Successful
  */
     doorcomm_t dummyMsg;
     doorcomm_t msgQOUT;
@@ -254,18 +305,69 @@ int MEPHelper(char currDoor, char state){
     else if(currDoor == '0')
     {
         strcpy(dummyMsg.cid, CTLA);
-        strcpy(msgQOUT.header, "MEP0");
+        strcpy(msgQOUT.header, "MEP");
         msgQOUT.state = state;
         sendQMessage(dummyMsg, msgQOUT);
 
         strcpy(dummyMsg.cid, CTLB);
-        strcpy(msgQOUT.header, "CEP0");
+        strcpy(msgQOUT.header, "MEP");
         msgQOUT.state = state;
         sendQMessage(dummyMsg, msgQOUT);
 
         strcpy(dummyMsg.cid, CTLC);
-        strcpy(msgQOUT.header, "CEP0");
+        strcpy(msgQOUT.header, "MEP");
         msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+
+        return 1;
+    }
+
+        return 0;
+        //doorcomm_t msgQIN = recieveQMessage();
+        //return msgQIN.state;        
+        
+}
+
+int RIPHelper(char currDoor){
+/*
+ * Function:  RIPHelper 
+ * --------------------
+ *  Handles the communication with the doors for the RIP command.
+ *  This function exists in order do reduce spaguetti code 
+ * 
+ *  Returns:
+ *      1: If Successful
+ *      0: If not Successful
+ */
+    doorcomm_t dummyMsg;
+    doorcomm_t msgQOUT;
+    message_t msgOUT;
+    strcpy(msgQOUT.header, "RIP");
+
+    if(currDoor == 'A'){
+        strcpy(dummyMsg.cid, CTLA);
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == 'B'){
+        strcpy(dummyMsg.cid, CTLB);
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == 'C'){
+        strcpy(dummyMsg.cid, CTLC);
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == '0')
+    {
+        strcpy(dummyMsg.cid, CTLA);
+        sendQMessage(dummyMsg, msgQOUT);
+
+        strcpy(dummyMsg.cid, CTLB);
+        sendQMessage(dummyMsg, msgQOUT);
+
+        strcpy(dummyMsg.cid, CTLC);
         sendQMessage(dummyMsg, msgQOUT);
 
         return 1;
@@ -485,7 +587,6 @@ int intgestParser(message_t msgIN){
         }
            
     }
-
     else if(strcmp(msgIN.header, "MEP") == 0)
     {
         //edit door state
@@ -500,12 +601,12 @@ int intgestParser(message_t msgIN){
         sendMessage(msgOUT);
         return 1;  
     }
-    
-    
-
     else if(strcmp(msgIN.header, "RIP") == 0)
     {
-        //RIPALL!!!
+        RIPHelper(msgIN.reguti[0].port[0]);
+        strcpy(msgQOUT.header, "RIP");
+
+
         strcpy(msgOUT.header, "RIPDONE");
         sendMessage(msgOUT);
         return 1;   
@@ -608,6 +709,11 @@ int processMessage(doorcomm_t msgQIN){
         msgOUT.reguti[0].port[1] = '\0';
         strcpy(msgOUT.header, "CEP DONE");
         sendMessage(msgOUT);
+    }
+    else if(strcmp(msgQIN.header, "REGUSR") == 0){
+        printf("%ld\n", msgQIN.reg.t.tv_sec);
+        printTimespecString(msgQIN.reg.t);
+        printf("%ld\n", stringToTimespec("11/12/2018 16:02:37"));
     }
     
     

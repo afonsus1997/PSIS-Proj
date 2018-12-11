@@ -27,7 +27,8 @@
 // ou #define CTLB 0x4342 /* (’C’’B’) nome (chave) do controlador B (msg) */
 #define CTLC "/CTLC" /* nome do controlador C (queue) */
 // ou #define CTLC 0x4343 /* (’C’’C’) nome (chave) do controlador C (msg) */
-
+#include <time.h>
+#include <sys/time.h>
 
 
 #endif

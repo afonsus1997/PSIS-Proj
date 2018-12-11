@@ -44,6 +44,8 @@
 //------------QUEUES
 
 #include <pthread.h>
+#include <time.h>
+#include <sys/time.h>
 
 #endif
 
@@ -56,7 +58,7 @@ typedef struct uti_s { /* estrutura de um registo utilizador */
 	unsigned char port[NPOR]; /* portas acess´ıveis ao utilizador: 1-acesso 0-n~ao */
 } uti_t;
 typedef struct reg_s { /* estrutura de um registo historico */
-	//struct timespec t; /* estampilha temporal */
+	struct timespec t; /* estampilha temporal */
 	char p; /* identificador da porta: A,B,C */
 	char id[NDIG+1]; /* identificador do utilizador */
 	unsigned char ac; /* acesso: 1-concedido; 0-recusado */
@@ -75,6 +77,7 @@ typedef struct doorcomm{
 	char    cid[10];
     char    porta;
     char    id[UMAX][NDIG+1];   
-	char 	state;   
+	char 	state;
+	reg_t	reg;     
   } doorcomm_t;
 

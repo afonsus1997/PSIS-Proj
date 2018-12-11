@@ -47,7 +47,9 @@ struct 	command_d {
   {lapu,     "lapu","                 listar acessos porta p (0-todas), utilizador u (0-todos), entre t1 (dd/mm/aaaa hh:mm:ss) e t2"},
   {tserv,    "tserv","                Termina o servidor." },
   {cep,    "cep","                Termina o servidor." },
-  {mep,    "mep","                Termina o servidor." }
+  {mep,    "mep","                Termina o servidor." },
+  {rip,    "rip","                Termina o servidor." }
+
 
 };
 

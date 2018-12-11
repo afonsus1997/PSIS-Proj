@@ -7,6 +7,7 @@ doorcomm_t askDoor;
 doorcomm_t doorAnswer;
 
 
+
 extern doorcomm_t receiveQMessage();
 extern sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();
@@ -19,6 +20,7 @@ void *thread_func(void * pi)  //Door answer thread
     while(1){
         
         processMessage(receiveQMessage());
+        //sem_post(&semMain);
 
         
     }
@@ -32,7 +34,7 @@ int main(int argc, char *argv[])
     doorMode = NORMAL;
     splashscreen('0');
     //if (sem_init(&semThread, 0, 0) != 0) {printf("Erro a inicializar semaforo da thread\n"); return -1;}
-    //if (sem_init(&semMain, 0, 0) != 0) {printf("Erro a inicializar semaforo principal\n"); return -1;}
+    //if (sem_init(&semMain, 1, 0) != 0) {printf("Erro a inicializar semaforo principal\n"); return -1;}
 
     sem_init(&semThread, 0, 0);
     sem_init(&semMain, 0, 0);
@@ -47,6 +49,7 @@ int main(int argc, char *argv[])
    if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
         printf("Error Creating Door Thread\n");
    }
+
     printf("Introduza o identificador: ");
     
     while(1){
@@ -67,6 +70,8 @@ int main(int argc, char *argv[])
         }
         else {
             if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
+            //esperar que processe semaforo!
+            sem_wait(&semMain);
             printf("Introduza o identificador: ");
         }
         //sem_post(&semThread);
@@ -95,6 +100,12 @@ printf("-------------------------------------------------------");
 
 printf("%s\n", KWHT);
 printf("\nPorta %c\n", clientDoor);
+
+if(mode == 'C'){
+    printf("%s\nCache Reset!%s\n\n", KRED, KWHT);
+    mode = doorMode;    
+}
+
 printf("Door Mode: ");
 if(mode == 'N'){
     printf("Normal\n\n");
