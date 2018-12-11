@@ -16,8 +16,17 @@ int processMessage(doorcomm_t msgQIN){
         return 1;
     }
     else if(strcmp(msgQIN.header, "CEP") == 0){
+        msgQOUT.porta = clientDoor;
         msgQOUT.state = doorMode;
-        strcpy(msgQOUT.header, "DONE");
+        strcpy(msgQOUT.header, "CEPANS");
+        //clientQinit();
+        sendQMessage(msgQOUT);
+        return 1;
+    }
+    else if(strcmp(msgQIN.header, "CEP0") == 0){
+        msgQOUT.porta = clientDoor;
+        msgQOUT.state = doorMode;
+        strcpy(msgQOUT.header, "CEPANS0");
         //clientQinit();
         sendQMessage(msgQOUT);
         return 1;

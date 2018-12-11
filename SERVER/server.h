@@ -50,5 +50,5 @@ extern message_t intgestParser(message_t msgIN);
 extern int initQueue();
 extern doorcomm_t recieveQMessage();
 void splashscreen();
-extern int answerDoor();
+extern int processMessage(doorcomm_t inQMsg);
 extern int initFileSystem();

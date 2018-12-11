@@ -164,14 +164,14 @@ int cep (int argc, char** argv)
   sendInfo(&msgOut);
 
   msgIn = recieveInfo();
-
+  printf("\nDoor States:\n");
   if(argv[1][0] == '0'){
-    printf("Door A state: %c\n\n", msgIn.reguti[0].port[0]);
-    printf("Door B state: %c\n\n", msgIn.reguti[0].port[1]);
-    printf("Door C state: %c\n\n", msgIn.reguti[0].port[2]);
+    printf("\tDoor A: %c\n", msgIn.reguti[0].port[0]);
+    printf("\tDoor B: %c\n", msgIn.reguti[0].port[1]);
+    printf("\tDoor C: %c\n\n", msgIn.reguti[0].port[2]);
   }
   else{
-    printf("Door %c state: %c\n\n", door, msgIn.reguti[0].port[0]);
+    printf("\tDoor %c state: %c\n\n", door, msgIn.reguti[0].port[0]);
   }
 
 

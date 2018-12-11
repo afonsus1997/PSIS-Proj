@@ -13,7 +13,7 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 
-message_t intgestParser(message_t msgIN);
+int intgestParser(message_t msgIN);
 
 #endif
 

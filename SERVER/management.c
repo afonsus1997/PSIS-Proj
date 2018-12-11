@@ -16,6 +16,7 @@
 uti_t *usersBufferFile;
 uti_t usersBuffer[UMAX];
 char estadoPortas[3];
+char cepTemp[3] = {'\0', '\0', '\0'};
 
 int mfdFUTI;
 int initFileSystem(){
@@ -162,15 +163,15 @@ void printPorts(char ports[NPOR+1]){
     }
 }
 
-char CEPHelper(char currDoor){
+int CEPHelper(char currDoor){
 /*
  * Function:  CEPHelper 
  * --------------------
  *  Handles the communication with the doors for the CEP command.
  *  This function exists in order do reduce spaguetti code 
+ * 
  *  Returns:
  *      (char) door state
- * 
  * 
  */
     doorcomm_t dummyMsg;
@@ -178,23 +179,46 @@ char CEPHelper(char currDoor){
     message_t msgOUT;
     if(currDoor == 'A'){
         strcpy(dummyMsg.cid, CTLA);
-        }
-        else if(currDoor == 'B'){
-            strcpy(dummyMsg.cid, CTLB);
-        }
-        else if(currDoor == 'C'){
-            strcpy(dummyMsg.cid, CTLC);
-        }
-
         strcpy(msgQOUT.header, "CEP");
         sendQMessage(dummyMsg, msgQOUT);
-        
-        doorcomm_t msgQIN = recieveQMessage();
-        return msgQIN.state;        
+        return 1;
+    }
+    else if(currDoor == 'B'){
+        strcpy(dummyMsg.cid, CTLB);
+        strcpy(msgQOUT.header, "CEP");
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == 'C'){
+        strcpy(dummyMsg.cid, CTLC);
+        strcpy(msgQOUT.header, "CEP");
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == '0')
+    {
+        strcpy(dummyMsg.cid, CTLA);
+        strcpy(msgQOUT.header, "CEP0");
+        sendQMessage(dummyMsg, msgQOUT);
+
+        strcpy(dummyMsg.cid, CTLB);
+        strcpy(msgQOUT.header, "CEP0");
+        sendQMessage(dummyMsg, msgQOUT);
+
+        strcpy(dummyMsg.cid, CTLC);
+        strcpy(msgQOUT.header, "CEP0");
+        sendQMessage(dummyMsg, msgQOUT);
+
+        return 1;
+    }
+
+        return 0;
+        //doorcomm_t msgQIN = recieveQMessage();
+        //return msgQIN.state;        
         
 }
 
-message_t intgestParser(message_t msgIN){
+int intgestParser(message_t msgIN){
 /*
  * Function:  intgestParser 
  * --------------------
@@ -217,7 +241,8 @@ message_t intgestParser(message_t msgIN){
             if(strcmp(msgIN.reguti[0].id, usersBuffer[i].id) == 0){
                 strcpy(msgOUT.header, "User already exists!");
                 printf("Error: User already exists\n");
-                return msgOUT;
+                sendMessage(msgOUT);
+                return 1;
             }
         }
         
@@ -256,7 +281,8 @@ message_t intgestParser(message_t msgIN){
 
 
         strcpy(msgOUT.header, "User created!");
-        return msgOUT;
+        sendMessage(msgOUT);
+        return 1;
     }
     else if(strcmp(msgIN.header, "LUTI") == 0)
     {
@@ -281,7 +307,8 @@ message_t intgestParser(message_t msgIN){
             strcpy(msgOUT.header, "User List Empty");
             else
             strcpy(msgOUT.header, "Done");
-            return msgOUT;
+            sendMessage(msgOUT);
+            return 1;
         }
         else{
             for(i = 0; i < UMAX; i++)
@@ -291,11 +318,13 @@ message_t intgestParser(message_t msgIN){
                     strcpy(msgOUT.reguti[0].nome, usersBuffer[i].nome);
                     strcpy(msgOUT.reguti[0].port, usersBuffer[i].port);
                     strcpy(msgOUT.header, "Done");
-                    return msgOUT;
+                    sendMessage(msgOUT);
+                    return 1;
                 }
             }
             strcpy(msgOUT.header, "User Not Found");
-            return msgOUT;
+            sendMessage(msgOUT);
+            return 1;
         }
     }
     else if(strcmp(msgIN.header, "EUTI") == 0)
@@ -334,7 +363,8 @@ message_t intgestParser(message_t msgIN){
             }
         }
         strcpy(msgOUT.header, "Deleted Specified user");
-        return msgOUT;
+        sendMessage(msgOUT);
+        return 1;
     }
     else if(strcmp(msgIN.header, "MPU") == 0)
     {
@@ -371,13 +401,15 @@ message_t intgestParser(message_t msgIN){
         }
 
         strcpy(msgOUT.header, "MPUDONE");
-        return msgOUT;
+        sendMessage(msgOUT);
+        return 1;
     }
     else if(strcmp(msgIN.header, "LAPU") == 0)
     {
         //list acesses
         strcpy(msgOUT.header, "LAPUDONE");
-        return msgOUT;   
+        sendMessage(msgOUT);
+        return 1;   
     }
     else if(strcmp(msgIN.header, "CEP") == 0)
     {
@@ -386,35 +418,48 @@ message_t intgestParser(message_t msgIN){
         char currDoor = msgIN.reguti[0].port[0];
         char currDoorState;        
         if(currDoor == '0'){
-            msgOUT.reguti[0].port[0] = CEPHelper('A');
-            msgOUT.reguti[0].port[1] = CEPHelper('B');
-            msgOUT.reguti[0].port[2] = CEPHelper('C');
-            strcpy(msgOUT.header, "CEP DONE");
-            return msgOUT;
+            //msgOUT.reguti[0].port[0] = CEPHelper('A');
+            //msgOUT.reguti[0].port[1] = CEPHelper('B');
+            //msgOUT.reguti[0].port[2] = CEPHelper('C');
+            //strcpy(msgOUT.header, "CEP DONE");            
+            //return msgOUT;
+            CEPHelper('0');
         }
         else{
-            msgOUT.reguti[0].port[0] = CEPHelper(currDoor);
-            msgOUT.reguti[0].port[1] = '\0';
-            strcpy(msgOUT.header, "CEP DONE");
-            return msgOUT;
+            //msgOUT.reguti[0].port[0] = CEPHelper(currDoor);
+            //msgOUT.reguti[0].port[1] = '\0';
+            CEPHelper(currDoor);
+            //strcpy(msgOUT.header, "CEP DONE");
+            //return msgOUT;
         }
            
     }
+
+    else if(strcmp(msgIN.header, "CEPANS") == 0)
+    {
+
+        
+           
+    }
+
     else if(strcmp(msgIN.header, "MEP") == 0)
     {
         //edit door state
         strcpy(msgOUT.header, "MEPDONE");
-        return msgOUT;   
+        sendMessage(msgOUT);
+        return 1;  
     }
     else if(strcmp(msgIN.header, "RIP") == 0)
     {
         //RIPALL!!!
         strcpy(msgOUT.header, "RIPDONE");
-        return msgOUT;   
+        sendMessage(msgOUT);
+        return 1;   
     }
     else{
         strcpy(msgOUT.header, "INVALIDH");
-        return msgOUT;   
+        sendMessage(msgOUT);
+        return 1;  
     }
 
 }
@@ -433,10 +478,9 @@ int checkAccess(char door, char doors[NPOR+1]){
 
 //----------QUEUES--------
 
-int answerDoor(){
+int answerQuery(doorcomm_t inQMsg){
     doorcomm_t outQMsg;
-    doorcomm_t inQMsg = recieveQMessage();
-    printf("Recieved query ID from door : %c\n", inQMsg.porta);
+    
     int i,j=0;
     for(i = 0;i < UMAX;i++)
     {
@@ -448,9 +492,46 @@ int answerDoor(){
     outQMsg.porta = inQMsg.porta;
     strcpy(outQMsg.header, "QUERY");
     sendQMessage(inQMsg, outQMsg);
-
-
-  
   
 }
+
+
+
+int processMessage(doorcomm_t msgQIN){
+    message_t msgOUT;
+    printf("Recieved query ID from door : %c\n", msgQIN.porta);
+    if(strcmp(msgQIN.header, "QUERY") == 0){
+        answerQuery(msgQIN);
+    }
+    else if(strcmp(msgQIN.header, "CEPANS0") == 0){
+        if(strcmp(msgQIN.cid, CTLA) == 0 ){
+            cepTemp[0] = msgQIN.state;
+        }
+        else if(strcmp(msgQIN.cid, CTLB) == 0 ){
+            cepTemp[1] = msgQIN.state;
+        }
+        else if(strcmp(msgQIN.cid, CTLC) == 0 ){
+            cepTemp[2] = msgQIN.state;
+        }
+        
+        if(cepTemp[0] != '\0' && cepTemp[1] != '\0' && cepTemp[2] != '\0'){
+            msgOUT.reguti[0].port[0] = cepTemp[0];
+            msgOUT.reguti[0].port[1] = cepTemp[1];
+            msgOUT.reguti[0].port[2] = cepTemp[2];
+            strcpy(msgOUT.header, "CEP DONE");
+            sendMessage(msgOUT);
+            cepTemp[0] = '\0'; cepTemp[1] = '\0'; cepTemp[2] = '\0';
+        }
+    }
+    else if(strcmp(msgQIN.header, "CEPANS") == 0){
+        
+        msgOUT.reguti[0].port[0] = msgQIN.state;
+        msgOUT.reguti[0].port[1] = '\0';
+        strcpy(msgOUT.header, "CEP DONE");
+        sendMessage(msgOUT);
+    }
+    
+    
+}
+
 

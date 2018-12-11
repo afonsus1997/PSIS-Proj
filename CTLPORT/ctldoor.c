@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
         askDoor.porta = clientDoor;
         strcpy(askDoor.cid, cliname);
-        
+        strcpy(askDoor.header, "QUERY");
         if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
         
         sem_post(&semThread);

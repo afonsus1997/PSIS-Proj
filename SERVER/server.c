@@ -28,7 +28,7 @@ void *thread_func(void * pi)  //Door answer thread
   initQueue();
   while(1){
       //printf("\n");
-      //answerDoor();
+      processMessage(recieveQMessage());
       
   }
 }
@@ -65,7 +65,7 @@ int main()
                 break;                
             }
             
-            sendMessage(intgestParser(msgIN));
+            intgestParser(msgIN);
 
         }
         
