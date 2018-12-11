@@ -46,7 +46,9 @@ struct 	command_d {
   {mpu,      "mpu","                  modificar portas utilizador u (0-todos), portas ABC"},
   {lapu,     "lapu","                 listar acessos porta p (0-todas), utilizador u (0-todos), entre t1 (dd/mm/aaaa hh:mm:ss) e t2"},
   {tserv,    "tserv","                Termina o servidor." },
-  {cep,    "cep","                Termina o servidor." }
+  {cep,    "cep","                Termina o servidor." },
+  {mep,    "mep","                Termina o servidor." }
+
 };
 
 #define NCOMMANDS  (sizeof(commands)/sizeof(struct command_d))

@@ -24,6 +24,7 @@
 
 #define NDIG 4 /* numero de digitos do identificador */
 #define IDX "9999" /* identificador especial de acesso */
+#define IDXn "9999\n" /* identificador especial de acesso */
 #define MAXN 50 /* dimensao maxima do nome do utilizador */
 #define CMAX 5 /* dimensao da cache de utilizadores */
 #define UMAX 15 /* numero maximo de utilizadores */
@@ -51,6 +52,8 @@
 #define KWHT  "\x1B[37m"
 
 
+
+
 #endif
 
 typedef struct uti_s { /* estrutura de um registo utilizador */
@@ -76,7 +79,6 @@ typedef struct doorcomm{
 
   char usersCache[UMAX][NDIG+1];
 
-
 char cliname[10];
 char readBuf[NDIG+5];
 struct mq_attr ma;
@@ -91,3 +93,4 @@ char clientDoor;
 
 sem_t semThread;
 sem_t semMain;
+char doorMode;

@@ -172,7 +172,6 @@ int CEPHelper(char currDoor){
  * 
  *  Returns:
  *      (char) door state
- * 
  */
     doorcomm_t dummyMsg;
     doorcomm_t msgQOUT;
@@ -218,6 +217,66 @@ int CEPHelper(char currDoor){
         
 }
 
+int MEPHelper(char currDoor, char state){
+/*
+ * Function:  CEPHelper 
+ * --------------------
+ *  Handles the communication with the doors for the CEP command.
+ *  This function exists in order do reduce spaguetti code 
+ * 
+ *  Returns:
+ *      (char) door state
+ */
+    doorcomm_t dummyMsg;
+    doorcomm_t msgQOUT;
+    message_t msgOUT;
+    if(currDoor == 'A'){
+        strcpy(dummyMsg.cid, CTLA);
+        strcpy(msgQOUT.header, "MEP");
+        msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == 'B'){
+        strcpy(dummyMsg.cid, CTLB);
+        strcpy(msgQOUT.header, "MEP");
+        msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == 'C'){
+        strcpy(dummyMsg.cid, CTLC);
+        strcpy(msgQOUT.header, "MEP");
+        msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+        return 1;
+    }
+    else if(currDoor == '0')
+    {
+        strcpy(dummyMsg.cid, CTLA);
+        strcpy(msgQOUT.header, "MEP0");
+        msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+
+        strcpy(dummyMsg.cid, CTLB);
+        strcpy(msgQOUT.header, "CEP0");
+        msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+
+        strcpy(dummyMsg.cid, CTLC);
+        strcpy(msgQOUT.header, "CEP0");
+        msgQOUT.state = state;
+        sendQMessage(dummyMsg, msgQOUT);
+
+        return 1;
+    }
+
+        return 0;
+        //doorcomm_t msgQIN = recieveQMessage();
+        //return msgQIN.state;        
+        
+}
+
 int intgestParser(message_t msgIN){
 /*
  * Function:  intgestParser 
@@ -225,7 +284,8 @@ int intgestParser(message_t msgIN){
  *  Checks if message is empty
  * 
  *  Returns:
- *      Message of type message_t
+ *      1: If successful
+ *      0: If not successful
  */
     uti_t user;
     message_t msgOUT;
@@ -418,37 +478,31 @@ int intgestParser(message_t msgIN){
         char currDoor = msgIN.reguti[0].port[0];
         char currDoorState;        
         if(currDoor == '0'){
-            //msgOUT.reguti[0].port[0] = CEPHelper('A');
-            //msgOUT.reguti[0].port[1] = CEPHelper('B');
-            //msgOUT.reguti[0].port[2] = CEPHelper('C');
-            //strcpy(msgOUT.header, "CEP DONE");            
-            //return msgOUT;
             CEPHelper('0');
         }
         else{
-            //msgOUT.reguti[0].port[0] = CEPHelper(currDoor);
-            //msgOUT.reguti[0].port[1] = '\0';
             CEPHelper(currDoor);
-            //strcpy(msgOUT.header, "CEP DONE");
-            //return msgOUT;
         }
-           
-    }
-
-    else if(strcmp(msgIN.header, "CEPANS") == 0)
-    {
-
-        
            
     }
 
     else if(strcmp(msgIN.header, "MEP") == 0)
     {
         //edit door state
+        strcpy(msgQOUT.header, "MEP");
+        if(msgIN.reguti[0].port[0] == '0')
+            MEPHelper(msgIN.reguti[0].port[0], msgIN.reguti[0].port[1]); //
+        else                                                             // THIS IS STUPID
+            MEPHelper(msgIN.reguti[0].port[0], msgIN.reguti[0].port[1]);//
+
+
         strcpy(msgOUT.header, "MEPDONE");
         sendMessage(msgOUT);
         return 1;  
     }
+    
+    
+
     else if(strcmp(msgIN.header, "RIP") == 0)
     {
         //RIPALL!!!
@@ -465,20 +519,37 @@ int intgestParser(message_t msgIN){
 }
 
 
-
 int checkAccess(char door, char doors[NPOR+1]){
+/*
+ * Function:  checkAccess 
+ * --------------------
+ *  Checks access
+ * 
+ *  Returns:
+ *      1: If has access
+ *      0: If it doesent have access
+ */
     if(door == 'A')
-    return doors[0] == '1';
+        return doors[0] == '1';
     else if(door == 'B')
-    return doors[1] == '1';
+        return doors[1] == '1';
     else if(door == 'C')
-    return doors[2] == '1';
+        return doors[2] == '1';
     else return 0;
 }
 
 //----------QUEUES--------
 
 int answerQuery(doorcomm_t inQMsg){
+ /*
+ * Function:  answerQuery 
+ * --------------------
+ *  Answers to user access query on ctldoor 
+ * 
+ *  Returns:
+ *      1
+ *      0
+ */   
     doorcomm_t outQMsg;
     
     int i,j=0;
@@ -495,11 +566,18 @@ int answerQuery(doorcomm_t inQMsg){
   
 }
 
-
-
 int processMessage(doorcomm_t msgQIN){
+    /*
+ * Function:  processMessage 
+ * --------------------
+ *  Processes Queue message 
+ * 
+ *  Returns:
+ *      1
+ *      0
+ */ 
     message_t msgOUT;
-    printf("Recieved query ID from door : %c\n", msgQIN.porta);
+    printf("Recieved query from door : %c\n\n", msgQIN.porta);
     if(strcmp(msgQIN.header, "QUERY") == 0){
         answerQuery(msgQIN);
     }
@@ -522,6 +600,7 @@ int processMessage(doorcomm_t msgQIN){
             sendMessage(msgOUT);
             cepTemp[0] = '\0'; cepTemp[1] = '\0'; cepTemp[2] = '\0';
         }
+        
     }
     else if(strcmp(msgQIN.header, "CEPANS") == 0){
         

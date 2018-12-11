@@ -3,7 +3,11 @@
 
 extern int sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();
-char doorMode = NORMAL;
+extern void splashscreen(char mode);
+
+//char doorMode = NORMAL;
+
+
 
 int processMessage(doorcomm_t msgQIN){
     doorcomm_t msgQOUT;
@@ -26,13 +30,18 @@ int processMessage(doorcomm_t msgQIN){
     else if(strcmp(msgQIN.header, "CEP0") == 0){
         msgQOUT.porta = clientDoor;
         msgQOUT.state = doorMode;
+        strcpy(msgQOUT.cid, cliname);
         strcpy(msgQOUT.header, "CEPANS0");
         //clientQinit();
         sendQMessage(msgQOUT);
         return 1;
     }
     else if(strcmp(msgQIN.header, "MEP") == 0){
-
+        doorMode = msgQIN.state;
+        splashscreen(doorMode);
+        
+        
+        
     }
     else if(strcmp(msgQIN.header, "RIP") == 0){
         clearCache();

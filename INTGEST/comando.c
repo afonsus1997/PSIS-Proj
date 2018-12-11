@@ -187,8 +187,11 @@ int mep (int argc, char** argv)
   }
 
   strcpy(msgOut.header, "MEP");
-  strcpy(msgOut.reguti[0].nome, argv[2]);  //ESTADO
-  strcpy(msgOut.reguti[0].port, argv[1]);
+  char buf[5];
+  strcpy(buf, argv[1]);
+  msgOut.reguti[0].port[0] = buf[0];
+  strcpy(buf, argv[2]);
+  msgOut.reguti[0].port[1] = buf[0];
   sendInfo(&msgOut);
   
   recieveInfo();

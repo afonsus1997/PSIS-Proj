@@ -27,9 +27,10 @@ void *thread_func(void * pi)  //Door answer thread
 
 int main(int argc, char *argv[])
 {
-    splashscreen();
+    
     clientDoor = argv[1][0];
-    printf("Porta %c\n", clientDoor);
+    doorMode = NORMAL;
+    splashscreen('0');
     //if (sem_init(&semThread, 0, 0) != 0) {printf("Erro a inicializar semaforo da thread\n"); return -1;}
     //if (sem_init(&semMain, 0, 0) != 0) {printf("Erro a inicializar semaforo principal\n"); return -1;}
 
@@ -46,20 +47,30 @@ int main(int argc, char *argv[])
    if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
         printf("Error Creating Door Thread\n");
    }
-
-
+    printf("Introduza o identificador: ");
+    
     while(1){
-        printf("Introduza o identificador: "); // Pede o identificador ao utilizador
+         // Pede o identificador ao utilizador
+        
         fgets(readBuf, sizeof(readBuf), stdin);
         strcpy(askDoor.id[0], readBuf);
 
         askDoor.porta = clientDoor;
         strcpy(askDoor.cid, cliname);
         strcpy(askDoor.header, "QUERY");
-        if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
-        
-        sem_post(&semThread);
-        sem_wait(&semMain);
+        if(doorMode == 'F'){
+            if(strcmp(readBuf, IDXn)==0)
+                printf("\n%sSuperUser detected, Access Granted!%s\n\n", KGRN, KWHT);
+            else
+                printf("\n%sAccess Denied!%s\n\n", KRED, KWHT);
+            printf("Introduza o identificador especial: ");
+        }
+        else {
+            if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
+            printf("Introduza o identificador: ");
+        }
+        //sem_post(&semThread);
+        //sem_wait(&semMain);
     }
     
     if(clientQClose() < 0){printf("Erro ao fechar Queueeue\n");}
@@ -67,8 +78,8 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-void splashscreen(){
-
+void splashscreen(char mode){
+char buf[25];
 system("clear");
 printf("\n\n%s", KGRN);
 printf("-------------------------------------------------------\n");
@@ -82,5 +93,31 @@ printf("|  %sAfonso Muralha | Miguel Dias | Tomas Bettencourt%s   |  \n", KWHT, 
 printf("|                                                     |  \n");
 printf("-------------------------------------------------------");
 
-printf("%s\n\n", KWHT);
+printf("%s\n", KWHT);
+printf("\nPorta %c\n", clientDoor);
+printf("Door Mode: ");
+if(mode == 'N'){
+    printf("Normal\n\n");
+    //printf("Introduza o identificador: ");
+    strcpy(buf, "Introduza o identificador: ");
+    write(1, buf, strlen(buf));
+}
+else if(mode == 'A'){
+    printf("%sOpen%s\n\n", KGRN, KWHT);
+    //printf("Introduza o identificador?: ");
+    strcpy(buf, "Introduza o identificador?: ");
+    write(1, buf, strlen(buf));
+}
+else if((mode == 'F')){
+    printf("%sClosed%s\n\n", KRED, KWHT);
+    //printf("Introduza o identificador especial: ");
+    strcpy(buf, "Introduza o identificador especial: ");
+    write(1, buf, strlen(buf));
+}
+else{
+    printf("Normal\n\n");
+}
+
+
+
 }
