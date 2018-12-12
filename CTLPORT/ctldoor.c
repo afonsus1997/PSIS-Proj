@@ -69,17 +69,23 @@ int main(int argc, char *argv[])
                 printf("\n%sAccess Denied!%s\n\n", KRED, KWHT);
             printf("Introduza o identificador especial: ");
         }
-        else {
+        else if(doorMode == 'N'){
             if(sendQMessage(askDoor) == 0 ){
                 /*Sem ligacao ao server, verificar na cache*/
                 printf("\nCan't connect to server, validating locally...\n");
                 checkCache(askDoor.id[0]);
                 //sem_post(&semMain);
             }
+        }
+        else if(doorMode == 'A'){
+            printf("\n%sAccess Granted!%s\n\n", KGRN, KWHT);
+            sendRegister(askDoor.id[0], '1');
+            sem_post(&semMain);
+        }
             //esperar que processe semaforo!
             sem_wait(&semMain);
             printf("Introduza o identificador: ");
-        }
+        
         //sem_post(&semThread);
         //sem_wait(&semMain);
     }
