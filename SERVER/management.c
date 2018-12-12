@@ -594,7 +594,7 @@ int intgestParser(message_t msgIN){
             int i;
             for(i = 0; i < UMAX-1; i++)
             {   
-                if(strcmp(usersBuffer[i].id, "\000") != 0){
+                if(usersBuffer[i].id[0] != '\0'){
                 pthread_mutex_lock(&lockUsers);
                 strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
                 pthread_mutex_unlock(&lockUsers);
@@ -608,13 +608,15 @@ int intgestParser(message_t msgIN){
             int i;
             for(i = 0; i < UMAX-1; i++)
             {
-                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) ==0){
+                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0 ){
                     pthread_mutex_lock(&lockUsers);
                     strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
                     pthread_mutex_unlock(&lockUsers);
                     printf("Modified User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
-                    printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
+                    printf("\tPORTAs:"); 
+                    printPorts(usersBuffer[i].port); 
+                    printf("\n\n");
                     break;
                 }
             }

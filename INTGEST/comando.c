@@ -116,7 +116,23 @@ int mpu (int argc, char** argv)
 
   strcpy(msgOut.header, "MPU");
   strcpy(msgOut.reguti[0].id, argv[1]);
-  strcpy(msgOut.reguti[0].port, argv[2]);
+  strcpy(msgOut.reguti[0].port, "000");
+
+  int i;
+  for(i=0;i<NPOR-1;i++){
+    if(argv[2][i] == '\0')
+      break;
+    else{
+      if(argv[2][i] == 'A')
+        msgOut.reguti[0].port[0] = '1';  
+      else if(argv[2][i] == 'B')
+        msgOut.reguti[0].port[1] = '1';  
+      else if(argv[2][i] == 'C')
+        msgOut.reguti[0].port[2] = '1';  
+    }
+
+  }
+
   sendInfo(&msgOut);
   recieveInfo();
 
