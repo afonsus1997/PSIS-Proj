@@ -49,7 +49,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <sys/time.h>
-
+#include <signal.h>
 #endif
 
 pthread_mutex_t lockUsers;
@@ -84,3 +84,8 @@ typedef struct doorcomm{
 	reg_t	reg;     
   } doorcomm_t;
 
+typedef struct flogStruct{
+	int oldest;
+	int last;
+	reg_t reg[NREG];
+}flogStruct_t;

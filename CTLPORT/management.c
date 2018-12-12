@@ -108,7 +108,7 @@ int checkCache(char id[NDIG+1]){
 
 
 
-
+/*
 int validacao(doorcomm_t msgIN, char msgId[NDIG+1]){
     int i,j,contador=0;
 
@@ -125,4 +125,4 @@ int validacao(doorcomm_t msgIN, char msgId[NDIG+1]){
     else{
         return 0;
     }
-}
+}*/

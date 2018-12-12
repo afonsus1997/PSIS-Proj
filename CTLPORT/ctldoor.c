@@ -13,6 +13,7 @@ extern sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();
 extern int clientQClose();
 extern int processMessage(doorcomm_t answer);
+extern int checkCache(char id[NDIG+1]);
 
 void *thread_func(void * pi)  //Door answer thread
 {
@@ -69,7 +70,12 @@ int main(int argc, char *argv[])
             printf("Introduza o identificador especial: ");
         }
         else {
-            if(sendQMessage(askDoor) < 0 ){/*Sem ligacao ao server, verificar na cache*/}
+            if(sendQMessage(askDoor) == 0 ){
+                /*Sem ligacao ao server, verificar na cache*/
+                printf("\nCan't connect to server, validating locally...\n");
+                checkCache(askDoor.id[0]);
+                //sem_post(&semMain);
+            }
             //esperar que processe semaforo!
             sem_wait(&semMain);
             printf("Introduza o identificador: ");

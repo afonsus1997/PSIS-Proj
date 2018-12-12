@@ -21,6 +21,10 @@ message_t msgOUT;
 int threadID;
 pthread_t thread;
 
+void exitHandler(int sn){
+    closeServer();
+    exit(0);
+}
 
 void *thread_func(void * pi)  //Door answer thread
 {
@@ -49,6 +53,9 @@ int main()
 
 
     serverInit();
+
+    signal(SIGINT, exitHandler);
+
 
     if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
         printf("Error Creating Door Thread\n");

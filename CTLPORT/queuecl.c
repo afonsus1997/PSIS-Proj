@@ -3,17 +3,23 @@
 
 
 int sendQMessage(doorcomm_t inMsg){
-    if (mq_send(mqids, &inMsg, sizeof(doorcomm_t), 0) < 0) { //Envia a mensagem para o servidor
-        perror("Controlador: erro a enviar mensagem");
-        return -1;
+    
+    //clientQClose();
+    if ((mqids=mq_open(SERVQ, O_RDWR), 0666, &ma) < 0) {
+        perror("Cliente: Erro a associar a queue servidor");
     }
-    return 0; 
+
+    if (mq_send(mqids, &inMsg, sizeof(doorcomm_t), 0) == -1) { //Envia a mensagem para o servidor
+        //perror("");
+        return 0;
+    }
+    return 1; 
 }
 
 doorcomm_t receiveQMessage(){
     doorcomm_t outMsg;
     if (mq_receive(mqidc, &outMsg, sizeof(doorcomm_t), NULL) < 0) { // recebe os ids de todos os utilizadores
-        perror("Controlador: erro a receber mensagem");
+        //perror("Controlador: erro a receber mensagem");
     }
     return outMsg;
     //timeout

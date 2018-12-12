@@ -14,7 +14,7 @@
 #include "management.h"
 
 uti_t *usersBufferFile;
-reg_t *regBufferFile;
+flogStruct_t *regBufferFile;
 uti_t usersBuffer[UMAX];
 char estadoPortas[3];
 char cepTemp[3] = {'\0', '\0', '\0'};
@@ -54,15 +54,21 @@ int initFileSystem(){
         perror("Erro a criar ficheiro"); exit(-1);
     }  
     else {
-        if (ftruncate(mfdFLOG, sizeof(regBufferFile)) < 0) { /* definir tamanho do ficheiro*/
+        if (ftruncate(mfdFLOG, sizeof(flogStruct_t)) < 0) { /* definir tamanho do ficheiro*/
             perror("Erro no ftruncate"); exit(-1);
                 }
         }
+    
  /* mapear ficheiro */
-    if ((regBufferFile=(reg_t*)mmap(NULL, sizeof(reg_t)*150, PROT_READ|PROT_WRITE, MAP_SHARED, mfdFLOG, 0)) < (reg_t *)0) {
+    if ((regBufferFile=(flogStruct_t*)mmap(NULL, sizeof(flogStruct_t), PROT_READ|PROT_WRITE, MAP_SHARED, mfdFLOG, 0)) < (reg_t *)0) {
         perror("Erro em mmap"); exit(-1);
     }
 
+    if(regBufferFile->reg[0].p == '\0'){
+        printf("\n\nREG file empty\n\n");
+        regBufferFile->last=0;
+        regBufferFile->oldest=0;
+    }
 
     clearBuffer();
     printf("Loading users from filesystem:\n\n");
@@ -84,7 +90,7 @@ int closeFileSystem(){
  * --------------------
  *  Closes file system and stores current users on local file 
  *  We are aware that this is not the best way to do it, but changing it would require
- *  redo a bit part of the project
+ *  redo a big part of the project
  * 
  *  Returns:
  *      1: if completed successfuly
@@ -105,7 +111,7 @@ int closeFileSystem(){
         
     }
     munmap(usersBufferFile, sizeof(usersBuffer)); close(mfdFUTI);
-    munmap(regBufferFile, sizeof(reg_t)*150); close(FLOG);
+    munmap(regBufferFile, sizeof(flogStruct_t)); close(FLOG);
     return 1;
 }
 
@@ -124,8 +130,6 @@ int clearBuffer(){
     }
     return 1;
 }
-
-
 
 struct tm timespecToTm(struct timespec t){
 /*
@@ -183,6 +187,27 @@ void printTimespecString(struct timespec t){
     tm = timespecToTm(t);
     strftime(&str[0], sizeof(str), "%d/%m/%Y %H:%M:%S\n", &tm); // specify format of str
     printf("%s\n\n", str); // e.g. “15/11/2011 15:45:25” 
+
+}
+
+int addToRegT(reg_t reg){
+    
+    if(regBufferFile->last == NREG-1){
+        
+        regBufferFile->oldest++;
+        regBufferFile->reg[regBufferFile->last] = reg;
+        printf("\n\nWrote to pos %i\n", regBufferFile->last);
+        regBufferFile->last = 0;
+    }
+    else if(regBufferFile->oldest != 0 || (regBufferFile->oldest == 0 && regBufferFile->last !=0)){
+        printf("\n\nWrote to pos %i\n", regBufferFile->last);        
+        regBufferFile->reg[regBufferFile->last++] = reg;
+    }
+    else if(regBufferFile->oldest == 0 && regBufferFile->last == 0){
+        regBufferFile->reg[0] = reg;
+        printf("\n\nWrote to pos %i\n", regBufferFile->last);
+        regBufferFile->last++;
+    }
 
 }
 
@@ -750,6 +775,7 @@ int processMessage(doorcomm_t msgQIN){
         //printf("%ld\n", msgQIN.reg.t.tv_sec);
         printf("Successfull entry on door %c at:\n\t", msgQIN.porta);
         printTimespecString(msgQIN.reg.t);
+        addToRegT(msgQIN.reg);
         //printf("%ld\n", stringToTimespec("11/12/2018 16:02:37"));
     }
     

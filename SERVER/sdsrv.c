@@ -79,7 +79,7 @@ int closeServer(){
   closeFileSystem();
   printf("\n\nStopping server...\n");
   closeQServer();
-  close(sd);
+  //close(sd);
   unlink(SERVNAME);
   printf("\nDone!\n");
   return 0;

@@ -85,6 +85,7 @@ typedef struct doorcomm{
 char cliname[10];
 char readBuf[NDIG+5];
 struct mq_attr ma;
+//mq_flags = O_NONBLOCK;
 char message[NDIG+1];
 char servmsg[30];
 int mqids, mqidc;
