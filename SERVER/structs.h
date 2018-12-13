@@ -9,18 +9,18 @@
 #define CLINAME "/tmp/CLI"
 #define MSG "Cliente pergunta?!"
 
-#define NDIG 4 /* numero de digitos do identificador */
-#define IDX "9999" /* identificador especial de acesso */
-#define MAXN 50 /* dimensao maxima do nome do utilizador */
-#define CMAX 5 /* dimensao da cache de utilizadores */
-#define UMAX 15 /* numero maximo de utilizadores */
-#define FUTI "USERS.DAT" /* ficheiro relativo aos utilizadores */
-#define NREG 150 /* numero maximo de registos no ficheiro */
+#define NDIG 4			   /* numero de digitos do identificador */
+#define IDX "9999"		   /* identificador especial de acesso */
+#define MAXN 50			   /* dimensao maxima do nome do utilizador */
+#define CMAX 5			   /* dimensao da cache de utilizadores */
+#define UMAX 15			   /* numero maximo de utilizadores */
+#define FUTI "USERS.DAT"   /* ficheiro relativo aos utilizadores */
+#define NREG 150		   /* numero maximo de registos no ficheiro */
 #define FLOG "ACESSOS.LOG" /* ficheiro com historico dos acessos */
-#define SERVS "/tmp/SERV" /* nome do servidor (socket) */
-#define SERVQ "/SERV" /* nome do servidor (queue) */
+#define SERVS "/tmp/SERV"  /* nome do servidor (socket) */
+#define SERVQ "/SERV"	  /* nome do servidor (queue) */
 // ou #define SERVQ 0x53 /* (’S’) nome (chave) do servidor (msg) */
-#define NPOR 4 /* numero de portas a controlar (ABC...) */
+#define NPOR 4		 /* numero de portas a controlar (ABC...) */
 #define CTLA "/CTLA" /* nome do controlador A (queue) */
 // ou #define CTLA 0x4341 /* (’C’’A’) nome (chave) do controlador A (msg) */
 #define CTLB "/CTLB" /* nome do controlador B (queue) */
@@ -32,15 +32,15 @@
 #define ABERTO 'A'
 #define FECHADO 'F'
 
-#define KNRM  "\x1B[0m"
-#define KRED  "\x1B[31m"
-#define KGRN  "\x1B[32m"
-#define KYEL  "\x1B[33m"
+#define KNRM "\x1B[0m"
+#define KRED "\x1B[31m"
+#define KGRN "\x1B[32m"
+#define KYEL "\x1B[33m"
 //#define KYEL "\e[0;97;41m"
-#define KBLU  "\x1B[34m"
-#define KMAG  "\x1B[35m"
-#define KCYN  "\x1B[36m"
-#define KWHT  "\x1B[37m"
+#define KBLU "\x1B[34m"
+#define KMAG "\x1B[35m"
+#define KCYN "\x1B[36m"
+#define KWHT "\x1B[37m"
 
 //#define KBEG "\e[0;97;41m"
 
@@ -54,38 +54,42 @@
 
 pthread_mutex_t lockUsers;
 
-
-typedef struct uti_s { /* estrutura de um registo utilizador */
-	char id[NDIG+1]; /* identificador do utilizador */
-	char nome[MAXN]; /* nome do utilizador */
+typedef struct uti_s
+{							  /* estrutura de um registo utilizador */
+	char id[NDIG + 1];		  /* identificador do utilizador */
+	char nome[MAXN];		  /* nome do utilizador */
 	unsigned char port[NPOR]; /* portas acess´ıveis ao utilizador: 1-acesso 0-n~ao */
 } uti_t;
-typedef struct reg_s { /* estrutura de um registo historico */
+typedef struct reg_s
+{					   /* estrutura de um registo historico */
 	struct timespec t; /* estampilha temporal */
-	char p; /* identificador da porta: A,B,C */
-	char id[NDIG+1]; /* identificador do utilizador */
-	unsigned char ac; /* acesso: 1-concedido; 0-recusado */
+	char p;			   /* identificador da porta: A,B,C */
+	char id[NDIG + 1]; /* identificador do utilizador */
+	unsigned char ac;  /* acesso: 1-concedido; 0-recusado */
 } reg_t;
 
-typedef struct message{
-	
-	char header[20]; 
+typedef struct message
+{
+
+	char header[20];
 	uti_t reguti[UMAX];
 	reg_t regt[2];
-	
-}message_t;
 
-typedef struct doorcomm{
-	char 	header[20];
-	char    cid[10];
-    char    porta;
-    char    id[UMAX][NDIG+1];   
-	char 	state;
-	reg_t	reg;     
-  } doorcomm_t;
+} message_t;
 
-typedef struct flogStruct{
+typedef struct doorcomm
+{
+	char header[20];
+	char cid[10];
+	char porta;
+	char id[UMAX][NDIG + 1];
+	char state;
+	reg_t reg;
+} doorcomm_t;
+
+typedef struct flogStruct
+{
 	int oldest;
 	int last;
 	reg_t reg[NREG];
-}flogStruct_t;
+} flogStruct_t;

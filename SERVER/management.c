@@ -20,8 +20,9 @@ char estadoPortas[3];
 char cepTemp[3] = {'\0', '\0', '\0'};
 
 int mfdFUTI;
-int initFileSystem(){
- /*
+int initFileSystem()
+{
+    /*
  * Function:  initFileSystem 
  * --------------------
  *  Initializes file system and loads users to a buffer 
@@ -33,59 +34,79 @@ int initFileSystem(){
  *      0: if error
  */
     int i, mfdFUTI, mfdFLOG;
-   
- //--------FUTI  
-    if ((mfdFUTI=open(FUTI, O_RDWR | O_CREAT, 0666 )) < 0) { /* abrir / criar ficheiro */
-        perror("Erro a criar ficheiro"); exit(-1);
-    }  
-    else {
-        if (ftruncate(mfdFUTI, sizeof(usersBuffer)) < 0) { /* definir tamanho do ficheiro*/
-            perror("Erro no ftruncate"); exit(-1);
-                }
-        }
- /* mapear ficheiro */
-    if ((usersBufferFile=(uti_t*)mmap(NULL, sizeof(usersBuffer), PROT_READ|PROT_WRITE, MAP_SHARED, mfdFUTI, 0)) < (uti_t *)0) {
-        perror("Erro em mmap"); exit(-1);
-    }
-    
-//----------FLOG
 
-    if ((mfdFLOG=open(FLOG, O_RDWR | O_CREAT, 0666 )) < 0) { /* abrir / criar ficheiro */
-        perror("Erro a criar ficheiro"); exit(-1);
-    }  
-    else {
-        if (ftruncate(mfdFLOG, sizeof(flogStruct_t)) < 0) { /* definir tamanho do ficheiro*/
-            perror("Erro no ftruncate"); exit(-1);
-                }
+    //--------FUTI
+    if ((mfdFUTI = open(FUTI, O_RDWR | O_CREAT, 0666)) < 0)
+    { /* abrir / criar ficheiro */
+        perror("Erro a criar ficheiro");
+        exit(-1);
+    }
+    else
+    {
+        if (ftruncate(mfdFUTI, sizeof(usersBuffer)) < 0)
+        { /* definir tamanho do ficheiro*/
+            perror("Erro no ftruncate");
+            exit(-1);
         }
-    
- /* mapear ficheiro */
-    if ((regBufferFile=(flogStruct_t*)mmap(NULL, sizeof(flogStruct_t), PROT_READ|PROT_WRITE, MAP_SHARED, mfdFLOG, 0)) < (reg_t *)0) {
-        perror("Erro em mmap"); exit(-1);
+    }
+    /* mapear ficheiro */
+    if ((usersBufferFile = (uti_t *)mmap(NULL, sizeof(usersBuffer), PROT_READ | PROT_WRITE, MAP_SHARED, mfdFUTI, 0)) < (uti_t *)0)
+    {
+        perror("Erro em mmap");
+        exit(-1);
     }
 
-    if(regBufferFile->reg[0].p == '\0'){
+    //----------FLOG
+
+    if ((mfdFLOG = open(FLOG, O_RDWR | O_CREAT, 0666)) < 0)
+    { /* abrir / criar ficheiro */
+        perror("Erro a criar ficheiro");
+        exit(-1);
+    }
+    else
+    {
+        if (ftruncate(mfdFLOG, sizeof(flogStruct_t)) < 0)
+        { /* definir tamanho do ficheiro*/
+            perror("Erro no ftruncate");
+            exit(-1);
+        }
+    }
+
+    /* mapear ficheiro */
+    if ((regBufferFile = (flogStruct_t *)mmap(NULL, sizeof(flogStruct_t), PROT_READ | PROT_WRITE, MAP_SHARED, mfdFLOG, 0)) < (reg_t *)0)
+    {
+        perror("Erro em mmap");
+        exit(-1);
+    }
+
+    if (regBufferFile->reg[0].p == '\0')
+    {
         printf("\n\nREG file empty\n\n");
-        regBufferFile->last=0;
-        regBufferFile->oldest=0;
+        regBufferFile->last = 0;
+        regBufferFile->oldest = 0;
     }
 
     clearBuffer();
     printf("Loading users from filesystem:\n\n");
-    for(i=0; i<UMAX;i++){
-        if(strcmp(usersBufferFile[i].id, "\0")!=0){
-        printf("\tID: %s\n", usersBufferFile[i].id);
-        printf("\tNOME: %s\n", usersBufferFile[i].nome);
-        printf("\tPORTAs:"); printPorts(usersBufferFile[i].port); printf("\n\n");
-        usersBuffer[i] = usersBufferFile[i];
+    for (i = 0; i < UMAX; i++)
+    {
+        if (strcmp(usersBufferFile[i].id, "\0") != 0)
+        {
+            printf("\tID: %s\n", usersBufferFile[i].id);
+            printf("\tNOME: %s\n", usersBufferFile[i].nome);
+            printf("\tPORTAs:");
+            printPorts(usersBufferFile[i].port);
+            printf("\n\n");
+            usersBuffer[i] = usersBufferFile[i];
         }
     }
-    
+
     return 0;
 }
 
-int closeFileSystem(){
-/*
+int closeFileSystem()
+{
+    /*
  * Function:  closeFileSystem 
  * --------------------
  *  Closes file system and stores current users on local file 
@@ -98,25 +119,30 @@ int closeFileSystem(){
  */
     printf("Saving users to filesystem:\n\n");
     int i;
-    for(i=0; i<UMAX;i++){
-        if(strcmp(usersBuffer[i].id, "\0")!=0){
+    for (i = 0; i < UMAX; i++)
+    {
+        if (strcmp(usersBuffer[i].id, "\0") != 0)
+        {
             usersBufferFile[i] = usersBuffer[i];
             printf("\tID: %s\n", usersBufferFile[i].id);
             printf("\tNOME: %s\n", usersBufferFile[i].nome);
-            printf("\tPORTAs:"); printPorts(usersBufferFile[i].port); printf("\n\n");
-            
+            printf("\tPORTAs:");
+            printPorts(usersBufferFile[i].port);
+            printf("\n\n");
         }
         else
-            memset(&usersBufferFile[i], '\0', sizeof(char)*(NDIG+1));
-        
+            memset(&usersBufferFile[i], '\0', sizeof(char) * (NDIG + 1));
     }
-    munmap(usersBufferFile, sizeof(usersBuffer)); close(mfdFUTI);
-    munmap(regBufferFile, sizeof(flogStruct_t)); close(FLOG);
+    munmap(usersBufferFile, sizeof(usersBuffer));
+    close(mfdFUTI);
+    munmap(regBufferFile, sizeof(flogStruct_t));
+    close(FLOG);
     return 1;
 }
 
-int clearBuffer(){
-/*
+int clearBuffer()
+{
+    /*
  * Function:  clearBuffer 
  * --------------------
  *  Clears users buffer. This has to be done to avoid sending garbadge to intgest
@@ -125,14 +151,16 @@ int clearBuffer(){
  *      1: if completed successfuly
  */
     int i;
-    for(i = 0; i < UMAX-1; i++){
-        memset(&usersBuffer[i], '\0', sizeof(char)*(NDIG+1));
+    for (i = 0; i < UMAX - 1; i++)
+    {
+        memset(&usersBuffer[i], '\0', sizeof(char) * (NDIG + 1));
     }
     return 1;
 }
 
-struct tm timespecToTm(struct timespec t){
-/*
+struct tm timespecToTm(struct timespec t)
+{
+    /*
  * Function:  timespecToTm 
  * --------------------
  *  Converts timespec to tm.
@@ -145,73 +173,79 @@ struct tm timespecToTm(struct timespec t){
     return tm;
 }
 
-struct timespec tmToTimespec(struct tm tm){
-/*
+struct timespec tmToTimespec(struct tm tm)
+{
+    /*
  * Function:  tmToTimespec 
  * --------------------
  *  Converts tm to timespec.
  * 
  *  Returns:
  *      (timespec) converted tm
- */    
+ */
     struct timespec t;
     t.tv_sec = mktime(&tm);
     return t;
 }
 
-struct timespec stringToTimespec(char string[26]){
-/*
+struct timespec stringToTimespec(char string[26])
+{
+    /*
  * Function:  stringToTimespec 
  * --------------------
  *  Parses string to timespec.
  * 
  *  Returns:
  *      (timespec) parsed string
- */   
+ */
     struct tm tm;
     strptime(string, "%d/%m/%Y %H:%M:%S\n", &tm);
-    return tmToTimespec(tm); 
+    return tmToTimespec(tm);
 }
 
-void printTimespecString(struct timespec t){
-/*
+void printTimespecString(struct timespec t)
+{
+    /*
  * Function:  printTimespecString 
  * --------------------
  *  Converts timespec to string and prints it.
  * 
  *  Returns:
  *      (void) 
- */ 
+ */
     char str[26];
     struct tm tm;
     tm = timespecToTm(t);
     strftime(&str[0], sizeof(str), "%d/%m/%Y %H:%M:%S\n", &tm); // specify format of str
-    printf("%s\n", str); // e.g. “15/11/2011 15:45:25” 
-
+    printf("%s\n", str);                                        // e.g. “15/11/2011 15:45:25”
 }
 
-int addToRegT(reg_t reg){
-    
-    if(regBufferFile->last == NREG-1){
-        
+int addToRegT(reg_t reg)
+{
+
+    if (regBufferFile->last == NREG - 1)
+    {
+
         regBufferFile->oldest++;
         regBufferFile->reg[regBufferFile->last] = reg;
         printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
         regBufferFile->last = 0;
     }
-    else if(regBufferFile->oldest != 0 || (regBufferFile->oldest == 0 && regBufferFile->last !=0)){
-        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);        
+    else if (regBufferFile->oldest != 0 || (regBufferFile->oldest == 0 && regBufferFile->last != 0))
+    {
+        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
         regBufferFile->reg[regBufferFile->last++] = reg;
     }
-    else if(regBufferFile->oldest == 0 && regBufferFile->last == 0){
+    else if (regBufferFile->oldest == 0 && regBufferFile->last == 0)
+    {
         regBufferFile->reg[0] = reg;
         printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
         regBufferFile->last++;
     }
-
 }
 
-int checkEmpty(int pos){
+int checkEmpty(int pos)
+{
     /*
  * Function:  checkEmpty 
  * --------------------
@@ -222,18 +256,19 @@ int checkEmpty(int pos){
  *      0: if users buffer is not empty
  */
     int i;
-    for(i = 0; i < NDIG; i++)
+    for (i = 0; i < NDIG; i++)
     {
-        if(usersBuffer[pos].id[i] != '\0'){
+        if (usersBuffer[pos].id[i] != '\0')
+        {
             return 0;
         }
     }
     return 1;
-
 }
 
-int checkEmptyMsg(char string[NDIG+1]){
-   /*
+int checkEmptyMsg(char string[NDIG + 1])
+{
+    /*
  * Function:  checkEmpty 
  * --------------------
  *  Checks if message is empty
@@ -242,17 +277,19 @@ int checkEmptyMsg(char string[NDIG+1]){
  *      1: if message is empty
  *      0: if message is not empty
  */
-   int i;
-    for(i = 0; i < NDIG; i++)
+    int i;
+    for (i = 0; i < NDIG; i++)
     {
-        if(string[i] != '\0'){
+        if (string[i] != '\0')
+        {
             return 0;
         }
     }
-    return 1; 
+    return 1;
 }
 
-void printPorts(char ports[NPOR+1]){
+void printPorts(char ports[NPOR + 1])
+{
     /*
  * Function:  printPorts 
  * --------------------
@@ -261,17 +298,23 @@ void printPorts(char ports[NPOR+1]){
  * 
  */
     int i;
-    for(i=0 ; i<NPOR ; i++){
-        if(ports[i] == '1'){
-            if(i==0) printf(" %c", 'A');
-            if(i==1) printf(" %c", 'B');
-            if(i==2) printf(" %c", 'C');
+    for (i = 0; i < NPOR; i++)
+    {
+        if (ports[i] == '1')
+        {
+            if (i == 0)
+                printf(" %c", 'A');
+            if (i == 1)
+                printf(" %c", 'B');
+            if (i == 2)
+                printf(" %c", 'C');
         }
     }
 }
 
-int CEPHelper(char currDoor){
-/*
+int CEPHelper(char currDoor)
+{
+    /*
  * Function:  CEPHelper 
  * --------------------
  *  Handles the communication with the doors for the CEP command.
@@ -284,25 +327,28 @@ int CEPHelper(char currDoor){
     doorcomm_t dummyMsg;
     doorcomm_t msgQOUT;
     message_t msgOUT;
-    if(currDoor == 'A'){
+    if (currDoor == 'A')
+    {
         strcpy(dummyMsg.cid, CTLA);
         strcpy(msgQOUT.header, "CEP");
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == 'B'){
+    else if (currDoor == 'B')
+    {
         strcpy(dummyMsg.cid, CTLB);
         strcpy(msgQOUT.header, "CEP");
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == 'C'){
+    else if (currDoor == 'C')
+    {
         strcpy(dummyMsg.cid, CTLC);
         strcpy(msgQOUT.header, "CEP");
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == '0')
+    else if (currDoor == '0')
     {
         strcpy(dummyMsg.cid, CTLA);
         strcpy(msgQOUT.header, "CEP0");
@@ -319,14 +365,14 @@ int CEPHelper(char currDoor){
         return 1;
     }
 
-        return 0;
-        //doorcomm_t msgQIN = recieveQMessage();
-        //return msgQIN.state;        
-        
+    return 0;
+    //doorcomm_t msgQIN = recieveQMessage();
+    //return msgQIN.state;
 }
 
-int MEPHelper(char currDoor, char state){
-/*
+int MEPHelper(char currDoor, char state)
+{
+    /*
  * Function:  MEPHelper 
  * --------------------
  *  Handles the communication with the doors for the MEP command.
@@ -339,28 +385,31 @@ int MEPHelper(char currDoor, char state){
     doorcomm_t dummyMsg;
     doorcomm_t msgQOUT;
     message_t msgOUT;
-    if(currDoor == 'A'){
+    if (currDoor == 'A')
+    {
         strcpy(dummyMsg.cid, CTLA);
         strcpy(msgQOUT.header, "MEP");
         msgQOUT.state = state;
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == 'B'){
+    else if (currDoor == 'B')
+    {
         strcpy(dummyMsg.cid, CTLB);
         strcpy(msgQOUT.header, "MEP");
         msgQOUT.state = state;
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == 'C'){
+    else if (currDoor == 'C')
+    {
         strcpy(dummyMsg.cid, CTLC);
         strcpy(msgQOUT.header, "MEP");
         msgQOUT.state = state;
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == '0')
+    else if (currDoor == '0')
     {
         strcpy(dummyMsg.cid, CTLA);
         strcpy(msgQOUT.header, "MEP");
@@ -380,188 +429,196 @@ int MEPHelper(char currDoor, char state){
         return 1;
     }
 
-        return 0;
-        //doorcomm_t msgQIN = recieveQMessage();
-        //return msgQIN.state;        
-        
+    return 0;
+    //doorcomm_t msgQIN = recieveQMessage();
+    //return msgQIN.state;
 }
 
-int LAPUHelper(message_t msg){
+int LAPUHelper(message_t msg)
+{
     char currPort = msg.reguti[0].port[0];
-    char currUser[NDIG+1];
+    char currUser[NDIG + 1];
     strcpy(currUser, msg.reguti[0].id);
     struct timespec t1 = msg.regt[0].t;
     struct timespec t2 = msg.regt[2].t;
     message_t msgOut;
     strcpy(msgOut.header, "LAPUC");
 
-    if(currPort != '0'){ //specific port
+    if (currPort != '0')
+    { //specific port
         int i;
-        for(i=regBufferFile->last; i<NREG-1; i++){ //from most recent to end of array
-            if(regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
-                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '0' ){ //if all users
+        for (i = regBufferFile->last; i < NREG - 1; i++)
+        { //from most recent to end of array
+            if (regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec)
+            { //if port matches and time is bigger than t1(x or 0)
+                if (t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec)
+                { // t2 not 0 and time < t2
+                    if (currUser[0] == '0')
+                    { //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
-                        
                     }
-                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
-
-                    } 
+                    }
                 }
-                else if(t2.tv_sec == 0){
-                    if(currUser[0] == '0'){ //if all users
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }
-                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }    
+                else if (t2.tv_sec == 0)
+                {
+                    if (currUser[0] == '0')
+                    { //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
                     }
-                else{
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                }
+                else
+                {
                     break;
                 }
             }
         }
-        for(i=0; i<regBufferFile->last-1; i++){ //from start of the array to oldest
-            if(regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
-                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '0' ){ //if all users
+        for (i = 0; i < regBufferFile->last - 1; i++)
+        { //from start of the array to oldest
+            if (regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec)
+            { //if port matches and time is bigger than t1(x or 0)
+                if (t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec)
+                { // t2 not 0 and time < t2
+                    if (currUser[0] == '0')
+                    { //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
-
-
                     }
-                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
-
-
-                    } 
+                    }
                 }
-                else if(t2.tv_sec == 0){
-                    if(currUser[0] == '0'){ //if all users
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }
-                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }    
-                    }
-                else{
-                    break;
-                }
-            }
-        }
-        
-    }
-    else{
-        int i;
-        for(i=regBufferFile->last; i<NREG-1; i++){ //from most recent to end of array
-            if(regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
-                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '0'){ //if all users
+                else if (t2.tv_sec == 0)
+                {
+                    if (currUser[0] == '0')
+                    { //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
-
-
                     }
-                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
-
-
-                    } 
-                }
-                else if(t2.tv_sec == 0){
-                    if(currUser[0] == '0'){ //if all users
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }
-                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }    
                     }
-                else{
-                    break;
                 }
-            }
-        }
-        for(i=0; i<regBufferFile->last-1; i++){ //from start of the array to oldest
-            if(regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
-                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '0'){ //if all users
-                        //copy info and send
-                        msgOut.regt[0] = regBufferFile->reg[i];
-                        sendMessage(msgOut);
-
-
-                    }
-                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
-                        //copy info and send
-                        msgOut.regt[0] = regBufferFile->reg[i];
-                        sendMessage(msgOut);
-
-
-                    } 
-                }
-                else if(t2.tv_sec == 0){
-                    if(currUser[0] == '0'){ //if all users
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }
-                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
-                            //copy info and send
-                            msgOut.regt[0] = regBufferFile->reg[i];
-                            sendMessage(msgOut);
-
-
-                        }    
-                    }
-                else{
+                else
+                {
                     break;
                 }
             }
         }
     }
-    
+    else
+    {
+        int i;
+        for (i = regBufferFile->last; i < NREG - 1; i++)
+        { //from most recent to end of array
+            if (regBufferFile->reg[i].t.tv_sec > t1.tv_sec)
+            { //if port matches and time is bigger than t1(x or 0)
+                if (t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec)
+                { // t2 not 0 and time < t2
+                    if (currUser[0] == '0')
+                    { //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                }
+                else if (t2.tv_sec == 0)
+                {
+                    if (currUser[0] == '0')
+                    { //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        for (i = 0; i < regBufferFile->last - 1; i++)
+        { //from start of the array to oldest
+            if (regBufferFile->reg[i].t.tv_sec > t1.tv_sec)
+            { //if port matches and time is bigger than t1(x or 0)
+                if (t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec)
+                { // t2 not 0 and time < t2
+                    if (currUser[0] == '0')
+                    { //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                }
+                else if (t2.tv_sec == 0)
+                {
+                    if (currUser[0] == '0')
+                    { //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                    else if (strcmp(currUser, regBufferFile->reg[i].id) == 0)
+                    { //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
     return 1;
 }
 
-int RIPHelper(char currDoor){
-/*
+int RIPHelper(char currDoor)
+{
+    /*
  * Function:  RIPHelper 
  * --------------------
  *  Handles the communication with the doors for the RIP command.
@@ -576,22 +633,25 @@ int RIPHelper(char currDoor){
     message_t msgOUT;
     strcpy(msgQOUT.header, "RIP");
 
-    if(currDoor == 'A'){
+    if (currDoor == 'A')
+    {
         strcpy(dummyMsg.cid, CTLA);
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == 'B'){
+    else if (currDoor == 'B')
+    {
         strcpy(dummyMsg.cid, CTLB);
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == 'C'){
+    else if (currDoor == 'C')
+    {
         strcpy(dummyMsg.cid, CTLC);
         sendQMessage(dummyMsg, msgQOUT);
         return 1;
     }
-    else if(currDoor == '0')
+    else if (currDoor == '0')
     {
         strcpy(dummyMsg.cid, CTLA);
         sendQMessage(dummyMsg, msgQOUT);
@@ -605,14 +665,14 @@ int RIPHelper(char currDoor){
         return 1;
     }
 
-        return 0;
-        //doorcomm_t msgQIN = recieveQMessage();
-        //return msgQIN.state;        
-        
+    return 0;
+    //doorcomm_t msgQIN = recieveQMessage();
+    //return msgQIN.state;
 }
 
-int intgestParser(message_t msgIN){
-/*
+int intgestParser(message_t msgIN)
+{
+    /*
  * Function:  intgestParser 
  * --------------------
  *  Checks if message is empty
@@ -626,44 +686,50 @@ int intgestParser(message_t msgIN){
     doorcomm_t msgQOUT;
     doorcomm_t msgQIN;
 
-    if(strcmp(msgIN.header, "NUTI") == 0){
-        
-        
+    if (strcmp(msgIN.header, "NUTI") == 0)
+    {
+
         //add new user function
         int i;
-        for(i = 0; i<UMAX-1; i++){
-            if(strcmp(msgIN.reguti[0].id, usersBuffer[i].id) == 0){
+        for (i = 0; i < UMAX - 1; i++)
+        {
+            if (strcmp(msgIN.reguti[0].id, usersBuffer[i].id) == 0)
+            {
                 strcpy(msgOUT.header, "User already exists!");
                 printf("Error: User already exists\n");
                 sendMessage(msgOUT);
                 return 1;
             }
         }
-        
-        for(i = 0 ; i<UMAX-1 ; i++){
 
-            if(checkEmpty(i))            
-            break;
+        for (i = 0; i < UMAX - 1; i++)
+        {
 
+            if (checkEmpty(i))
+                break;
         }
         pthread_mutex_lock(&lockUsers);
         strcpy(usersBuffer[i].id, msgIN.reguti[0].id);
         strcpy(usersBuffer[i].nome, msgIN.reguti[0].nome);
         int j;
 
-        usersBuffer[i].port[0] = '0';    //
-        usersBuffer[i].port[1] = '0';    //  DO THIS IN A BETTER WAY PLEEEASE
-        usersBuffer[i].port[2] = '0';    //
+        usersBuffer[i].port[0] = '0'; //
+        usersBuffer[i].port[1] = '0'; //  DO THIS IN A BETTER WAY PLEEEASE
+        usersBuffer[i].port[2] = '0'; //
 
-        for(j=0 ; j<NPOR ; j++){
-            if(msgIN.reguti[0].port[j] == 'A'){
-                usersBuffer[i].port[0] = '1';    
+        for (j = 0; j < NPOR; j++)
+        {
+            if (msgIN.reguti[0].port[j] == 'A')
+            {
+                usersBuffer[i].port[0] = '1';
             }
-            else if(msgIN.reguti[0].port[j] == 'B'){
-                usersBuffer[i].port[1] = '1';    
+            else if (msgIN.reguti[0].port[j] == 'B')
+            {
+                usersBuffer[i].port[1] = '1';
             }
-            else if(msgIN.reguti[0].port[j] == 'C'){
-                usersBuffer[i].port[2] = '1';    
+            else if (msgIN.reguti[0].port[j] == 'C')
+            {
+                usersBuffer[i].port[2] = '1';
             }
         }
         pthread_mutex_unlock(&lockUsers);
@@ -671,43 +737,49 @@ int intgestParser(message_t msgIN){
         printf("New User:\n");
         printf("\tID: %s\n", msgIN.reguti[0].id);
         printf("\tNOME: %s\n", msgIN.reguti[0].nome);
-        printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
-
+        printf("\tPORTAs:");
+        printPorts(usersBuffer[i].port);
+        printf("\n\n");
 
         strcpy(msgOUT.header, "User created!");
         sendMessage(msgOUT);
         return 1;
     }
-    else if(strcmp(msgIN.header, "LUTI") == 0)
+    else if (strcmp(msgIN.header, "LUTI") == 0)
     {
         //get user list
         int j = 0;
         int i = 0;
-        if(strcmp(msgIN.reguti[0].id, "0")==0){
-            
-            for(i = 0; i < UMAX; i++)
+        if (strcmp(msgIN.reguti[0].id, "0") == 0)
+        {
+
+            for (i = 0; i < UMAX; i++)
             {
-                if(strcmp(usersBuffer[i].id, "\0") != 0){
+                if (strcmp(usersBuffer[i].id, "\0") != 0)
+                {
                     strcpy(msgOUT.reguti[i].id, usersBuffer[i].id);
                     strcpy(msgOUT.reguti[i].nome, usersBuffer[i].nome);
                     strcpy(msgOUT.reguti[i].port, usersBuffer[i].port);
                     j++;
                 }
-                else{
-                    memset(&msgOUT.reguti[i].id, '\0', sizeof(char)*(NDIG+1));
+                else
+                {
+                    memset(&msgOUT.reguti[i].id, '\0', sizeof(char) * (NDIG + 1));
                 }
             }
-            if(j==UMAX-1)
-            strcpy(msgOUT.header, "User List Empty");
+            if (j == UMAX - 1)
+                strcpy(msgOUT.header, "User List Empty");
             else
-            strcpy(msgOUT.header, "Done");
+                strcpy(msgOUT.header, "Done");
             sendMessage(msgOUT);
             return 1;
         }
-        else{
-            for(i = 0; i < UMAX; i++)
+        else
+        {
+            for (i = 0; i < UMAX; i++)
             {
-                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0){
+                if (strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0)
+                {
                     strcpy(msgOUT.reguti[0].id, usersBuffer[i].id);
                     strcpy(msgOUT.reguti[0].nome, usersBuffer[i].nome);
                     strcpy(msgOUT.reguti[0].port, usersBuffer[i].port);
@@ -721,34 +793,42 @@ int intgestParser(message_t msgIN){
             return 1;
         }
     }
-    else if(strcmp(msgIN.header, "EUTI") == 0)
+    else if (strcmp(msgIN.header, "EUTI") == 0)
     {
-        
+
         int i;
-        if(strcmp(msgIN.reguti[0].id, "0")==0){
-            for(i = 0; i < UMAX-1; i++)
+        if (strcmp(msgIN.reguti[0].id, "0") == 0)
+        {
+            for (i = 0; i < UMAX - 1; i++)
             {
-                if(strcmp(usersBuffer[i].id, "\0") != 0){
+                if (strcmp(usersBuffer[i].id, "\0") != 0)
+                {
                     printf("Deleted User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
                     printf("\tNOME: %s\n", usersBuffer[i].nome);
-                    printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
+                    printf("\tPORTAs:");
+                    printPorts(usersBuffer[i].port);
+                    printf("\n\n");
                     pthread_mutex_lock(&lockUsers);
                     memset(&usersBuffer[i], '\0', sizeof(uti_t));
                     pthread_mutex_unlock(&lockUsers);
                 }
             }
         }
-        else{
-            
-            for(i = 0; i < UMAX-1; i++)
+        else
+        {
+
+            for (i = 0; i < UMAX - 1; i++)
             {
-                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0){
-                    
+                if (strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0)
+                {
+
                     printf("Deleted User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
                     printf("\tNOME: %s\n", usersBuffer[i].nome);
-                    printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
+                    printf("\tPORTAs:");
+                    printPorts(usersBuffer[i].port);
+                    printf("\n\n");
                     pthread_mutex_lock(&lockUsers);
                     memset(&usersBuffer[i], '\0', sizeof(uti_t));
                     pthread_mutex_unlock(&lockUsers);
@@ -760,36 +840,42 @@ int intgestParser(message_t msgIN){
         sendMessage(msgOUT);
         return 1;
     }
-    else if(strcmp(msgIN.header, "MPU") == 0)
+    else if (strcmp(msgIN.header, "MPU") == 0)
     {
         //modify access
 
-        if(strcmp(msgIN.reguti[0].id, "0")==0){
+        if (strcmp(msgIN.reguti[0].id, "0") == 0)
+        {
             int i;
-            for(i = 0; i < UMAX-1; i++)
-            {   
-                if(usersBuffer[i].id[0] != '\0'){
-                pthread_mutex_lock(&lockUsers);
-                strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
-                pthread_mutex_unlock(&lockUsers);
-                printf("Modified User:\n");
-                printf("\tID: %s\n", usersBuffer[i].id);
-                printf("\tPORTAs:"); printPorts(usersBuffer[i].port); printf("\n\n");
-                }
-            }
-        }
-        else{
-            int i;
-            for(i = 0; i < UMAX-1; i++)
+            for (i = 0; i < UMAX - 1; i++)
             {
-                if(strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0 ){
+                if (usersBuffer[i].id[0] != '\0')
+                {
                     pthread_mutex_lock(&lockUsers);
                     strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
                     pthread_mutex_unlock(&lockUsers);
                     printf("Modified User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
-                    printf("\tPORTAs:"); 
-                    printPorts(usersBuffer[i].port); 
+                    printf("\tPORTAs:");
+                    printPorts(usersBuffer[i].port);
+                    printf("\n\n");
+                }
+            }
+        }
+        else
+        {
+            int i;
+            for (i = 0; i < UMAX - 1; i++)
+            {
+                if (strcmp(usersBuffer[i].id, msgIN.reguti[0].id) == 0)
+                {
+                    pthread_mutex_lock(&lockUsers);
+                    strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
+                    pthread_mutex_unlock(&lockUsers);
+                    printf("Modified User:\n");
+                    printf("\tID: %s\n", usersBuffer[i].id);
+                    printf("\tPORTAs:");
+                    printPorts(usersBuffer[i].port);
                     printf("\n\n");
                     break;
                 }
@@ -800,74 +886,61 @@ int intgestParser(message_t msgIN){
         sendMessage(msgOUT);
         return 1;
     }
-    else if(strcmp(msgIN.header, "LAPU") == 0)
+    else if (strcmp(msgIN.header, "LAPU") == 0)
     {
-        /*list acesses debug
-        strcpy(msgOUT.header, "LAPUC");
-        memcpy(&msgOUT.regt[0], regBufferFile[0].reg, sizeof(reg_t));
-        sendMessage(msgOUT);
-        strcpy(msgOUT.header, "LAPUC");
-        memcpy(&msgOUT.regt[0], regBufferFile[1].reg, sizeof(reg_t));
-        sendMessage(msgOUT);
-        strcpy(msgOUT.header, "LAPUC");
-        memcpy(&msgOUT.regt[0], regBufferFile[2].reg, sizeof(reg_t));
-        sendMessage(msgOUT);*/
-
         LAPUHelper(msgIN);
-
         strcpy(msgOUT.header, "LAPUDONE");
         sendMessage(msgOUT);
-        return 1;   
+        return 1;
     }
-    else if(strcmp(msgIN.header, "CEP") == 0)
+    else if (strcmp(msgIN.header, "CEP") == 0)
     {
         //consult door state
         doorcomm_t dummyMsg;
         char currDoor = msgIN.reguti[0].port[0];
-        char currDoorState;        
-        if(currDoor == '0'){
+        char currDoorState;
+        if (currDoor == '0')
+        {
             CEPHelper('0');
         }
-        else{
+        else
+        {
             CEPHelper(currDoor);
         }
-           
     }
-    else if(strcmp(msgIN.header, "MEP") == 0)
+    else if (strcmp(msgIN.header, "MEP") == 0)
     {
         //edit door state
         strcpy(msgQOUT.header, "MEP");
-        if(msgIN.reguti[0].port[0] == '0')
+        if (msgIN.reguti[0].port[0] == '0')
             MEPHelper(msgIN.reguti[0].port[0], msgIN.reguti[0].port[1]); //
         else                                                             // THIS IS STUPID
-            MEPHelper(msgIN.reguti[0].port[0], msgIN.reguti[0].port[1]);//
-
+            MEPHelper(msgIN.reguti[0].port[0], msgIN.reguti[0].port[1]); //
 
         strcpy(msgOUT.header, "MEPDONE");
         sendMessage(msgOUT);
-        return 1;  
+        return 1;
     }
-    else if(strcmp(msgIN.header, "RIP") == 0)
+    else if (strcmp(msgIN.header, "RIP") == 0)
     {
         RIPHelper(msgIN.reguti[0].port[0]);
         strcpy(msgQOUT.header, "RIP");
 
-
         strcpy(msgOUT.header, "RIPDONE");
         sendMessage(msgOUT);
-        return 1;   
+        return 1;
     }
-    else{
+    else
+    {
         strcpy(msgOUT.header, "INVALIDH");
         sendMessage(msgOUT);
-        return 1;  
+        return 1;
     }
-
 }
 
-
-int checkAccess(char door, char doors[NPOR+1]){
-/*
+int checkAccess(char door, char doors[NPOR + 1])
+{
+    /*
  * Function:  checkAccess 
  * --------------------
  *  Checks access
@@ -876,19 +949,21 @@ int checkAccess(char door, char doors[NPOR+1]){
  *      1: If has access
  *      0: If it doesent have access
  */
-    if(door == 'A')
+    if (door == 'A')
         return doors[0] == '1';
-    else if(door == 'B')
+    else if (door == 'B')
         return doors[1] == '1';
-    else if(door == 'C')
+    else if (door == 'C')
         return doors[2] == '1';
-    else return 0;
+    else
+        return 0;
 }
 
 //----------QUEUES--------
 
-int answerQuery(doorcomm_t inQMsg){
- /*
+int answerQuery(doorcomm_t inQMsg)
+{
+    /*
  * Function:  answerQuery 
  * --------------------
  *  Answers to user access query on ctldoor 
@@ -896,24 +971,25 @@ int answerQuery(doorcomm_t inQMsg){
  *  Returns:
  *      1
  *      0
- */   
+ */
     doorcomm_t outQMsg;
-    
-    int i,j=0;
-    for(i = 0;i < UMAX;i++)
+
+    int i, j = 0;
+    for (i = 0; i < UMAX; i++)
     {
-       if(checkAccess(inQMsg.porta, usersBuffer[i].port)){
-           strcpy(outQMsg.id[j++], usersBuffer[i].id);
-           //j++;
-       } 
+        if (checkAccess(inQMsg.porta, usersBuffer[i].port))
+        {
+            strcpy(outQMsg.id[j++], usersBuffer[i].id);
+            //j++;
+        }
     }
     outQMsg.porta = inQMsg.porta;
     strcpy(outQMsg.header, "QUERY");
     sendQMessage(inQMsg, outQMsg);
-  
 }
 
-int processMessage(doorcomm_t msgQIN){
+int processMessage(doorcomm_t msgQIN)
+{
     /*
  * Function:  processMessage 
  * --------------------
@@ -922,46 +998,55 @@ int processMessage(doorcomm_t msgQIN){
  *  Returns:
  *      1
  *      0
- */ 
+ */
     message_t msgOUT;
-    
-    if(strcmp(msgQIN.header, "QUERY") == 0){
+
+    if (strcmp(msgQIN.header, "QUERY") == 0)
+    {
         printf("Recieved query from door : %c\n\n", msgQIN.porta);
         answerQuery(msgQIN);
     }
-    else if(strcmp(msgQIN.header, "CEPANS0") == 0){
+    else if (strcmp(msgQIN.header, "CEPANS0") == 0)
+    {
         printf("Recieved query from door : %c\n\n", msgQIN.porta);
-        if(strcmp(msgQIN.cid, CTLA) == 0 ){
+        if (strcmp(msgQIN.cid, CTLA) == 0)
+        {
             cepTemp[0] = msgQIN.state;
         }
-        else if(strcmp(msgQIN.cid, CTLB) == 0 ){
+        else if (strcmp(msgQIN.cid, CTLB) == 0)
+        {
             cepTemp[1] = msgQIN.state;
         }
-        else if(strcmp(msgQIN.cid, CTLC) == 0 ){
+        else if (strcmp(msgQIN.cid, CTLC) == 0)
+        {
             cepTemp[2] = msgQIN.state;
         }
-        
-        if(cepTemp[0] != '\0' && cepTemp[1] != '\0' && cepTemp[2] != '\0'){
+
+        if (cepTemp[0] != '\0' && cepTemp[1] != '\0' && cepTemp[2] != '\0')
+        {
             msgOUT.reguti[0].port[0] = cepTemp[0];
             msgOUT.reguti[0].port[1] = cepTemp[1];
             msgOUT.reguti[0].port[2] = cepTemp[2];
             strcpy(msgOUT.header, "CEP DONE");
             sendMessage(msgOUT);
-            cepTemp[0] = '\0'; cepTemp[1] = '\0'; cepTemp[2] = '\0';
+            cepTemp[0] = '\0';
+            cepTemp[1] = '\0';
+            cepTemp[2] = '\0';
         }
-        
     }
-    else if(strcmp(msgQIN.header, "CEPANS") == 0){
-        
+    else if (strcmp(msgQIN.header, "CEPANS") == 0)
+    {
+
         printf("Recieved query from door : %c\n\n", msgQIN.porta);
         msgOUT.reguti[0].port[0] = msgQIN.state;
         msgOUT.reguti[0].port[1] = '\0';
         strcpy(msgOUT.header, "CEP DONE");
         sendMessage(msgOUT);
     }
-    else if(strcmp(msgQIN.header, "REGUSR") == 0){
+    else if (strcmp(msgQIN.header, "REGUSR") == 0)
+    {
         //printf("%ld\n", msgQIN.reg.t.tv_sec);
-        if(msgQIN.reg.ac == '1')
+        if (msgQIN.reg.ac == '1')
             printf("Successfull entry on door %c at: ", msgQIN.reg.p);
         else
             printf("Unsuccessfull entry on door %c at: ", msgQIN.reg.p);
@@ -969,8 +1054,4 @@ int processMessage(doorcomm_t msgQIN){
         addToRegT(msgQIN.reg);
         //printf("%ld\n", stringToTimespec("11/12/2018 16:02:37"));
     }
-    
-    
 }
-
-

@@ -25,7 +25,6 @@
 #define SERVNAME "/tmp/SERV1"
 #define MSG "Servidor responde!!!"
 
-
 int sd;
 struct sockaddr_un my_addr;
 socklen_t addrlen;
@@ -36,7 +35,8 @@ message_t msgIN;
 extern int closeFileSystem();
 extern int closeQServer();
 
-int serverInit(){
+int serverInit()
+{
   /*
  * Function:  serverInit 
  * --------------------
@@ -45,28 +45,32 @@ int serverInit(){
  *  Returns:
  *      1: If successful
  *      0: If not successful
- */ 
+ */
   printf("\nStarting Intgest Server...\n");
   unlink(SERVNAME);
-  if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0 ) {
-    perror("Erro a criar socket"); exit(-1);
+  if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0)
+  {
+    perror("Erro a criar socket");
+    exit(-1);
   }
-      
+
   my_addr.sun_family = AF_UNIX;
   memset(my_addr.sun_path, 0, sizeof(my_addr.sun_path));
   strcpy(my_addr.sun_path, SERVNAME);
   addrlen = sizeof(my_addr.sun_family) + strlen(my_addr.sun_path);
 
-  if (bind(sd, (struct sockaddr *)&my_addr, addrlen) < 0 ) {
-    perror("Erro no bind"); exit(-1);
+  if (bind(sd, (struct sockaddr *)&my_addr, addrlen) < 0)
+  {
+    perror("Erro no bind");
+    exit(-1);
   }
   printf("Done.\n\n");
 
   return 0;
-
 }
 
-int closeServer(){
+int closeServer()
+{
   /*
  * Function:  closeServer 
  * --------------------
@@ -75,7 +79,7 @@ int closeServer(){
  *  Returns:
  *      1: If successful
  *      0: If not successful
- */ 
+ */
   closeFileSystem();
   printf("\n\nStopping server...\n");
   closeQServer();
@@ -85,7 +89,8 @@ int closeServer(){
   return 0;
 }
 
-message_t recieveMessage(){
+message_t recieveMessage()
+{
   /*
  * Function:  recieveMessage 
  * --------------------
@@ -93,21 +98,23 @@ message_t recieveMessage(){
  * 
  *  Returns:
  *      (message_t) message
- */ 
+ */
   message_t msg;
   fromlen = sizeof(from);
 
-  if (recvfrom(sd, &msg, fromlen, 0, (struct sockaddr *)&from, 
-	       &fromlen) < 0) {
+  if (recvfrom(sd, &msg, fromlen, 0, (struct sockaddr *)&from, &fromlen) < 0)
+  {
     perror("Erro no recvfrom");
   }
-  else {
+  else
+  {
     return msg;
   }
 }
 
-int sendMessage(message_t msgOUT){
-    /*
+int sendMessage(message_t msgOUT)
+{
+  /*
  * Function:  sendMessage 
  * --------------------
  *  Sends message of type message_t using Datagram Sockets . 
@@ -115,18 +122,12 @@ int sendMessage(message_t msgOUT){
  *  Returns:
  *      1: If successful
  *      0: If not successful
- */ 
-  if (sendto(sd, &msgOUT, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0) {
+ */
+  if (sendto(sd, &msgOUT, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0)
+  {
 
-      perror("Erro no sendto");
-      return -1;
-    }
+    perror("Erro no sendto");
+    return -1;
+  }
   return 0;
 }
-
-
-
-
-
-
-

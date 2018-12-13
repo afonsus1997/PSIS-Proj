@@ -14,14 +14,11 @@
 #define SERVNAME "/SERV"
 #define TXTSIZE 10
 
-#endif 
-
-
+#endif
 
 int mqids, mqidc, i;
-  struct {
-    char    id[10];
-    char    mtext[TXTSIZE];   /* message text */
-  } msg;
-
-  
+struct
+{
+  char id[10];
+  char mtext[TXTSIZE]; /* message text */
+} msg;

@@ -12,37 +12,35 @@
 ***********************************************************************************
 */
 
-
 #include "server.h"
-
 
 message_t msgIN;
 message_t msgOUT;
 int threadID;
 pthread_t thread;
 
-void exitHandler(int sn){
+void exitHandler(int sn)
+{
     closeServer();
     exit(0);
 }
 
-void *thread_func(void * pi)  //Door answer thread
+void *thread_func(void *pi) //Door answer thread
 {
-  doorcomm_t msgIN;
-  initQueue();
-  while(1){
-      //printf("\n");
-      processMessage(recieveQMessage());
-      
-  }
+    doorcomm_t msgIN;
+    initQueue();
+    while (1)
+    {
+        //printf("\n");
+        processMessage(recieveQMessage());
+    }
 }
-
 
 int main()
 {
 
     splashscreen(); //good stuff right here ;)
-    
+
     initFileSystem();
 
     if (pthread_mutex_init(&lockUsers, NULL) != 0) //user array mutex initialization
@@ -51,45 +49,38 @@ int main()
         return 1;
     }
 
-
     serverInit();
 
     signal(SIGINT, exitHandler);
 
-
-    if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0) {
+    if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0)
+    {
         printf("Error Creating Door Thread\n");
     }
-        
-        while(1){                                  // main server (socket) loop 
-            msgIN = recieveMessage();
-            
-            if(strcmp(msgIN.header, "TSERV") == 0){
-                
-                strcpy(msgOUT.header, "Server killed");
-                sendMessage(msgOUT);
-                closeServer();
-                break;                
-            }
-            
-            intgestParser(msgIN);
 
+    while (1)
+    { // main server (socket) loop
+        msgIN = recieveMessage();
+
+        if (strcmp(msgIN.header, "TSERV") == 0)
+        {
+
+            strcpy(msgOUT.header, "Server killed");
+            sendMessage(msgOUT);
+            closeServer();
+            break;
         }
-        
 
-     
-
-
+        intgestParser(msgIN);
+    }
 
     pthread_mutex_destroy(&lockUsers);
     return 0;
 }
 
-
-
-
-void splashscreen(){
-/*
+void splashscreen()
+{
+    /*
  * Function:  splashscreen 
  * --------------------
  *  Draws a pretty splashcreen. 
@@ -113,10 +104,3 @@ void splashscreen(){
 
     printf("%s\n\n", KWHT);
 }
-
-   
-  
-  
-  
-  
-                                      

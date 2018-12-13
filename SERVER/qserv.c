@@ -11,14 +11,13 @@
 ***********************************************************************************
 */
 
-
 #include "qserv.h"
 
 struct mq_attr ma;
 
-
-int initQueue(){
-/*
+int initQueue()
+{
+  /*
  * Function:  initQueue 
  * --------------------
  *  Initializes Queues. 
@@ -31,18 +30,19 @@ int initQueue(){
   ma.mq_maxmsg = 2;
   ma.mq_msgsize = sizeof(doorcomm_t);
   printf("\nStarting Queue...\n");
-  if ((mqids=mq_open(SERVNAME, O_RDWR|O_CREAT, 0666, &ma)) < 0) {
+  if ((mqids = mq_open(SERVNAME, O_RDWR | O_CREAT, 0666, &ma)) < 0)
+  {
     perror("Servidor: Erro a criar queue servidor");
     exit(-1);
   }
   printf("Done.\n\n");
 
   printf("\nReady\n\n");
-
 }
 
-int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg){
-/*
+int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg)
+{
+  /*
  * Function:  sendQMessage 
  * --------------------
  *  Sends a message of type doorcomm_t using POSIX queues. 
@@ -50,35 +50,39 @@ int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg){
  *  Returns:
  *      1: If successful
  *      0: If not successful
- */    
-    
-    if ((mqidc=mq_open(inQMsg.cid, O_RDWR)) < 0) {
-      perror("Servidor: Erro a associar a queue cliente");
-    }
-    if (mq_send(mqidc, &outQMsg, sizeof(doorcomm_t), 0) < 0) {
-	perror("Servidor: erro a enviar mensagem");
-    }
+ */
+
+  if ((mqidc = mq_open(inQMsg.cid, O_RDWR)) < 0)
+  {
+    perror("Servidor: Erro a associar a queue cliente");
+  }
+  if (mq_send(mqidc, &outQMsg, sizeof(doorcomm_t), 0) < 0)
+  {
+    perror("Servidor: erro a enviar mensagem");
+  }
 }
 
-doorcomm_t recieveQMessage(){
-/*
+doorcomm_t recieveQMessage()
+{
+  /*
  * Function:  recieveQMessage 
  * --------------------
  *  Recieves a message of type doorcomm_t using POSIX queues. 
  * 
  *  Returns:
  *      (doorcomm_t) message
- */ 
+ */
   doorcomm_t inQMsg;
-  if (mq_receive(mqids, &inQMsg, sizeof(doorcomm_t), NULL) < 0) {
+  if (mq_receive(mqids, &inQMsg, sizeof(doorcomm_t), NULL) < 0)
+  {
     perror("Servidor: erro a receber mensagem");
   }
   return inQMsg;
 }
 
-
-int closeQServer(){
-/*
+int closeQServer()
+{
+  /*
  * Function:  closeQServer 
  * --------------------
  *  Unlinks POSIX Queue. 
@@ -86,10 +90,7 @@ int closeQServer(){
  *  Returns:
  *      1:?
  *      0:?
- */     
-    mq_unlink(SERVNAME);
-    //perror("Servidor: Erro a eliminar queue servidor");
-  
+ */
+  mq_unlink(SERVNAME);
+  //perror("Servidor: Erro a eliminar queue servidor");
 }
-
-
