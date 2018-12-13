@@ -94,14 +94,15 @@ message_t recieveMessage(){
  *  Returns:
  *      (message_t) message
  */ 
+  message_t msg;
   fromlen = sizeof(from);
 
-  if (recvfrom(sd, &msgIN, fromlen, 0, (struct sockaddr *)&from, 
+  if (recvfrom(sd, &msg, fromlen, 0, (struct sockaddr *)&from, 
 	       &fromlen) < 0) {
     perror("Erro no recvfrom");
   }
   else {
-    return msgIN;
+    return msg;
   }
 }
 

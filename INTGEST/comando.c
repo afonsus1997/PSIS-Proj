@@ -145,8 +145,8 @@ int lapu (int argc, char** argv)
 
   
   strcpy(msgOut.header, "LAPU");
-  msgOut.regt[0].p = argv[1][0];
-  strcpy(msgOut.regt[0].id, argv[2]);
+  msgOut.reguti[0].port[0] = argv[1][0];
+  strcpy(msgOut.reguti[0].id, argv[2]);
   if(argc == 4){
     msgOut.regt[0].t = stringToTimespec(argv[3]);
     msgOut.regt[1].t.tv_sec = 0;
@@ -157,6 +157,9 @@ int lapu (int argc, char** argv)
   }
   else{
     msgOut.regt[0].t.tv_sec = 0;
+    msgOut.regt[0].t.tv_nsec = 0;
+
+    msgOut.regt[1].t.tv_nsec = 0;
     msgOut.regt[1].t.tv_sec = 0;
   }
   

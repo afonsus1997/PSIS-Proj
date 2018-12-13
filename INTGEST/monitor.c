@@ -103,6 +103,7 @@ int monitor ()
 
   //printf("%s \n", TitleMsg);
   for (;;) {
+    printf("\n------------------------------\n");
     printf("\nCmd> ");
     /* Reading and parsing command line  ----------------------------------*/
     if ((argc = my_getline(argv, ARGVECSIZE)) > 0) {

@@ -64,6 +64,8 @@ message_t recieveInfo(){ //arg timeout???
   }
   else{
     //lapuc
+    return msgIN;
+
   }
   
 }

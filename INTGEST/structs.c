@@ -51,7 +51,7 @@ void printTimespecString(struct timespec t){
  *  Returns:
  *      (void) 
  */ 
-    char str[26];
+    char str[25];
     struct tm tm;
     tm = timespecToTm(t);
     strftime(&str[0], sizeof(str), "%d/%m/%Y %H:%M:%S\n", &tm); // specify format of str

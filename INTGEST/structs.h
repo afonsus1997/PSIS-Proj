@@ -51,7 +51,6 @@ typedef struct message{
 	uti_t reguti[UMAX];
 	reg_t regt[2];
 	
-	
 }message_t;
 
 

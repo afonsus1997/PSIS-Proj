@@ -386,21 +386,21 @@ int MEPHelper(char currDoor, char state){
         
 }
 
-int LAPUHelper(message_t msgIN){
-    char currPort = msgIN.regt[0].p;
+int LAPUHelper(message_t msg){
+    char currPort = msg.reguti[0].port[0];
     char currUser[NDIG+1];
-    strcpy(currUser, msgIN.regt[0].id);
-    struct timespec t1 = msgIN.regt[0].t;
-    struct timespec t2 = msgIN.regt[2].t;
+    strcpy(currUser, msg.reguti[0].id);
+    struct timespec t1 = msg.regt[0].t;
+    struct timespec t2 = msg.regt[2].t;
     message_t msgOut;
-    strcpy(msgOut.header, "LAPU");
+    strcpy(msgOut.header, "LAPUC");
 
-    if(msgIN.regt[0].p != '\0'){ //specific port
+    if(currPort != '0'){ //specific port
         int i;
         for(i=regBufferFile->last; i<NREG-1; i++){ //from most recent to end of array
             if(regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
                 if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '\0' ){ //if all users
+                    if(currUser[0] == '0' ){ //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
@@ -414,7 +414,7 @@ int LAPUHelper(message_t msgIN){
                     } 
                 }
                 else if(t2.tv_sec == 0){
-                    if(currUser[0] == '\0'){ //if all users
+                    if(currUser[0] == '0'){ //if all users
                             //copy info and send
                             msgOut.regt[0] = regBufferFile->reg[i];
                             sendMessage(msgOut);
@@ -437,7 +437,7 @@ int LAPUHelper(message_t msgIN){
         for(i=0; i<regBufferFile->last-1; i++){ //from start of the array to oldest
             if(regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
                 if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '\0' ){ //if all users
+                    if(currUser[0] == '0' ){ //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
@@ -453,7 +453,7 @@ int LAPUHelper(message_t msgIN){
                     } 
                 }
                 else if(t2.tv_sec == 0){
-                    if(currUser[0] == '\0'){ //if all users
+                    if(currUser[0] == '0'){ //if all users
                             //copy info and send
                             msgOut.regt[0] = regBufferFile->reg[i];
                             sendMessage(msgOut);
@@ -480,7 +480,7 @@ int LAPUHelper(message_t msgIN){
         for(i=regBufferFile->last; i<NREG-1; i++){ //from most recent to end of array
             if(regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
                 if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '\0'){ //if all users
+                    if(currUser[0] == '0'){ //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
@@ -496,7 +496,7 @@ int LAPUHelper(message_t msgIN){
                     } 
                 }
                 else if(t2.tv_sec == 0){
-                    if(currUser[0] == '\0'){ //if all users
+                    if(currUser[0] == '0'){ //if all users
                             //copy info and send
                             msgOut.regt[0] = regBufferFile->reg[i];
                             sendMessage(msgOut);
@@ -519,7 +519,7 @@ int LAPUHelper(message_t msgIN){
         for(i=0; i<regBufferFile->last-1; i++){ //from start of the array to oldest
             if(regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
                 if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
-                    if(currUser[0] == '\0'){ //if all users
+                    if(currUser[0] == '0'){ //if all users
                         //copy info and send
                         msgOut.regt[0] = regBufferFile->reg[i];
                         sendMessage(msgOut);
@@ -535,7 +535,7 @@ int LAPUHelper(message_t msgIN){
                     } 
                 }
                 else if(t2.tv_sec == 0){
-                    if(currUser[0] == '\0'){ //if all users
+                    if(currUser[0] == '0'){ //if all users
                             //copy info and send
                             msgOut.regt[0] = regBufferFile->reg[i];
                             sendMessage(msgOut);
