@@ -57,10 +57,13 @@ message_t recieveInfo(){ //arg timeout???
     &tolen) < 0) {
     perror("CLI: Erro no recvfrom");
   }
-  else {
+  else if(strcmp(msgIN.header, "LAPUC") !=0){
     
     printf("\nServer: %s\n", msgIN.header);
     return msgIN;
+  }
+  else{
+    //lapuc
   }
   
 }

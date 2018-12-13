@@ -80,7 +80,13 @@ typedef struct doorcomm{
 	reg_t	reg;   
   } doorcomm_t;
 
-  char usersCache[UMAX][NDIG+1];
+struct failCounter{
+	int number;
+	char id[NDIG+1];
+};
+
+
+char usersCache[UMAX][NDIG+1];
 
 char cliname[10];
 char readBuf[NDIG+5];

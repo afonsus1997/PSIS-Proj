@@ -7,7 +7,6 @@ doorcomm_t askDoor;
 doorcomm_t doorAnswer;
 
 
-
 extern doorcomm_t receiveQMessage();
 extern sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();

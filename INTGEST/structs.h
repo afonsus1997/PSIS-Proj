@@ -39,7 +39,7 @@ typedef struct uti_s { /* estrutura de um registo utilizador */
 	unsigned char port[NPOR]; /* portas acess´ıveis ao utilizador: 1-acesso 0-n~ao */
 } uti_t;
 typedef struct reg_s { /* estrutura de um registo historico */
-	//struct timespec t; /* estampilha temporal */
+	struct timespec t; /* estampilha temporal */
 	char p; /* identificador da porta: A,B,C */
 	char id[NDIG+1]; /* identificador do utilizador */
 	unsigned char ac; /* acesso: 1-concedido; 0-recusado */
@@ -49,7 +49,7 @@ typedef struct message{
 	
 	char header[20]; 
 	uti_t reguti[UMAX];
-	reg_t regt[UMAX];
+	reg_t regt[2];
 	
 	
 }message_t;

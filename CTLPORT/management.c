@@ -5,7 +5,7 @@ extern int sendQMessage(doorcomm_t inMsg);
 extern int clientQinit();
 extern void splashscreen(char mode);
 
-
+struct failCounter fails;
 //char doorMode = NORMAL;
 
 
@@ -102,6 +102,22 @@ int checkCache(char id[NDIG+1]){
         
     }
     printf("\n%sAccess Denied!%s\n\n", KRED, KWHT);
+
+    if(strcmp(fails.id, id) == 0){
+        if(++fails.number == 3){
+            printf("%s3 failed attepts on id %s.%s\n", KRED, id, KWHT);
+            printf("%sContacting server!%s\n\n", KRED, KWHT);
+
+            sendRegister(id, '0');
+        }
+        
+    }
+    else{
+        strcpy(fails.id, id);
+        fails.number = 1;
+    }
+
+
     sem_post(&semMain);
     return 0;        
 }

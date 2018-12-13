@@ -17,7 +17,7 @@
 extern int closeServer(void);
 extern message_t recieveInfo();
 extern int sendInfo(message_t* msg);
-
+extern struct timespec stringToTimespec(char string[26]);
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,19 +143,45 @@ int lapu (int argc, char** argv)
   message_t msgOut;
   message_t msgIn;
 
-  if(argv[1] == NULL || argv[2] == NULL){
-    return -1;
-  }
-
-  strcpy(msgOut.header, "LAPU");
-  strcpy(msgOut.reguti[0].port, argv[1]);
-  strcpy(msgOut.reguti[0].id, argv[2]);
-  //strcpy(msgOut.reguti.nome, argv[3]);   TEMPO
   
-  sendInfo(&msgOut);
-  recieveInfo();
+  strcpy(msgOut.header, "LAPU");
+  msgOut.regt[0].p = argv[1][0];
+  strcpy(msgOut.regt[0].id, argv[2]);
+  if(argc == 4){
+    msgOut.regt[0].t = stringToTimespec(argv[3]);
+    msgOut.regt[1].t.tv_sec = 0;
+  }
+  else if(argc == 5){
+    msgOut.regt[0].t = stringToTimespec(argv[3]);
+    msgOut.regt[1].t = stringToTimespec(argv[4]);
+  }
+  else{
+    msgOut.regt[0].t.tv_sec = 0;
+    msgOut.regt[1].t.tv_sec = 0;
+  }
+  
+  sendInfo(&msgOut); 
+  msgIn = recieveInfo();
+  printf("\n");
+  while(strcmp(msgIn.header, "LAPUDONE") !=0){
+    lapur(msgIn);
+    msgIn = recieveInfo();
+  }
+  
 
 }
+
+int lapur(message_t msgIn){
+
+  printf("%s", printTimespecString(msgIn.regt[0].t)); 
+  printf("\tID: %s\n", msgIn.regt[0].id);
+  printf("\tPORTA: %c\n", msgIn.regt[0].p);
+  printf("\tACCESS: %c\n\n", msgIn.regt[0].ac);
+
+}
+
+
+
 
 int tserv (int argc, char** argv)
 {

@@ -71,7 +71,7 @@ typedef struct message{
 	
 	char header[20]; 
 	uti_t reguti[UMAX];
-	reg_t regt[UMAX];
+	reg_t regt[2];
 	
 }message_t;
 

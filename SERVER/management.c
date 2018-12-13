@@ -186,7 +186,7 @@ void printTimespecString(struct timespec t){
     struct tm tm;
     tm = timespecToTm(t);
     strftime(&str[0], sizeof(str), "%d/%m/%Y %H:%M:%S\n", &tm); // specify format of str
-    printf("%s\n\n", str); // e.g. “15/11/2011 15:45:25” 
+    printf("%s\n", str); // e.g. “15/11/2011 15:45:25” 
 
 }
 
@@ -196,16 +196,16 @@ int addToRegT(reg_t reg){
         
         regBufferFile->oldest++;
         regBufferFile->reg[regBufferFile->last] = reg;
-        printf("\n\nWrote to pos %i\n", regBufferFile->last);
+        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
         regBufferFile->last = 0;
     }
     else if(regBufferFile->oldest != 0 || (regBufferFile->oldest == 0 && regBufferFile->last !=0)){
-        printf("\n\nWrote to pos %i\n", regBufferFile->last);        
+        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);        
         regBufferFile->reg[regBufferFile->last++] = reg;
     }
     else if(regBufferFile->oldest == 0 && regBufferFile->last == 0){
         regBufferFile->reg[0] = reg;
-        printf("\n\nWrote to pos %i\n", regBufferFile->last);
+        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
         regBufferFile->last++;
     }
 
@@ -384,6 +384,180 @@ int MEPHelper(char currDoor, char state){
         //doorcomm_t msgQIN = recieveQMessage();
         //return msgQIN.state;        
         
+}
+
+int LAPUHelper(message_t msgIN){
+    char currPort = msgIN.regt[0].p;
+    char currUser[NDIG+1];
+    strcpy(currUser, msgIN.regt[0].id);
+    struct timespec t1 = msgIN.regt[0].t;
+    struct timespec t2 = msgIN.regt[2].t;
+    message_t msgOut;
+    strcpy(msgOut.header, "LAPU");
+
+    if(msgIN.regt[0].p != '\0'){ //specific port
+        int i;
+        for(i=regBufferFile->last; i<NREG-1; i++){ //from most recent to end of array
+            if(regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
+                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
+                    if(currUser[0] == '\0' ){ //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+                        
+                    }
+                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+                    } 
+                }
+                else if(t2.tv_sec == 0){
+                    if(currUser[0] == '\0'){ //if all users
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }
+                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }    
+                    }
+                else{
+                    break;
+                }
+            }
+        }
+        for(i=0; i<regBufferFile->last-1; i++){ //from start of the array to oldest
+            if(regBufferFile->reg[i].p == currPort && regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
+                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
+                    if(currUser[0] == '\0' ){ //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+
+                    }
+                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+
+                    } 
+                }
+                else if(t2.tv_sec == 0){
+                    if(currUser[0] == '\0'){ //if all users
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }
+                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }    
+                    }
+                else{
+                    break;
+                }
+            }
+        }
+        
+    }
+    else{
+        int i;
+        for(i=regBufferFile->last; i<NREG-1; i++){ //from most recent to end of array
+            if(regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
+                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
+                    if(currUser[0] == '\0'){ //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+
+                    }
+                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+
+                    } 
+                }
+                else if(t2.tv_sec == 0){
+                    if(currUser[0] == '\0'){ //if all users
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }
+                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }    
+                    }
+                else{
+                    break;
+                }
+            }
+        }
+        for(i=0; i<regBufferFile->last-1; i++){ //from start of the array to oldest
+            if(regBufferFile->reg[i].t.tv_sec > t1.tv_sec){ //if port matches and time is bigger than t1(x or 0)
+                if(t2.tv_sec != 0 && regBufferFile->reg[i].t.tv_sec < t2.tv_sec){ // t2 not 0 and time < t2
+                    if(currUser[0] == '\0'){ //if all users
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+
+                    }
+                    else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                        //copy info and send
+                        msgOut.regt[0] = regBufferFile->reg[i];
+                        sendMessage(msgOut);
+
+
+                    } 
+                }
+                else if(t2.tv_sec == 0){
+                    if(currUser[0] == '\0'){ //if all users
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }
+                        else if(strcmp(currUser, regBufferFile->reg[i].id) == 0){ //if user specific matches
+                            //copy info and send
+                            msgOut.regt[0] = regBufferFile->reg[i];
+                            sendMessage(msgOut);
+
+
+                        }    
+                    }
+                else{
+                    break;
+                }
+            }
+        }
+    }
+    
+    return 1;
 }
 
 int RIPHelper(char currDoor){
@@ -628,7 +802,19 @@ int intgestParser(message_t msgIN){
     }
     else if(strcmp(msgIN.header, "LAPU") == 0)
     {
-        //list acesses
+        /*list acesses debug
+        strcpy(msgOUT.header, "LAPUC");
+        memcpy(&msgOUT.regt[0], regBufferFile[0].reg, sizeof(reg_t));
+        sendMessage(msgOUT);
+        strcpy(msgOUT.header, "LAPUC");
+        memcpy(&msgOUT.regt[0], regBufferFile[1].reg, sizeof(reg_t));
+        sendMessage(msgOUT);
+        strcpy(msgOUT.header, "LAPUC");
+        memcpy(&msgOUT.regt[0], regBufferFile[2].reg, sizeof(reg_t));
+        sendMessage(msgOUT);*/
+
+        LAPUHelper(msgIN);
+
         strcpy(msgOUT.header, "LAPUDONE");
         sendMessage(msgOUT);
         return 1;   
@@ -775,7 +961,10 @@ int processMessage(doorcomm_t msgQIN){
     }
     else if(strcmp(msgQIN.header, "REGUSR") == 0){
         //printf("%ld\n", msgQIN.reg.t.tv_sec);
-        printf("Successfull entry on door %c at:\n\t", msgQIN.porta);
+        if(msgQIN.reg.ac == '1')
+            printf("Successfull entry on door %c at: ", msgQIN.reg.p);
+        else
+            printf("Unsuccessfull entry on door %c at: ", msgQIN.reg.p);
         printTimespecString(msgQIN.reg.t);
         addToRegT(msgQIN.reg);
         //printf("%ld\n", stringToTimespec("11/12/2018 16:02:37"));
