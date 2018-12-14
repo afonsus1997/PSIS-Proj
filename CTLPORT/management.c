@@ -91,6 +91,7 @@ int checkCache(char id[NDIG + 1])
     if (strcmp(id, IDX) == 0)
     {
         printf("\n%sSuperUser detected, Access Granted!%s\n\n", KGRN, KWHT);
+        printf("Introduza o identificador: ");
         sem_post(&semMain);
         return 1;
     }
@@ -102,6 +103,7 @@ int checkCache(char id[NDIG + 1])
             printf("\n%sAccess Granted!%s\n\n", KGRN, KWHT);
             //criar e enviar registo
             sendRegister(id, '1');
+            printf("Introduza o identificador: ");
             sem_post(&semMain);
             return 1;
         }
@@ -123,26 +125,7 @@ int checkCache(char id[NDIG + 1])
         strcpy(fails.id, id);
         fails.number = 1;
     }
-
+    printf("Introduza o identificador: ");
     sem_post(&semMain);
     return 0;
 }
-
-/*
-int validacao(doorcomm_t msgIN, char msgId[NDIG+1]){
-    int i,j,contador=0;
-
-    for(i=0;i<UMAX;i++){
-        for (j=0;j<NDIG+1;j++){
-            if(msgId[j]==msgIN.id[i][j]){
-                contador ++;     //verifica se todos os 4 digitos do identificador sao iguais
-            }
-        }
-    }
-    if (contador ==4){
-        return 1;
-    }
-    else{
-        return 0;
-    }
-}*/
