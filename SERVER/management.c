@@ -441,6 +441,16 @@ int MEPHelper(char currDoor, char state)
 
 int LAPUHelper(message_t msg)
 {
+       /*
+ * Function:  LAPUHelper 
+ * --------------------
+ *  Helps send the correct time registers.
+ *  This function exists in order do reduce spaguetti code 
+ * 
+ *  Returns:
+ *      1: If Successful
+ *      0: If not Successful
+ */
     char currPort = msg.reguti[0].port[0];
     char currUser[NDIG + 1];
     strcpy(currUser, msg.reguti[0].id);

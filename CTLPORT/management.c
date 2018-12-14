@@ -10,6 +10,16 @@ struct failCounter fails;
 
 int processMessage(doorcomm_t msgQIN)
 {
+/*
+ * Function:  processMessage 
+ * --------------------
+ *  Processes the incoming queue message.
+ *  This function works independently from the main thread. 
+ * 
+ *  Returns:
+ *      1: If Successful
+ *      0: If not Successful
+ */
     doorcomm_t msgQOUT;
     if (strcmp(msgQIN.header, "QUERY") == 0)
     {
@@ -51,8 +61,16 @@ int processMessage(doorcomm_t msgQIN)
     }
 }
 
-int clearCache()
+void clearCache()
 {
+/*
+ * Function:  clearCache 
+ * --------------------
+ *  Clears users cache.
+ * 
+ *  Returns:
+ *      (void)
+ */
     int i;
     for (i = 0; i < UMAX - 1; i++)
     {
@@ -60,8 +78,17 @@ int clearCache()
     }
 }
 
-int updateCache(doorcomm_t answer)
+void updateCache(doorcomm_t answer)
 {
+/*
+ * Function:  updateCache 
+ * --------------------
+ *  Updates users cache by overwriting ALL users, this ensures that the chache is up to date if the server goes offline.
+ *  We are aware that the max number of ussers in cache, CMAX, is 3, but we still think this is a better approach. *Nao e por isso que o gato vai as filhoses*
+ * 
+ *  Returns:
+ *      (void)
+ */
     int i;
     for (i = 0; i < UMAX; i++)
     {
@@ -74,6 +101,15 @@ int updateCache(doorcomm_t answer)
 
 int sendRegister(char id[NDIG + 1], char ac)
 {
+/*
+ * Function:  sendRegister 
+ * --------------------
+ *  Sends time register to server if there is a successfull entry attempt or if there are 3 failed attempts in a row with the same id.
+ * 
+ *  Returns:
+ *      1: If Successful
+ *      0: If not Successful
+ */
     doorcomm_t regMsg;
     time_t currentTime;
     strcpy(regMsg.header, "REGUSR");
@@ -81,7 +117,7 @@ int sendRegister(char id[NDIG + 1], char ac)
     regMsg.reg.p = clientDoor;
     clock_gettime(CLOCK_REALTIME, &regMsg.reg.t);
     regMsg.reg.ac = ac;
-    sendQMessage(regMsg);
+    return sendQMessage(regMsg);
 }
 
 int checkCache(char id[NDIG + 1])
