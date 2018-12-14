@@ -82,8 +82,10 @@ int initFileSystem()
     if (regBufferFile->reg[0].p == '\0')
     {
         printf("\n\nREG file empty\n\n");
+        pthread_mutex_lock(&lockTime);
         regBufferFile->last = 0;
         regBufferFile->oldest = 0;
+        pthread_mutex_unlock(&lockTime);
     }
 
     clearBuffer();
@@ -222,7 +224,7 @@ void printTimespecString(struct timespec t)
 
 int addToRegT(reg_t reg)
 {
-
+        pthread_mutex_lock(&lockTime);
     if (regBufferFile->last == NREG - 1)
     {
 
@@ -242,6 +244,9 @@ int addToRegT(reg_t reg)
         printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
         regBufferFile->last++;
     }
+        pthread_mutex_unlock(&lockTime);
+
+
 }
 
 int checkEmpty(int pos)
@@ -443,6 +448,7 @@ int LAPUHelper(message_t msg)
     struct timespec t2 = msg.regt[2].t;
     message_t msgOut;
     strcpy(msgOut.header, "LAPUC");
+    pthread_mutex_lock(&lockTime);
 
     if (currPort != '0')
     { //specific port
@@ -612,6 +618,7 @@ int LAPUHelper(message_t msg)
             }
         }
     }
+    pthread_mutex_unlock(&lockTime);
 
     return 1;
 }

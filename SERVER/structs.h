@@ -53,6 +53,8 @@
 #endif
 
 pthread_mutex_t lockUsers;
+pthread_mutex_t lockTime;
+
 
 typedef struct uti_s
 {							  /* estrutura de um registo utilizador */

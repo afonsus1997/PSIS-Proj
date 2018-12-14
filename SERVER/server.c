@@ -48,6 +48,11 @@ int main()
         printf("\n mutex init failed\n");
         return 1;
     }
+    if (pthread_mutex_init(&lockTime, NULL) != 0) //user array mutex initialization
+    {
+        printf("\n mutex init failed\n");
+        return 1;
+    }
 
     serverInit();
 

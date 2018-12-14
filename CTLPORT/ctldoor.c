@@ -66,7 +66,8 @@ int main(int argc, char *argv[])
                 printf("\n%sSuperUser detected, Access Granted!%s\n\n", KGRN, KWHT);
             else
                 printf("\n%sAccess Denied!%s\n\n", KRED, KWHT);
-            printf("Introduza o identificador especial: ");
+            //sem_close(&semMain);
+            
         }
         else if(doorMode == 'N'){
             if(sendQMessage(askDoor) == 0 ){
@@ -79,7 +80,9 @@ int main(int argc, char *argv[])
         else if(doorMode == 'A'){
             printf("\n%sAccess Granted!%s\n\n", KGRN, KWHT);
             sendRegister(askDoor.id[0], '1');
-            sem_post(&semMain);
+            //sem_post(&semMain);
+            //sem_close(&semMain);
+
         }
             //esperar que processe semaforo!
             sem_wait(&semMain);
