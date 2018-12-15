@@ -59,8 +59,8 @@ int nuti(int argc, char **argv)
   strcpy(msgOut.reguti[0].id, argv[1]);
   strcpy(msgOut.reguti[0].nome, argv[2]);
   strcpy(msgOut.reguti[0].port, argv[3]);
-  sendInfo(&msgOut);
-  recieveInfo();
+  if(sendInfo(&msgOut))
+    recieveInfo();
 }
 
 int luti(int argc, char **argv)

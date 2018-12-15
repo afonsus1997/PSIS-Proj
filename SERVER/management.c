@@ -226,25 +226,11 @@ void printTimespecString(struct timespec t)
 int addToRegT(reg_t reg)
 {
         pthread_mutex_lock(&lockTime);
-    if (regBufferFile->last == NREG - 1)
-    {
 
-        regBufferFile->oldest++;
         regBufferFile->reg[regBufferFile->last] = reg;
         printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
-        regBufferFile->last = 0;
-    }
-    else if (regBufferFile->oldest != 0 || (regBufferFile->oldest == 0 && regBufferFile->last != 0))
-    {
-        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last+1);
-        regBufferFile->reg[++regBufferFile->last] = reg;
-    }
-    else if (regBufferFile->oldest == 0 && regBufferFile->last == 0)
-    {
-        regBufferFile->reg[0] = reg;
-        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
-        //regBufferFile->last++;
-    }
+        regBufferFile->last = (regBufferFile->last + 1) % NREG;
+    
         pthread_mutex_unlock(&lockTime);
 
 
@@ -860,7 +846,6 @@ int intgestParser(message_t msgIN)
     }
     else if (strcmp(msgIN.header, "MPU") == 0)
     {
-        //modify access
 
         if (strcmp(msgIN.reguti[0].id, "0") == 0)
         {
@@ -872,7 +857,7 @@ int intgestParser(message_t msgIN)
                     pthread_mutex_lock(&lockUsers);
                     strcpy(usersBuffer[i].port, msgIN.reguti[0].port);
                     pthread_mutex_unlock(&lockUsers);
-                    printf("Modified User:\n");
+                    printf("\nModified User:\n");
                     printf("\tID: %s\n", usersBuffer[i].id);
                     printf("\tPORTAs:");
                     printPorts(usersBuffer[i].port);

@@ -60,7 +60,7 @@ int sendInfo(message_t *msg)
  */
   if (sendto(sd, msg, sizeof(message_t), 0, (struct sockaddr *)&to, tolen) < 0)
   {
-    perror("CLI: Erro no sendto");
+    printf("%s\nCant connect to server, try again later.\n%s", KRED, KWHT);
     return 0;
   }
   else
