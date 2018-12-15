@@ -44,8 +44,6 @@
 
 //#define KBEG "\e[0;97;41m"
 
-//------------QUEUES
-
 #include <pthread.h>
 #include <time.h>
 #include <sys/time.h>
@@ -54,7 +52,6 @@
 
 pthread_mutex_t lockUsers;
 pthread_mutex_t lockTime;
-
 
 typedef struct uti_s
 {							  /* estrutura de um registo utilizador */

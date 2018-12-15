@@ -1,20 +1,36 @@
 #include "ctldoor.h"
 
+void exitHandler(int sn)
+{
+
+    system("clear");
+    printf("\n\nStopping client...\n");
+
+    if (clientQClose() < 0)
+    {
+        printf("Erro ao fechar Queue\n");
+    }
+    printf("\n\nDone!\n");
+    exit(-1);
+}
 
 void *thread_func(void *pi) //Door answer thread
 {
 
     while (1)
     {
-
         processMessage(receiveQMessage());
-        //sem_post(&semMain);
     }
 }
 
 int main(int argc, char *argv[])
 {
 
+    if (argc < 2)
+    {
+        printf("%s\nMissing arguments!\n%s", KRED, KWHT);
+        exit(-1);
+    }
     clientDoor = argv[1][0];
     doorMode = NORMAL;
     splashscreen('0');
@@ -38,6 +54,9 @@ int main(int argc, char *argv[])
     {
         printf("Error Creating Door Thread\n");
     }
+
+    signal(SIGINT, exitHandler);
+    signal(SIGTERM, exitHandler);
 
     printf("Introduza o identificador: ");
 

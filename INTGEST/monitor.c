@@ -39,16 +39,15 @@ struct 	command_d {
 } const commands[] = {
   {cmd_sos,  "sos","                  help"},
   {cmd_sair, "sair","                 sair"},
-  {cmd_test, "teste","<arg1> <arg2>   comando de teste"},
-  {nuti,     "nuti","                 novo utilizador: id; nome; portas com acesso (ABC"},
-  {luti,     "luti","                 listar utilizador u (0-todos) (id, nome, portas)"},
-  {euti,     "euti","                 eliminar utilizador u (0-todos)"},
-  {mpu,      "mpu","                  modificar portas utilizador u (0-todos), portas ABC"},
-  {lapu,     "lapu","                 listar acessos porta p (0-todas), utilizador u (0-todos), entre t1 (dd/mm/aaaa hh:mm:ss) e t2"},
-  {tserv,    "tserv","                Termina o servidor." },
-  {cep,    "cep","                Termina o servidor." },
-  {mep,    "mep","                Termina o servidor." },
-  {rip,    "rip","                Termina o servidor." }
+  {nuti,     "nuti","                 Novo utilizador: id; nome; portas com acesso (ABC)"},
+  {luti,     "luti","                 Listar utilizador u (0-todos) (id, nome, portas)"},
+  {euti,     "euti","                 Eliminar utilizador u (0-todos)"},
+  {mpu,      "mpu","                  Modificar portas utilizador u (0-todos), portas ABC"},
+  {lapu,     "lapu","                 Listar acessos porta p (0-todas), utilizador u (0-todos), entre t1 (dd/mm/aaaa hh:mm:ss) e t2"},
+  {tserv,    "tserv","                Consultar estado porta p (0-todas)." },
+  {cep,    "cep","                  Consultar estado porta p (0-todas)" },
+  {mep,    "mep","                Modificar estado porta p (0-todas) para e (AFN -abrir,fechar,normal)." },
+  {rip,    "rip","                Reinicializar (apagar cache) identificadores porta p (0-todas)." }
 
 
 };

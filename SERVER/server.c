@@ -22,6 +22,7 @@ pthread_t thread;
 void exitHandler(int sn)
 {
     closeServer();
+    
     exit(0);
 }
 
@@ -31,7 +32,6 @@ void *thread_func(void *pi) //Door answer thread
     initQueue();
     while (1)
     {
-        //printf("\n");
         processMessage(recieveQMessage());
     }
 }
@@ -57,6 +57,8 @@ int main()
     serverInit();
 
     signal(SIGINT, exitHandler);
+    signal(SIGTERM, exitHandler);
+
 
     if (pthread_create(&thread, NULL, thread_func, (void *)&threadID) != 0)
     {

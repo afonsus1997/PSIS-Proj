@@ -137,6 +137,7 @@ int closeFileSystem()
     }
     munmap(usersBufferFile, sizeof(usersBuffer));
     close(mfdFUTI);
+    printf("Saving time logs to filesystem...\n\n");
     munmap(regBufferFile, sizeof(flogStruct_t));
     close(FLOG);
     return 1;
