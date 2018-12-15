@@ -1,0 +1,299 @@
+commit a0a8004c26aaced4d7fc49e1a34fc15d7ae7916f
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Dec 15 18:06:57 2018 +0000
+
+    added function descriptions
+
+commit f7ac8123a158e50d05e49c54a75ae0915dcd6f28
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Dec 15 17:31:46 2018 +0000
+
+    timespec finnaly works
+
+commit b6aef090dab5b50fce18c8c29d462c64e554f5fa
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Fri Dec 14 10:31:31 2018 +0000
+
+    added fucntion description to ctldoor and server
+
+commit 059b7b73a2e6b2721993cf938960dbf6c14b3e9f
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Fri Dec 14 10:18:50 2018 +0000
+
+    door fixed
+
+commit 9ffa29175305ba7d492c1c16e2e636090a005183
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Fri Dec 14 09:53:40 2018 +0000
+
+    tried to fix ctldoor on closed mode
+
+commit f68d8968919ef47eba04dac574a7a61f6a70592d
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Thu Dec 13 20:39:03 2018 +0000
+
+    beautified code
+
+commit 54dc3f8aec83074ca6d04ef1368448e608af5f8c
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Thu Dec 13 19:18:57 2018 +0000
+
+    lapu works?
+
+commit 74aa813c715db56a7c91dfdda9816dd227f0be4f
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Thu Dec 13 17:51:17 2018 +0000
+
+    work done on lapu, 3 failed atmpts report to server
+
+commit 82533ccc6b5d45ce3feae038b414c01c80963ca6
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Dec 12 17:00:18 2018 +0000
+
+    open door works
+
+commit a211ff4d94c24e9b6c3abd6da172d0b97e96fb87
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Dec 12 16:28:26 2018 +0000
+
+    mpu works now
+
+commit 3b04d9740b6bb8a3d8a1ebf12cb8649f498e4ff8
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Dec 12 16:03:45 2018 +0000
+
+    ctldoors work offline
+
+commit ddc112c7483cec5e367fee4581d0f9aaf867c9b9
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Dec 11 23:51:02 2018 +0000
+
+    added description to functions
+
+commit 0fd3901d49c194e7f5e70f9a765a9c7298ff575a
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Dec 11 16:05:11 2018 +0000
+
+    added time functions
+
+commit ccef950d06b8661a0c69267c9366ecd38e5c5907
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Dec 11 11:33:56 2018 +0000
+
+    cep 0 works, mep command works
+
+commit a389bf7e8c2cee997dc2c9627d32a9815126bd65
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Dec 11 01:06:49 2018 +0000
+
+    fixed doorcomm, but cep 0 doesent work
+
+commit c0baab8db20e8b716fa8be33b4157fea065a71ac
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Mon Dec 10 19:45:12 2018 +0000
+
+    added more comments, cep command done, need to figure out a way to fix door comm
+
+commit 13dbafbddd87864523ca971fe0c12fb943362ea8
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Mon Dec 10 12:40:40 2018 +0000
+
+    added comments
+
+commit d2e0965eb40649fb324542440ebad08bd30853a1
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Mon Dec 10 11:18:52 2018 +0000
+
+    reading and writing from file works
+
+commit 9e678e52c5c33b22c6a383c4375b2b1870eb3b21
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sun Dec 9 19:50:50 2018 +0000
+
+    added prototypes for missing funcs in doorctl. Added color support. C O L O R F U L
+
+commit 17437b69d6a3b03bde3de08247a01ada4ca06523
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Dec 8 18:58:12 2018 +0000
+
+    mmap for users works
+
+commit e4e67027ff9aeac2e4c11156a58422d1ccea8801
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Dec 8 18:41:20 2018 +0000
+
+    starting to develop mmap functionlities
+
+commit 1bbe6b1dbce04a65662d11b984e515f68848a47f
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Dec 8 17:50:47 2018 +0000
+
+    validation working
+
+commit 74193e4ab943a47063f28def7c16ef08fc5a1505
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Dec 8 17:05:31 2018 +0000
+
+    fixed door types and started tidying up ctldoor
+
+commit 958c8773acf945582407b54d4b52700163fa9d57
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Fri Dec 7 15:17:10 2018 +0000
+
+    fixed fgets bug
+
+commit fca60cd68e944284f1b07480521c16b4058d2c85
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Fri Dec 7 12:49:53 2018 +0000
+
+    added verification to doorclient and added update cache funcionality
+
+commit 34e6cea50ab2b6d9344974410c4c5e2b3eaf0a88
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Dec 5 12:51:02 2018 +0000
+
+    work done on door client
+
+commit 76dc15e415d3d1e1c20896889414b7a1428fa5ef
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Dec 4 13:21:38 2018 +0000
+
+    queue works!
+
+commit a1aef32f905143635d01de1f9e7eaf1362a745d8
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 28 11:52:41 2018 +0000
+
+    tried to fix doorctrl
+
+commit dc5f3f214a2c8085d23381493700071aebb698bf
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Nov 27 18:53:44 2018 +0000
+
+    stuff done in door ctrl
+
+commit 707010193c5953417510284c7d566fefb2fddca1
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Nov 27 18:26:08 2018 +0000
+
+    server ready for the doors
+
+commit be789a6a5b59c35f9a766a0756b4a6b59e145971
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Tue Nov 27 11:00:19 2018 +0000
+
+    started integrating ctrdoor
+
+commit d50205759c98ab39a649b897357c692b8e1e17e2
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sun Nov 25 23:26:10 2018 +0000
+
+    mpu works, everything done for intgest?
+
+commit 9ee8edddc249b9fd17f7d306a1f30ba359decc6f
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sun Nov 25 22:28:16 2018 +0000
+
+    adding, listing and deletng users works (finnaly!!!)
+
+commit a9feb7bee2a523b56296e5f27cfa26db8030fd6a
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sun Nov 25 18:07:47 2018 +0000
+
+    still need to find a better way to see if struct is empty
+
+commit 3cd9805227602dabc3aa30c476a38d9b89ff82bb
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sun Nov 25 15:25:59 2018 +0000
+
+    new types work
+
+commit eb303830e8aaf0ab4a8f0328a997f871a92a2aba
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sun Nov 25 15:08:38 2018 +0000
+
+    modified message type to accomodate 15 users, started deeveloping command functionalities on server side
+
+commit 510aa1cf7cdd4843dcc89ef339dcd84767536bd6
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Sat Nov 24 20:25:55 2018 +0000
+
+    started organizing the server, changed message type
+
+commit 7123b0f7a0447d51245c1b4e85a88bef044e5a5c
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 21 12:52:34 2018 +0000
+
+    formated commands and modified Message struct on client and server
+
+commit c118ecf88784b9c8e8fb685afeae9d9c4b9fbc8d
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 21 12:21:47 2018 +0000
+
+    added makefile to server. added killsignals to client
+
+commit cfcb670ca7d3db5557ecf4cc6eb27827f8cd0d00
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 14 12:59:44 2018 +0000
+
+    sending structs works
+
+commit 83ce0cb6242e28627bde3969bb1ef39689037f86
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 14 11:09:39 2018 +0000
+
+    dunno
+
+commit 9eeb60ab16a1bbaa0ae8608a6eb155568223414d
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Fri Nov 9 08:25:38 2018 +0000
+
+    server responds but only to defautl client name. Added function to flatten the message
+
+commit ebb4f4597c6bf97690167e94b311c76f446a1590
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Thu Nov 8 19:54:10 2018 +0000
+
+    server cant respond for some reason
+
+commit dd4f38e6058ceb229ce9173ad98a1e4ba8ec1860
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 19:36:59 2018 +0000
+
+    added new commands prototypes
+
+commit 97093103a188ff53dde4c0f78054f6a9982e1b70
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 16:34:13 2018 +0000
+
+    added table
+
+commit dcacc1f0d19679119b6bd05a0c32ca5b83870010
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 16:32:39 2018 +0000
+
+    i cant markdown
+
+commit 2b9d1d9d0029a878ca938257e90a2e9ca4aab78c
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 16:31:11 2018 +0000
+
+    added readme
+
+commit d4fce8c1c0808dc18011a641f0c5854dc34b1a7a
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 16:28:31 2018 +0000
+
+    created intgest folder
+
+commit 5f52a0d8c00c49ef7b49f585c9144b5700092b9a
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 16:27:39 2018 +0000
+
+    Started working on intgest
+
+commit 5be30d05d8ce3302f42c502796a6fdabfc3ab672
+Author: Afonso Muralha <afonsomuralha@gmail.com>
+Date:   Wed Nov 7 16:20:19 2018 +0000
+
+    Initial commit
