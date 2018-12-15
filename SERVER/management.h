@@ -13,6 +13,8 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 
+//#include "structs.h"
+
 int intgestParser(message_t msgIN);
 
 #endif

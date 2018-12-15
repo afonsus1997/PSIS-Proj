@@ -38,7 +38,7 @@ struct timespec stringToTimespec(char string[26]){
  *      (timespec) parsed string
  */   
     struct tm tm;
-    strptime(string, "%d/%m/%Y%H:%M:%S\n", &tm);
+    strptime(string, "%d/%m/%Y %T\n", &tm);
     return tmToTimespec(tm); 
 }
 

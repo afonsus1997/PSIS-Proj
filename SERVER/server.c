@@ -27,7 +27,7 @@ void exitHandler(int sn)
 
 void *thread_func(void *pi) //Door answer thread
 {
-    doorcomm_t msgIN;
+    //doorcomm_t msgIN;
     initQueue();
     while (1)
     {
@@ -65,6 +65,7 @@ int main()
 
     while (1)
     { // main server (socket) loop
+        
         msgIN = recieveMessage();
 
         if (strcmp(msgIN.header, "TSERV") == 0)

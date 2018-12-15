@@ -100,7 +100,7 @@ message_t recieveMessage()
  *      (message_t) message
  */
   message_t msg;
-  fromlen = sizeof(from);
+  fromlen = sizeof(msg);
 
   if (recvfrom(sd, &msg, fromlen, 0, (struct sockaddr *)&from, &fromlen) < 0)
   {

@@ -9,7 +9,7 @@ EXALL= $(EXMQ)
 all: $(EXALL)
 
 ctldoor: ctldoor.o management.o queuecl.o
-	$(CC) -o ctldoor ctldoor.o management.o queuecl.o structs.h $(LDFLAGS) $(CFLAGS)
+	$(CC) -o ctldoor ctldoor.o management.o queuecl.o structs.h ctldoor.h management.h $(LDFLAGS) $(CFLAGS)
 	
 clean:
 	rm -f $(EXALL) *.o

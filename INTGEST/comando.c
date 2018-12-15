@@ -142,18 +142,25 @@ int lapu (int argc, char** argv)
 {
   message_t msgOut;
   message_t msgIn;
-
+  char timeTemp[26];
+  char timeTemp2[26];
+  memset(timeTemp, '\0', sizeof(timeTemp));
+  memset(timeTemp2, '\0', sizeof(timeTemp));
   
   strcpy(msgOut.header, "LAPU");
   msgOut.reguti[0].port[0] = argv[1][0];
   strcpy(msgOut.reguti[0].id, argv[2]);
-  if(argc == 4){
-    msgOut.regt[0].t = stringToTimespec(argv[3]);
+  if(argc == 5){
+    sprintf(timeTemp, "%s %s", argv[3], argv[4]);
+    msgOut.regt[0].t = stringToTimespec(timeTemp);
     msgOut.regt[1].t.tv_sec = 0;
   }
-  else if(argc == 5){
-    msgOut.regt[0].t = stringToTimespec(argv[3]);
-    msgOut.regt[1].t = stringToTimespec(argv[4]);
+  else if(argc == 7){
+    sprintf(timeTemp, "%s %s", argv[3], argv[4]);
+    msgOut.regt[0].t = stringToTimespec(timeTemp);
+    sprintf(timeTemp2, "%s %s", argv[5], argv[6]);
+    msgOut.regt[1].t = stringToTimespec(timeTemp2);
+
   }
   else{
     msgOut.regt[0].t.tv_sec = 0;

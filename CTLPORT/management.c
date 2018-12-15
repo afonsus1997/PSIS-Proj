@@ -1,16 +1,9 @@
-
-#include "structs.h"
-
-extern int sendQMessage(doorcomm_t inMsg);
-extern int clientQinit();
-extern void splashscreen(char mode);
-
-struct failCounter fails;
+#include "management.h"
 //char doorMode = NORMAL;
 
 int processMessage(doorcomm_t msgQIN)
 {
-/*
+    /*     
  * Function:  processMessage 
  * --------------------
  *  Processes the incoming queue message.
@@ -63,7 +56,7 @@ int processMessage(doorcomm_t msgQIN)
 
 void clearCache()
 {
-/*
+    /*
  * Function:  clearCache 
  * --------------------
  *  Clears users cache.
@@ -80,7 +73,7 @@ void clearCache()
 
 void updateCache(doorcomm_t answer)
 {
-/*
+    /*
  * Function:  updateCache 
  * --------------------
  *  Updates users cache by overwriting ALL users, this ensures that the chache is up to date if the server goes offline.
@@ -101,7 +94,7 @@ void updateCache(doorcomm_t answer)
 
 int sendRegister(char id[NDIG + 1], char ac)
 {
-/*
+    /*
  * Function:  sendRegister 
  * --------------------
  *  Sends time register to server if there is a successfull entry attempt or if there are 3 failed attempts in a row with the same id.

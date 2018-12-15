@@ -235,14 +235,14 @@ int addToRegT(reg_t reg)
     }
     else if (regBufferFile->oldest != 0 || (regBufferFile->oldest == 0 && regBufferFile->last != 0))
     {
-        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
-        regBufferFile->reg[regBufferFile->last++] = reg;
+        printf("Debug: Wrote time to position %i\n\n", regBufferFile->last+1);
+        regBufferFile->reg[++regBufferFile->last] = reg;
     }
     else if (regBufferFile->oldest == 0 && regBufferFile->last == 0)
     {
         regBufferFile->reg[0] = reg;
         printf("Debug: Wrote time to position %i\n\n", regBufferFile->last);
-        regBufferFile->last++;
+        //regBufferFile->last++;
     }
         pthread_mutex_unlock(&lockTime);
 
@@ -455,7 +455,7 @@ int LAPUHelper(message_t msg)
     char currUser[NDIG + 1];
     strcpy(currUser, msg.reguti[0].id);
     struct timespec t1 = msg.regt[0].t;
-    struct timespec t2 = msg.regt[2].t;
+    struct timespec t2 = msg.regt[1].t;
     message_t msgOut;
     strcpy(msgOut.header, "LAPUC");
     pthread_mutex_lock(&lockTime);
