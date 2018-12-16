@@ -8,6 +8,8 @@ socklen_t tolen;
 char buf[100];
 int cliid;
 char cliname[20];
+struct timeval tv;
+
 int clientInit()
 {
   /*
@@ -20,7 +22,7 @@ int clientInit()
  *      0: If not Successful
  * 
  */
-  //unlink(CLINAME); 
+  //unlink(CLINAME);
   int clipid = getpid();
   snprintf(cliname, sizeof(cliname), "/tmp/CLI-%05d", clipid);
 
@@ -41,7 +43,14 @@ int clientInit()
     perror("Erro no bind");
     exit(-1);
   }
-  
+
+  tv.tv_sec = 2;
+
+  if (setsockopt(sd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0)
+  {
+    perror("Timeout\n");
+  }
+
   to.sun_family = AF_UNIX;
   memset(to.sun_path, 0, sizeof(to.sun_path));
   strcpy(to.sun_path, SERVNAME);
@@ -50,7 +59,7 @@ int clientInit()
 
 int sendInfo(message_t *msg)
 {
- /*
+  /*
  * Function:  sendInfo 
  * --------------------
  *  Send message of type message_t using Sockets.
@@ -71,7 +80,7 @@ int sendInfo(message_t *msg)
 }
 
 message_t recieveInfo()
-{ 
+{
   /*
  * Function:  recieveInfo 
  * --------------------
@@ -79,12 +88,14 @@ message_t recieveInfo()
  * 
  *  Returns:
  *      (message_t) message
- */ 
+ */
   message_t msgIN;
   if (recvfrom(sd, &msgIN, sizeof(message_t), 0, (struct sockaddr *)&to,
                &tolen) < 0)
   {
-    perror("CLI: Erro no recvfrom");
+    printf("%s\nReceive error! Please reset intgest.\n\n%s", KRED, KWHT);
+    closeServer();
+    exit(-1);
   }
   else if (strcmp(msgIN.header, "LAPUC") != 0)
   {
@@ -100,18 +111,17 @@ message_t recieveInfo()
 
 int closeServer()
 {
-/*
+  /*
  * Function:  Close server 
  * --------------------
  * Closes Server.
  * 
  *  Returns:
  *      (int)
- */ 
+ */
   //system("clear");
   printf("\n\nStopping client...\n");
   close(sd);
   unlink(CLINAME);
   printf("\nDone!\n");
 }
-

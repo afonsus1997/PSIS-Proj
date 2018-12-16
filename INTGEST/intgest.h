@@ -11,6 +11,8 @@
 #include <errno.h>
 #include <string.h>
 #include <signal.h>
+#include <time.h>
+#include <sys/time.h>
 
 #include "structs.h"
 

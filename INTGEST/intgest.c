@@ -28,6 +28,7 @@ int main()
   splashscreen();
 
   signal(SIGINT, exitHandler);
+  signal(SIGTERM, exitHandler);
 
   if (clientInit() < 0)
   {
@@ -48,7 +49,7 @@ int main()
 
 void splashscreen()
 {
-    /*
+  /*
  * Function:  splashscreen 
  * --------------------
  *  Draws a pretty splashcreen. 
