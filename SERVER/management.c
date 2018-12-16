@@ -1039,12 +1039,12 @@ int processMessage(doorcomm_t msgQIN)
     }
     else if (strcmp(msgQIN.header, "CEPANS") == 0)
     {
-
+        message_t msg;
         printf("Recieved query from door : %c\n\n", msgQIN.porta);
-        msgOUT.reguti[0].port[0] = msgQIN.state;
-        msgOUT.reguti[0].port[1] = '\0';
-        strcpy(msgOUT.header, "CEP DONE");
-        sendMessage(msgOUT);
+        msg.reguti[0].port[0] = msgQIN.state;
+        msg.reguti[0].port[1] = '\0';
+        strcpy(msg.header, "CEP DONE");
+        sendMessage(msg);
     }
     else if (strcmp(msgQIN.header, "REGUSR") == 0)
     {

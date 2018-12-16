@@ -21,5 +21,6 @@ int intgestParser(message_t msgIN);
 
 extern int sendQMessage(doorcomm_t inQMsg, doorcomm_t outQMsg);
 extern int sendQMessage2(doorcomm_t inQMsg, doorcomm_t outQMsg);
+int sendMessage(message_t msgOUT);
 doorcomm_t recieveQMessage();
 doorcomm_t sendAcesses;

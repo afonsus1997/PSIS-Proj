@@ -6,9 +6,8 @@ socklen_t addrlen;
 struct sockaddr_un to;
 socklen_t tolen;
 char buf[100];
-char cliname[100] = "/tmp/CLI";
 int cliid;
-
+char cliname[20];
 int clientInit()
 {
   /*
@@ -21,7 +20,9 @@ int clientInit()
  *      0: If not Successful
  * 
  */
-  unlink(cliname); 
+  //unlink(CLINAME); 
+  int clipid = getpid();
+  snprintf(cliname, sizeof(cliname), "/tmp/CLI-%05d", clipid);
 
   printf("Client Name: %s\n", cliname);
   if ((sd = socket(AF_UNIX, SOCK_DGRAM, 0)) < 0)
@@ -31,7 +32,7 @@ int clientInit()
   }
 
   my_addr.sun_family = AF_UNIX;
-  (my_addr.sun_path, 0, sizeof(my_addr.sun_path));
+  memset(my_addr.sun_path, 0, sizeof(my_addr.sun_path));
   strcpy(my_addr.sun_path, cliname);
   addrlen = sizeof(my_addr.sun_family) + strlen(my_addr.sun_path);
 
@@ -40,7 +41,7 @@ int clientInit()
     perror("Erro no bind");
     exit(-1);
   }
-
+  
   to.sun_family = AF_UNIX;
   memset(to.sun_path, 0, sizeof(to.sun_path));
   strcpy(to.sun_path, SERVNAME);
@@ -61,6 +62,8 @@ int sendInfo(message_t *msg)
   if (sendto(sd, msg, sizeof(message_t), 0, (struct sockaddr *)&to, tolen) < 0)
   {
     printf("%s\nCant connect to server, try again later.\n%s", KRED, KWHT);
+    closeServer();
+    exit(0);
     return 0;
   }
   else
@@ -105,10 +108,10 @@ int closeServer()
  *  Returns:
  *      (int)
  */ 
-  system("clear");
+  //system("clear");
   printf("\n\nStopping client...\n");
   close(sd);
-  unlink(cliname);
+  unlink(CLINAME);
   printf("\nDone!\n");
 }
 

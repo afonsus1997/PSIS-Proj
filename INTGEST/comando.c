@@ -291,7 +291,6 @@ int cep(int argc, char **argv)
   strcpy(msgOut.reguti[0].port, argv[1]);
   door = msgOut.reguti[0].port[0];
   sendInfo(&msgOut);
-
   msgIn = recieveInfo();
   printf("\nDoor States:\n");
   if (argv[1][0] == '0')

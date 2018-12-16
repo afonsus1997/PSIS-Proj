@@ -23,7 +23,6 @@
 
 #define TRUE 1
 #define SERVNAME "/tmp/SERV1"
-#define MSG "Servidor responde!!!"
 
 int sd;
 struct sockaddr_un my_addr;
@@ -83,7 +82,7 @@ int closeServer()
   closeFileSystem();
   printf("\n\nStopping server...\n");
   closeQServer();
-  //close(sd);
+  close(sd);
   unlink(SERVNAME);
   printf("\nDone!\n");
   return 0;
@@ -100,9 +99,8 @@ message_t recieveMessage()
  *      (message_t) message
  */
   message_t msg;
-  fromlen = sizeof(msg);
 
-  if (recvfrom(sd, &msg, fromlen, 0, (struct sockaddr *)&from, &fromlen) < 0)
+  if (recvfrom(sd, &msg, sizeof(message_t), 0, (struct sockaddr *)&from, &fromlen) < 0)
   {
     perror("Erro no recvfrom");
   }
@@ -112,7 +110,7 @@ message_t recieveMessage()
   }
 }
 
-int sendMessage(message_t msgOUT)
+int sendMessage(message_t msg)
 {
   /*
  * Function:  sendMessage 
@@ -123,10 +121,10 @@ int sendMessage(message_t msgOUT)
  *      1: If successful
  *      0: If not successful
  */
-  if (sendto(sd, &msgOUT, sizeof(msgIN), 0, (struct sockaddr *)&from, fromlen) < 0)
+  if (sendto(sd, &msg, sizeof(message_t), 0, (struct sockaddr *)&from, fromlen) < 0)
   {
 
-    perror("Erro no sendto");
+    printf("Send Error, please reset Intgest without closing this server!\n\n");
     return -1;
   }
   return 0;
